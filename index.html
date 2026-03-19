@@ -8,917 +8,382 @@
   @import url('https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Kosugi+Maru&display=swap');
 
   :root {
-    --cream: #F5EDD6;
-    --cream-dark: #EAD9B8;
-    --red: #8B2020;
-    --brown: #3D1F0D;
-    --brown-mid: #6B3A1F;
-    --brown-light: #9C5E30;
-    --gold: #C9A227;
-    --gold-light: #E8C547;
-    --green: #2E7D32;
+    --cream:#F5EDD6; --cream-dark:#EAD9B8;
+    --red:#8B2020; --brown:#3D1F0D;
+    --brown-mid:#6B3A1F; --brown-light:#9C5E30;
+    --gold:#C9A227; --gold-light:#E8C547; --green:#2E7D32;
   }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{width:100%;height:100%;background:var(--brown);
+    font-family:'Kosugi Maru','Hiragino Kaku Gothic ProN',sans-serif;
+    overflow:hidden;touch-action:none;user-select:none;}
+  #app{width:100%;height:100%;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;position:relative;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 28px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 28px),
+    linear-gradient(160deg,#4a2510 0%,#3D1F0D 50%,#2a1208 100%);}
 
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  .screen{display:none;width:100%;height:100%;position:absolute;top:0;left:0;
+    align-items:center;justify-content:center;flex-direction:column;}
+  .screen.active{display:flex;}
 
-  html, body {
-    width:100%; height:100%;
-    background: var(--brown);
-    font-family: 'Kosugi Maru','Hiragino Kaku Gothic ProN',sans-serif;
-    overflow:hidden;
-    touch-action:none;
-    user-select:none;
-  }
+  /* ─── TITLE ─── */
+  #title-screen{background:linear-gradient(180deg,#08040f 0%,#120818 30%,#1e0e06 70%,#2a1208 100%);
+    justify-content:flex-end;overflow:hidden;padding:0;}
+  #title-screen::before{content:'';position:absolute;inset:0;
+    background-image:radial-gradient(1.2px 1.2px at 8% 6%,rgba(255,245,210,.9) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 30% 4%,rgba(255,245,210,1) 0%,transparent 100%),
+    radial-gradient(1.2px 1.2px at 55% 3%,rgba(255,245,210,.8) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 78% 7%,rgba(255,245,210,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 18% 12%,rgba(255,245,210,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 66% 14%,rgba(255,245,210,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 88% 2%,rgba(255,245,210,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 50% 18%,rgba(255,245,210,.5) 0%,transparent 100%);
+    pointer-events:none;z-index:0;animation:twinkle 6s ease-in-out infinite alternate;}
+  @keyframes twinkle{0%{opacity:.7}50%{opacity:1}100%{opacity:.8}}
+  #title-screen::after{content:'';position:absolute;top:4%;right:10%;width:44px;height:44px;
+    background:radial-gradient(circle at 40% 40%,#FFF8DC,#F0D070);border-radius:50%;
+    box-shadow:0 0 20px rgba(240,208,80,.5),0 0 60px rgba(240,208,80,.2);
+    pointer-events:none;z-index:0;}
+  #restaurant-scene{width:100%;max-width:480px;flex:1;position:relative;
+    display:flex;align-items:flex-end;justify-content:center;overflow:hidden;z-index:1;}
+  #restaurant-svg{width:100%;max-width:420px;height:auto;display:block;}
+  .lantern-l{transform-origin:126px 38px;animation:swing-l 3.2s ease-in-out infinite alternate;}
+  .lantern-r{transform-origin:282px 38px;animation:swing-r 2.9s ease-in-out infinite alternate;}
+  @keyframes swing-l{0%{transform:rotate(-5deg)}100%{transform:rotate(5deg)}}
+  @keyframes swing-r{0%{transform:rotate(4deg)}100%{transform:rotate(-4deg)}}
+  .win-glow{animation:win-pulse 3s ease-in-out infinite alternate;}
+  @keyframes win-pulse{0%{opacity:.75}100%{opacity:1}}
+  .sign-neon{animation:neon-flicker 5s ease-in-out infinite;}
+  @keyframes neon-flicker{0%,88%,100%{opacity:1;filter:drop-shadow(0 0 6px rgba(255,180,60,.9))}
+    90%{opacity:.5;filter:none}92%{opacity:1;filter:drop-shadow(0 0 6px rgba(255,180,60,.9))}
+    95%{opacity:.7;filter:none}97%{opacity:1;filter:drop-shadow(0 0 6px rgba(255,180,60,.9))}}
+  .smoke1{animation:smoke-rise 4s ease-in-out infinite;transform-origin:50% 100%;}
+  .smoke2{animation:smoke-rise 4s ease-in-out 1.5s infinite;transform-origin:50% 100%;}
+  .smoke3{animation:smoke-rise 4s ease-in-out 2.8s infinite;transform-origin:50% 100%;}
+  @keyframes smoke-rise{0%{transform:translateY(0) scale(.3);opacity:.5}50%{opacity:.25}100%{transform:translateY(-28px) scale(1.6);opacity:0}}
+  #title-bottom{width:100%;background:linear-gradient(0deg,#0e0604 60%,rgba(14,6,4,0) 100%);
+    padding:0 24px 36px;position:relative;z-index:10;text-align:center;}
+  .restaurant-label{font-family:'Zen Kurenaido',serif;font-size:12px;color:rgba(201,162,39,.7);letter-spacing:4px;margin-bottom:8px;}
+  .game-main-title{font-family:'Zen Kurenaido',serif;font-size:clamp(26px,7.5vw,34px);
+    color:var(--cream);text-shadow:0 0 24px rgba(201,162,39,.35),0 2px 6px rgba(0,0,0,.9);
+    line-height:1.2;margin-bottom:4px;}
+  .game-sub-title{font-size:11px;color:rgba(220,195,145,.5);letter-spacing:3px;margin-bottom:28px;}
+  .start-btn{display:inline-block;width:100%;max-width:300px;
+    background:linear-gradient(180deg,#A52828 0%,#7a1a1a 100%);color:var(--gold-light);
+    border:none;border-radius:3px;padding:17px 24px;
+    font-family:'Zen Kurenaido',serif;font-size:19px;letter-spacing:4px;cursor:pointer;
+    position:relative;overflow:hidden;
+    box-shadow:0 4px 24px rgba(139,32,32,.7),0 0 0 1px rgba(201,162,39,.35),inset 0 1px 0 rgba(255,255,255,.15);
+    transition:transform .1s,box-shadow .1s;}
+  .start-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;
+    background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);}
+  .start-btn:active{transform:scale(.97);}
+  .title-footer{font-size:10px;color:rgba(200,170,120,.35);letter-spacing:2px;margin-top:14px;}
 
-  #app {
-    width:100%; height:100%;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    position:relative;
-    background:
-      repeating-linear-gradient(0deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 28px),
-      repeating-linear-gradient(90deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 28px),
-      linear-gradient(160deg,#4a2510 0%,#3D1F0D 50%,#2a1208 100%);
-  }
+  /* ─── GAME ─── */
+  #game-screen{padding:0;overflow:hidden;}
+  #game-header{width:100%;background:var(--red);padding:8px 12px;
+    display:flex;align-items:center;justify-content:space-between;
+    box-shadow:0 2px 8px rgba(0,0,0,.4);flex-shrink:0;position:relative;z-index:10;}
+  #game-header .title{font-family:'Zen Kurenaido',serif;color:var(--gold-light);font-size:15px;letter-spacing:1px;}
+  #item-tray{display:flex;gap:4px;align-items:center;flex-wrap:wrap;max-width:60%;justify-content:flex-end;}
+  .tray-slot{width:28px;height:28px;background:rgba(0,0,0,.25);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:15px;
+    border:1.5px solid rgba(255,255,255,.2);transition:all .3s;}
+  .tray-slot.filled{background:rgba(201,162,39,.25);border-color:var(--gold);animation:slot-fill .4s ease;}
+  @keyframes slot-fill{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+  #maze-container{flex:1;width:100%;position:relative;overflow:hidden;}
+  #maze-canvas{position:absolute;image-rendering:pixelated;cursor:none;}
+  #goal-proximity{position:absolute;inset:0;pointer-events:none;z-index:5;}
 
-  .screen { display:none; width:100%; height:100%; position:absolute; top:0; left:0; align-items:center; justify-content:center; flex-direction:column; }
-  .screen.active { display:flex; }
+  /* アイテム収集プログレス */
+  #collect-progress{
+    position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    background:rgba(30,10,2,.8);border:1.5px solid rgba(201,162,39,.4);
+    border-radius:20px;padding:4px 12px;
+    font-size:11px;color:var(--gold-light);letter-spacing:1px;
+    z-index:20;white-space:nowrap;backdrop-filter:blur(4px);
+    box-shadow:0 2px 8px rgba(0,0,0,.4);}
+  #collect-progress.complete{
+    border-color:var(--gold);color:#FFE87A;
+    animation:prog-flash .6s ease;}
+  @keyframes prog-flash{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.4)}
+    50%{box-shadow:0 0 20px rgba(201,162,39,.8)}}
 
-  /* ======================================================
-     TITLE SCREEN — 老舗洋食レストランの夜の外観
-  ====================================================== */
-  #title-screen {
-    background: linear-gradient(180deg, #08040f 0%, #120818 30%, #1e0e06 70%, #2a1208 100%);
-    justify-content: flex-end;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  /* 星空 */
-  #title-screen::before {
-    content:'';
-    position:absolute; inset:0;
-    background-image:
-      radial-gradient(1.2px 1.2px at  8%  6%, rgba(255,245,210,0.9) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 18% 12%, rgba(255,245,210,0.6) 0%,transparent 100%),
-      radial-gradient(1.5px 1.5px at 30%  4%, rgba(255,245,210,1.0) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 42%  9%, rgba(255,245,210,0.7) 0%,transparent 100%),
-      radial-gradient(1.2px 1.2px at 55%  3%, rgba(255,245,210,0.8) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 66% 14%, rgba(255,245,210,0.5) 0%,transparent 100%),
-      radial-gradient(1.5px 1.5px at 78%  7%, rgba(255,245,210,0.9) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 88%  2%, rgba(255,245,210,0.6) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 95% 11%, rgba(255,245,210,0.7) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 12% 22%, rgba(255,245,210,0.4) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 50% 18%, rgba(255,245,210,0.5) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 72% 20%, rgba(255,245,210,0.4) 0%,transparent 100%),
-      radial-gradient(1px   1px   at 35% 25%, rgba(255,245,210,0.3) 0%,transparent 100%),
-      radial-gradient(1.2px 1.2px at 85% 17%, rgba(255,245,210,0.6) 0%,transparent 100%);
-    pointer-events:none;
-    z-index:0;
-    animation: twinkle 6s ease-in-out infinite alternate;
-  }
-
-  @keyframes twinkle {
-    0%   { opacity:0.7; }
-    50%  { opacity:1; }
-    100% { opacity:0.8; }
-  }
-
-  /* 月 */
-  #title-screen::after {
-    content:'';
-    position:absolute;
-    top: 4%; right: 10%;
-    width: 44px; height: 44px;
-    background: radial-gradient(circle at 40% 40%, #FFF8DC, #F0D070);
-    border-radius:50%;
-    box-shadow: 0 0 20px rgba(240,208,80,0.5), 0 0 60px rgba(240,208,80,0.2);
-    pointer-events:none;
-    z-index:0;
-  }
-
-  #restaurant-scene {
-    width:100%;
-    max-width:480px;
-    flex:1;
-    position:relative;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    overflow:hidden;
-    z-index:1;
-  }
-
-  #restaurant-svg {
-    width:100%;
-    max-width:420px;
-    height:auto;
-    display:block;
-  }
-
-  /* ランタンの揺れ */
-  .lantern-l {
-    transform-origin: 126px 38px;
-    animation: swing-l 3.2s ease-in-out infinite alternate;
-  }
-  .lantern-r {
-    transform-origin: 282px 38px;
-    animation: swing-r 2.9s ease-in-out infinite alternate;
-  }
-  @keyframes swing-l {
-    0%   { transform: rotate(-5deg); }
-    100% { transform: rotate(5deg); }
-  }
-  @keyframes swing-r {
-    0%   { transform: rotate(4deg); }
-    100% { transform: rotate(-4deg); }
-  }
-
-  /* 窓の光 */
-  .win-glow {
-    animation: win-pulse 3s ease-in-out infinite alternate;
-  }
-  @keyframes win-pulse {
-    0%   { opacity:0.75; }
-    100% { opacity:1; }
-  }
-
-  /* 看板のネオン点滅 */
-  .sign-neon {
-    animation: neon-flicker 5s ease-in-out infinite;
-  }
-  @keyframes neon-flicker {
-    0%,88%,100% { opacity:1; filter:drop-shadow(0 0 6px rgba(255,180,60,0.9)); }
-    90% { opacity:0.5; filter:none; }
-    92% { opacity:1; filter:drop-shadow(0 0 6px rgba(255,180,60,0.9)); }
-    95% { opacity:0.7; filter:none; }
-    97% { opacity:1; filter:drop-shadow(0 0 6px rgba(255,180,60,0.9)); }
-  }
-
-  /* 煙 */
-  .smoke1 { animation: smoke-rise 4s ease-in-out infinite; transform-origin:50% 100%; }
-  .smoke2 { animation: smoke-rise 4s ease-in-out 1.5s infinite; transform-origin:50% 100%; }
-  .smoke3 { animation: smoke-rise 4s ease-in-out 2.8s infinite; transform-origin:50% 100%; }
-  @keyframes smoke-rise {
-    0%   { transform:translateY(0) scale(0.3); opacity:0.5; }
-    50%  { opacity:0.25; }
-    100% { transform:translateY(-28px) scale(1.6); opacity:0; }
-  }
-
-  /* タイトル下部 */
-  #title-bottom {
-    width:100%;
-    background:linear-gradient(0deg,#0e0604 60%, rgba(14,6,4,0) 100%);
-    padding: 0 24px 36px;
-    position:relative;
-    z-index:10;
-    text-align:center;
-  }
-
-  .restaurant-label {
-    font-family:'Zen Kurenaido',serif;
-    font-size:12px;
-    color:rgba(201,162,39,0.7);
-    letter-spacing:4px;
-    margin-bottom:8px;
-  }
-
-  .game-main-title {
-    font-family:'Zen Kurenaido',serif;
-    font-size:clamp(26px,7.5vw,34px);
-    color:var(--cream);
-    text-shadow:0 0 24px rgba(201,162,39,0.35), 0 2px 6px rgba(0,0,0,0.9);
-    line-height:1.2;
-    margin-bottom:4px;
-  }
-
-  .game-sub-title {
-    font-size:11px;
-    color:rgba(220,195,145,0.5);
-    letter-spacing:3px;
-    margin-bottom:28px;
-  }
-
-  .start-btn {
-    display:inline-block; width:100%; max-width:300px;
-    background:linear-gradient(180deg,#A52828 0%,#7a1a1a 100%);
-    color:var(--gold-light);
-    border:none;
-    border-radius:3px;
-    padding:17px 24px;
-    font-family:'Zen Kurenaido',serif;
-    font-size:19px;
-    letter-spacing:4px;
-    cursor:pointer;
-    position:relative;
-    overflow:hidden;
-    box-shadow:0 4px 24px rgba(139,32,32,0.7),0 0 0 1px rgba(201,162,39,0.35),inset 0 1px 0 rgba(255,255,255,0.15);
-    transition:transform 0.1s,box-shadow 0.1s;
-  }
-  .start-btn::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:50%;
-    background:linear-gradient(180deg,rgba(255,255,255,0.1) 0%,transparent 100%);
-  }
-  .start-btn:active {
-    transform:scale(0.97);
-    box-shadow:0 2px 8px rgba(139,32,32,0.4),0 0 0 1px rgba(201,162,39,0.2);
-  }
-
-  .title-footer {
-    font-size:10px;
-    color:rgba(200,170,120,0.35);
-    letter-spacing:2px;
-    margin-top:14px;
-  }
-
-  /* ===== GAME SCREEN ===== */
-  #game-screen { padding:0; overflow:hidden; }
-
-  #game-header {
-    width:100%;
-    background:var(--red);
-    padding:8px 12px;
-    display:flex; align-items:center; justify-content:space-between;
-    box-shadow:0 2px 8px rgba(0,0,0,0.4);
-    flex-shrink:0;
-    position:relative; z-index:10;
-  }
-
-  #game-header .title {
-    font-family:'Zen Kurenaido',serif;
-    color:var(--gold-light);
-    font-size:15px;
-    letter-spacing:1px;
-  }
-
-  #item-tray {
-    display:flex; gap:4px; align-items:center; flex-wrap:wrap;
-    max-width:60%;
-    justify-content:flex-end;
-  }
-
-  .tray-slot {
-    width:30px; height:30px;
-    background:rgba(0,0,0,0.25);
-    border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:16px;
-    border:1.5px solid rgba(255,255,255,0.2);
-    transition:all 0.3s;
-  }
-
-  .tray-slot.filled {
-    background:rgba(201,162,39,0.25);
-    border-color:var(--gold);
-    animation:slot-fill 0.4s ease;
-  }
-
-  @keyframes slot-fill {
-    0%  { transform:scale(0.5); opacity:0; }
-    60% { transform:scale(1.15); }
-    100%{ transform:scale(1); opacity:1; }
-  }
-
-  #maze-container {
-    flex:1; width:100%;
-    position:relative; overflow:hidden;
-    background:var(--cream-dark);
-  }
-
-  #maze-canvas {
-    position:absolute;
-    image-rendering:pixelated;
-    cursor:none;
-  }
-
-  #item-popup {
-    position:fixed;
-    left:50%; transform:translateX(-50%);
-    top:20%;
-    background:var(--cream);
-    border:3px solid var(--gold);
-    border-radius:12px;
-    padding:16px 24px;
-    text-align:center;
-    z-index:100;
-    box-shadow:0 8px 30px rgba(0,0,0,0.5);
-    display:none;
-    pointer-events:none;
-    min-width:160px;
-  }
-
-  #item-popup.show {
-    display:block;
-    animation:popup-bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
-  }
-
-  @keyframes popup-bounce {
-    0%  { transform:translateX(-50%) scale(0.3); opacity:0; }
-    60% { transform:translateX(-50%) scale(1.1); }
-    100%{ transform:translateX(-50%) scale(1); opacity:1; }
-  }
-
-  #popup-emoji { font-size:40px; display:block; margin-bottom:6px; }
-  #popup-name  { font-size:16px; font-weight:bold; color:var(--brown); }
-  #popup-sub   { font-size:11px; color:var(--brown-mid); margin-top:3px; }
+  #item-popup{position:fixed;left:50%;transform:translateX(-50%);top:18%;
+    background:var(--cream);border:3px solid var(--gold);border-radius:12px;
+    padding:14px 22px;text-align:center;z-index:100;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);display:none;pointer-events:none;min-width:160px;}
+  #item-popup.show{display:block;animation:popup-bounce .5s cubic-bezier(.175,.885,.32,1.275);}
+  @keyframes popup-bounce{0%{transform:translateX(-50%) scale(.3);opacity:0}
+    60%{transform:translateX(-50%) scale(1.1)}100%{transform:translateX(-50%) scale(1);opacity:1}}
+  #popup-emoji{font-size:38px;display:block;margin-bottom:5px;}
+  #popup-name{font-size:15px;font-weight:bold;color:var(--brown);}
+  #popup-sub{font-size:11px;color:var(--brown-mid);margin-top:3px;}
 
   /* D-PAD */
-  #dpad {
-    position:absolute;
-    bottom:20px; left:20px;
-    width:120px; height:120px;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    grid-template-rows:repeat(3,1fr);
-    gap:3px;
-    z-index:20;
-  }
+  #dpad{position:absolute;bottom:20px;left:16px;width:114px;height:114px;
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+    gap:3px;z-index:20;}
+  .dpad-btn{background:rgba(30,12,4,.78);border:1.5px solid rgba(255,255,255,.18);
+    border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;
+    cursor:pointer;backdrop-filter:blur(4px);transition:background .1s,transform .1s;}
+  .dpad-btn:active,.dpad-btn.pressed{background:rgba(139,32,32,.85);transform:scale(.93);}
+  .dpad-center{background:rgba(201,162,39,.2);border-color:rgba(201,162,39,.3);}
+  #item-count{position:absolute;bottom:22px;right:14px;background:var(--cream);
+    border-radius:10px;padding:7px 11px;text-align:center;
+    border:2px solid var(--brown-light);box-shadow:0 2px 8px rgba(0,0,0,.3);
+    z-index:20;font-size:11px;color:var(--brown);}
+  #item-count strong{font-size:17px;color:var(--red);display:block;}
 
-  .dpad-btn {
-    background:rgba(61,31,13,0.7);
-    border:1.5px solid rgba(255,255,255,0.15);
-    border-radius:6px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px;
-    cursor:pointer;
-    backdrop-filter:blur(4px);
-    transition:background 0.1s,transform 0.1s;
-  }
+  /* ─── GOAL SCREEN ─── */
+  #goal-screen{padding:16px;overflow-y:auto;}
+  .order-paper{background:#FFFDF0;width:min(360px,93vw);border-radius:2px;
+    box-shadow:0 6px 30px rgba(0,0,0,.5),3px 3px 0 rgba(0,0,0,.1);
+    position:relative;overflow:hidden;max-height:96vh;overflow-y:auto;}
+  .order-paper::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;
+    background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 10px,var(--cream) 10px,var(--cream) 20px);}
+  .order-header{padding:18px 18px 12px;border-bottom:2px solid rgba(107,58,31,.2);text-align:center;}
+  .order-shop{font-size:10px;letter-spacing:3px;color:var(--brown-mid);text-transform:uppercase;}
+  .order-title{font-family:'Zen Kurenaido',serif;font-size:21px;color:var(--red);margin:6px 0 4px;}
+  .order-body{padding:14px 18px;}
+  .collected-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0;}
+  .collected-item{text-align:center;background:var(--cream);border:1px solid rgba(107,58,31,.2);
+    border-radius:8px;padding:7px 3px;font-size:22px;}
+  .collected-item .cname{font-size:9px;color:var(--brown-mid);display:block;margin-top:3px;line-height:1.3;}
+  .order-question{background:rgba(139,32,32,.08);border-left:4px solid var(--red);
+    padding:11px 13px;border-radius:0 6px 6px 0;margin:14px 0;
+    font-size:13px;color:var(--brown);line-height:1.7;}
+  .answer-area{margin:14px 0;}
+  .answer-label{font-size:12px;color:var(--brown-mid);margin-bottom:8px;letter-spacing:1px;}
+  .answer-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 
-  .dpad-btn:active,.dpad-btn.pressed {
-    background:rgba(139,32,32,0.8);
-    transform:scale(0.93);
-  }
+  /* ★ タッチ操作修正：pointer-events確保 */
+  .choice-btn{
+    background:var(--cream);border:2px solid rgba(107,58,31,.25);border-radius:8px;
+    padding:12px 6px;
+    font-family:'Kosugi Maru',sans-serif;font-size:13px;color:var(--brown);
+    cursor:pointer;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    -webkit-tap-highlight-color:rgba(139,32,32,.2);
+    touch-action:manipulation;
+    pointer-events:auto;
+    position:relative;z-index:1;
+    transition:transform .15s,background .15s;}
+  .choice-btn:active{transform:scale(.95);background:var(--cream-dark);}
+  .choice-btn .dish-img{font-size:28px;line-height:1;display:block;}
+  .choice-btn .dish-label{font-size:12px;margin-top:2px;}
+  .choice-btn.correct{background:#E8F5E9;border-color:var(--green);color:var(--green);}
+  .choice-btn.wrong{background:#FFEBEE;border-color:var(--red);color:var(--red);animation:shake .4s;}
+  .choice-btn.disabled{opacity:.4;pointer-events:none;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
-  .dpad-center {
-    background:rgba(201,162,39,0.2);
-    border-color:rgba(201,162,39,0.3);
-  }
+  /* ─── RESULT ─── */
+  #result-screen{padding:20px;}
+  .result-card{background:var(--cream);border-radius:4px;width:min(360px,92vw);
+    text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.6);overflow:hidden;position:relative;}
+  .result-card::before{content:'';position:absolute;inset:6px;
+    border:1.5px solid rgba(107,58,31,.2);border-radius:2px;pointer-events:none;z-index:1;}
+  .result-header-correct{background:var(--red);padding:20px;position:relative;overflow:hidden;}
+  .result-header-correct::before{content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.04) 8px,rgba(255,255,255,.04) 16px);}
+  .result-header-wrong{background:var(--brown-mid);padding:20px;}
+  .result-label{font-family:'Zen Kurenaido',serif;font-size:28px;color:var(--gold-light);
+    text-shadow:0 2px 8px rgba(0,0,0,.4);position:relative;}
+  .result-sub{font-size:12px;color:rgba(255,230,180,.8);letter-spacing:2px;margin-top:4px;position:relative;}
+  .result-dish{padding:22px 20px;background:linear-gradient(180deg,rgba(245,237,214,.5) 0%,transparent 100%);}
+  .dish-emoji{font-size:72px;display:block;animation:dish-appear .6s .2s both cubic-bezier(.175,.885,.32,1.275);}
+  @keyframes dish-appear{0%{transform:scale(0) rotate(-10deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+  .dish-name{font-family:'Zen Kurenaido',serif;font-size:26px;color:var(--brown);margin:8px 0 4px;}
+  .dish-desc{font-size:12px;color:var(--brown-mid);line-height:1.8;}
+  .sparkles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .sparkle{position:absolute;font-size:16px;animation:sparkle-fly 2s infinite;opacity:0;}
+  @keyframes sparkle-fly{0%{opacity:0;transform:translateY(0) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translateY(-60px) scale(1.2)}}
+  .result-body{padding:14px 20px 22px;}
+  .replay-btn{display:block;width:100%;background:var(--red);color:var(--gold-light);
+    border:none;border-radius:4px;padding:14px;
+    font-family:'Zen Kurenaido',serif;font-size:17px;letter-spacing:2px;
+    cursor:pointer;margin-top:14px;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:transform .1s;}
+  .replay-btn:active{transform:scale(.97);}
 
-  #item-count {
-    position:absolute;
-    bottom:25px; right:16px;
-    background:var(--cream);
-    border-radius:10px;
-    padding:8px 12px;
-    text-align:center;
-    border:2px solid var(--brown-light);
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
-    z-index:20;
-    font-size:11px;
-    color:var(--brown);
-  }
+  #goal-overlay{position:fixed;inset:0;
+    background:radial-gradient(circle,rgba(201,162,39,.2) 0%,transparent 70%);
+    pointer-events:none;z-index:50;display:none;}
+  #goal-overlay.show{display:block;animation:overlay-flash 1s ease-out;}
+  @keyframes overlay-flash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
 
-  #item-count strong { font-size:18px; color:var(--red); display:block; }
-
-  /* ===== GOAL SCREEN ===== */
-  #goal-screen { padding:20px; }
-
-  .order-paper {
-    background:#FFFDF0;
-    width:min(360px,92vw);
-    border-radius:2px;
-    box-shadow:0 6px 30px rgba(0,0,0,0.5),3px 3px 0 rgba(0,0,0,0.1);
-    position:relative;
-    overflow:hidden;
-    max-height:96vh;
-    overflow-y:auto;
-  }
-
-  .order-paper::before {
-    content:'';
-    position:absolute; top:0; left:0; right:0; height:6px;
-    background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 10px,var(--cream) 10px,var(--cream) 20px);
-  }
-
-  .order-header {
-    padding:20px 20px 14px;
-    border-bottom:2px solid rgba(107,58,31,0.2);
-    text-align:center;
-  }
-
-  .order-shop  { font-size:10px; letter-spacing:3px; color:var(--brown-mid); text-transform:uppercase; }
-  .order-title { font-family:'Zen Kurenaido',serif; font-size:22px; color:var(--red); margin:6px 0 4px; }
-
-  .order-body { padding:16px 20px; }
-
-  .collected-grid {
-    display:grid; grid-template-columns:repeat(4,1fr);
-    gap:8px; margin:16px 0;
-  }
-
-  .collected-item {
-    text-align:center;
-    background:var(--cream);
-    border:1px solid rgba(107,58,31,0.2);
-    border-radius:8px;
-    padding:8px 4px;
-    font-size:24px;
-  }
-
-  .collected-item .cname {
-    font-size:9px; color:var(--brown-mid);
-    display:block; margin-top:3px; line-height:1.3;
-  }
-
-  .order-question {
-    background:rgba(139,32,32,0.08);
-    border-left:4px solid var(--red);
-    padding:12px 14px;
-    border-radius:0 6px 6px 0;
-    margin:16px 0;
-    font-size:14px; color:var(--brown); line-height:1.7;
-  }
-
-  .answer-area { margin:16px 0; }
-  .answer-label { font-size:12px; color:var(--brown-mid); margin-bottom:8px; letter-spacing:1px; }
-
-  .answer-choices {
-    display:grid; grid-template-columns:1fr 1fr;
-    gap:8px;
-  }
-
-  .choice-btn {
-    background:var(--cream);
-    border:2px solid rgba(107,58,31,0.25);
-    border-radius:8px;
-    padding:12px 8px;
-    font-family:'Kosugi Maru',sans-serif;
-    font-size:14px;
-    color:var(--brown);
-    cursor:pointer;
-    text-align:center;
-    transition:all 0.2s;
-    display:flex; flex-direction:column;
-    align-items:center; gap:4px;
-  }
-
-  .choice-btn:active { transform:scale(0.96); }
-  .choice-btn span { font-size:24px; }
-  .choice-btn.correct { background:#E8F5E9; border-color:var(--green); color:var(--green); }
-  .choice-btn.wrong   { background:#FFEBEE; border-color:var(--red); color:var(--red); animation:shake 0.4s; }
-  .choice-btn.disabled{ opacity:0.4; pointer-events:none; }
-
-  @keyframes shake {
-    0%,100%{ transform:translateX(0); }
-    20%    { transform:translateX(-6px); }
-    40%    { transform:translateX(6px); }
-    60%    { transform:translateX(-4px); }
-    80%    { transform:translateX(4px); }
-  }
-
-  /* ===== RESULT SCREEN ===== */
-  #result-screen { padding:20px; }
-
-  .result-card {
-    background:var(--cream);
-    border-radius:4px;
-    width:min(360px,92vw);
-    text-align:center;
-    box-shadow:0 8px 40px rgba(0,0,0,0.6);
-    overflow:hidden;
-    position:relative;
-  }
-
-  .result-card::before {
-    content:'';
-    position:absolute; inset:6px;
-    border:1.5px solid rgba(107,58,31,0.2);
-    border-radius:2px;
-    pointer-events:none; z-index:1;
-  }
-
-  .result-header-correct {
-    background:var(--red);
-    padding:20px; position:relative; overflow:hidden;
-  }
-
-  .result-header-correct::before {
-    content:''; position:absolute; inset:0;
-    background:repeating-linear-gradient(
-      -45deg,transparent,transparent 8px,
-      rgba(255,255,255,0.04) 8px,rgba(255,255,255,0.04) 16px
-    );
-  }
-
-  .result-header-wrong { background:var(--brown-mid); padding:20px; }
-
-  .result-label {
-    font-family:'Zen Kurenaido',serif;
-    font-size:28px; color:var(--gold-light);
-    text-shadow:0 2px 8px rgba(0,0,0,0.4);
-    position:relative;
-  }
-
-  .result-sub {
-    font-size:12px; color:rgba(255,230,180,0.8);
-    letter-spacing:2px; margin-top:4px; position:relative;
-  }
-
-  .result-dish {
-    padding:24px 20px;
-    background:linear-gradient(180deg,rgba(245,237,214,0.5) 0%,transparent 100%);
-  }
-
-  .dish-emoji {
-    font-size:72px; display:block;
-    animation:dish-appear 0.6s 0.2s both cubic-bezier(0.175,0.885,0.32,1.275);
-  }
-
-  @keyframes dish-appear {
-    0%  { transform:scale(0) rotate(-10deg); opacity:0; }
-    100%{ transform:scale(1) rotate(0); opacity:1; }
-  }
-
-  .dish-name { font-family:'Zen Kurenaido',serif; font-size:26px; color:var(--brown); margin:8px 0 4px; }
-  .dish-desc { font-size:12px; color:var(--brown-mid); line-height:1.8; }
-
-  .sparkles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-
-  .sparkle {
-    position:absolute; font-size:16px;
-    animation:sparkle-fly 2s infinite;
-    opacity:0;
-  }
-
-  @keyframes sparkle-fly {
-    0%  { opacity:0; transform:translateY(0) scale(0.5); }
-    30% { opacity:1; }
-    100%{ opacity:0; transform:translateY(-60px) scale(1.2); }
-  }
-
-  .result-body { padding:16px 20px 24px; }
-
-  .replay-btn {
-    display:block; width:100%;
-    background:var(--red); color:var(--gold-light);
-    border:none; border-radius:4px;
-    padding:14px;
-    font-family:'Zen Kurenaido',serif;
-    font-size:17px; letter-spacing:2px;
-    cursor:pointer; margin-top:16px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.25);
-    transition:transform 0.1s;
-  }
-  .replay-btn:active { transform:scale(0.97); }
-
-  /* Goal overlay */
-  #goal-overlay {
-    position:fixed; inset:0;
-    background:radial-gradient(circle,rgba(201,162,39,0.15) 0%,transparent 70%);
-    pointer-events:none; z-index:50; display:none;
-  }
-  #goal-overlay.show { display:block; animation:overlay-flash 0.8s ease-out; }
-  @keyframes overlay-flash {
-    0%  { opacity:0; }
-    30% { opacity:1; }
-    100%{ opacity:0; }
-  }
-
-  /* Loading */
-  #loading {
-    position:fixed; inset:0;
-    background:var(--brown); z-index:200;
-    display:flex; align-items:center; justify-content:center;
-    flex-direction:column; gap:12px;
-  }
-  #loading .logo { font-family:'Zen Kurenaido',serif; color:var(--gold); font-size:20px; letter-spacing:2px; }
-  .loading-dots { display:flex; gap:8px; }
-  .loading-dot {
-    width:8px; height:8px; background:var(--gold); border-radius:50%;
-    animation:dot-bounce 0.8s ease-in-out infinite;
-  }
-  .loading-dot:nth-child(2) { animation-delay:0.15s; }
-  .loading-dot:nth-child(3) { animation-delay:0.3s; }
-  @keyframes dot-bounce {
-    0%,100%{ transform:translateY(0); opacity:0.4; }
-    50%    { transform:translateY(-8px); opacity:1; }
-  }
+  #loading{position:fixed;inset:0;background:var(--brown);z-index:200;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+  #loading .logo{font-family:'Zen Kurenaido',serif;color:var(--gold);font-size:20px;letter-spacing:2px;}
+  .loading-dots{display:flex;gap:8px;}
+  .loading-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:dot-bounce .8s ease-in-out infinite;}
+  .loading-dot:nth-child(2){animation-delay:.15s;}
+  .loading-dot:nth-child(3){animation-delay:.3s;}
+  @keyframes dot-bounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-8px);opacity:1}}
 </style>
 </head>
 <body>
-
 <div id="loading">
   <div class="logo">🌙 準備中...</div>
   <div class="loading-dots">
-    <div class="loading-dot"></div>
-    <div class="loading-dot"></div>
-    <div class="loading-dot"></div>
+    <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
   </div>
 </div>
 
 <div id="app">
 
-  <!-- ================== TITLE SCREEN ================== -->
+  <!-- ====== TITLE ====== -->
   <div id="title-screen" class="screen">
-
-    <!-- レストラン外観SVGイラスト -->
     <div id="restaurant-scene">
       <svg id="restaurant-svg" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- 煉瓦テクスチャ用パターン -->
           <pattern id="brick" x="0" y="0" width="24" height="12" patternUnits="userSpaceOnUse">
-            <rect width="24" height="12" fill="#5a2e18"/>
-            <rect x="1" y="1" width="21" height="9" fill="#6b3620" rx="1"/>
-            <rect x="12" y="7" width="11" height="4" fill="transparent" stroke="#4a2010" stroke-width="0.5"/>
+            <rect width="24" height="12" fill="#5a2e18"/><rect x="1" y="1" width="21" height="9" fill="#6b3620" rx="1"/>
           </pattern>
-          <!-- 木目パターン -->
           <pattern id="wood" x="0" y="0" width="20" height="80" patternUnits="userSpaceOnUse">
             <rect width="20" height="80" fill="#4a2510"/>
-            <line x1="3"  y1="0" x2="3"  y2="80" stroke="#3a1a08" stroke-width="0.8" opacity="0.6"/>
-            <line x1="10" y1="0" x2="10" y2="80" stroke="#3a1a08" stroke-width="0.5" opacity="0.4"/>
-            <line x1="16" y1="0" x2="16" y2="80" stroke="#3a1a08" stroke-width="0.8" opacity="0.6"/>
+            <line x1="3" y1="0" x2="3" y2="80" stroke="#3a1a08" stroke-width=".8" opacity=".6"/>
+            <line x1="10" y1="0" x2="10" y2="80" stroke="#3a1a08" stroke-width=".5" opacity=".4"/>
+            <line x1="16" y1="0" x2="16" y2="80" stroke="#3a1a08" stroke-width=".8" opacity=".6"/>
           </pattern>
-          <!-- 窓の光グラデ -->
           <radialGradient id="winGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#FFE4A0" stop-opacity="0.9"/>
-            <stop offset="60%"  stop-color="#FFC86E" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#FF9030" stop-opacity="0.2"/>
+            <stop offset="0%" stop-color="#FFE4A0" stop-opacity=".9"/>
+            <stop offset="60%" stop-color="#FFC86E" stop-opacity=".7"/>
+            <stop offset="100%" stop-color="#FF9030" stop-opacity=".2"/>
           </radialGradient>
-          <!-- ランタン光 -->
           <radialGradient id="lantGlow" cx="50%" cy="70%" r="50%">
-            <stop offset="0%"   stop-color="#FFDD88" stop-opacity="1"/>
+            <stop offset="0%" stop-color="#FFDD88" stop-opacity="1"/>
             <stop offset="100%" stop-color="#FF8800" stop-opacity="0"/>
           </radialGradient>
-          <!-- 地面グラデ -->
           <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="#1a0e06"/>
-            <stop offset="100%" stop-color="#0a0603"/>
+            <stop offset="0%" stop-color="#1a0e06"/><stop offset="100%" stop-color="#0a0603"/>
           </linearGradient>
-          <!-- 看板グロー -->
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="softglow">
-            <feGaussianBlur stdDeviation="5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
-
-        <!-- 空（グラデーション背景） -->
         <rect width="400" height="320" fill="url(#groundGrad)"/>
-
-        <!-- 地面・歩道 -->
         <rect x="0" y="272" width="400" height="48" fill="#1a0e07"/>
-        <!-- 歩道タイル -->
         <rect x="0" y="272" width="400" height="12" fill="#22120a"/>
         <line x1="0" y1="278" x2="400" y2="278" stroke="#2e1810" stroke-width="1.5"/>
-        <!-- タイル目地 -->
-        <line x1="40"  y1="272" x2="40"  y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="80"  y1="272" x2="80"  y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="120" y1="272" x2="120" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="160" y1="272" x2="160" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="200" y1="272" x2="200" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="240" y1="272" x2="240" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="280" y1="272" x2="280" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="320" y1="272" x2="320" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="360" y1="272" x2="360" y2="284" stroke="#1a0e07" stroke-width="1"/>
-        <!-- 地面の光沢 -->
-        <ellipse cx="200" cy="275" rx="100" ry="4" fill="rgba(255,180,60,0.07)"/>
-
-        <!-- ===== 建物本体 ===== -->
-        <!-- 建物基礎（石畳台座） -->
+        <ellipse cx="200" cy="275" rx="100" ry="4" fill="rgba(255,180,60,.07)"/>
         <rect x="40" y="258" width="320" height="18" fill="#2e1a0e" rx="2"/>
         <rect x="44" y="260" width="312" height="14" fill="#3a2010" rx="1"/>
-
-        <!-- 外壁（煉瓦） -->
         <rect x="48" y="80" width="304" height="182" fill="url(#brick)"/>
-
-        <!-- 外壁上部モールディング -->
         <rect x="42" y="74" width="316" height="10" fill="#3a1f10" rx="1"/>
-        <rect x="44" y="74" width="312" height="7"  fill="#4a2818" rx="1"/>
-
-        <!-- ===== 屋根 ===== -->
-        <!-- 破風・切妻屋根 -->
+        <rect x="44" y="74" width="312" height="7" fill="#4a2818" rx="1"/>
         <polygon points="30,80 200,22 370,80" fill="#2a1206"/>
-        <!-- 屋根瓦 -->
         <polygon points="36,80 200,26 364,80" fill="#3a1a08"/>
-        <!-- 瓦の横ライン -->
-        <line x1="60"  y1="72" x2="340" y2="72" stroke="#2a1206" stroke-width="2" opacity="0.6"/>
-        <line x1="80"  y1="62" x2="320" y2="62" stroke="#2a1206" stroke-width="2" opacity="0.5"/>
-        <line x1="106" y1="50" x2="294" y2="50" stroke="#2a1206" stroke-width="2" opacity="0.4"/>
-        <line x1="136" y1="40" x2="264" y2="40" stroke="#2a1206" stroke-width="2" opacity="0.3"/>
-        <!-- 棟（ridge） -->
-        <line x1="200" y1="22" x2="200" y2="80" stroke="#1a0e06" stroke-width="3" opacity="0.3"/>
-        <!-- 棟飾り -->
+        <line x1="60" y1="72" x2="340" y2="72" stroke="#2a1206" stroke-width="2" opacity=".6"/>
+        <line x1="80" y1="62" x2="320" y2="62" stroke="#2a1206" stroke-width="2" opacity=".5"/>
+        <line x1="106" y1="50" x2="294" y2="50" stroke="#2a1206" stroke-width="2" opacity=".4"/>
         <polygon points="196,22 200,14 204,22" fill="#4a2818"/>
-        <circle cx="200" cy="13" r="4" fill="#6b3620"/>
-        <circle cx="200" cy="13" r="2.5" fill="#8B5030"/>
-
-        <!-- 煙突 -->
+        <circle cx="200" cy="13" r="4" fill="#6b3620"/><circle cx="200" cy="13" r="2.5" fill="#8B5030"/>
         <rect x="148" y="24" width="16" height="40" fill="#3a1f0e" rx="1"/>
-        <rect x="145" y="22" width="22" height="6"  fill="#2a1208" rx="2"/>
-        <!-- 煙 -->
-        <g class="smoke1"><ellipse cx="156" cy="20" rx="4" ry="5" fill="rgba(200,160,120,0.25)"/></g>
-        <g class="smoke2"><ellipse cx="152" cy="16" rx="3" ry="4" fill="rgba(200,160,120,0.18)"/></g>
-        <g class="smoke3"><ellipse cx="158" cy="13" rx="3.5" ry="5" fill="rgba(200,160,120,0.15)"/></g>
-
-        <!-- ===== ひさし（Awning） ===== -->
-        <!-- ひさし本体 -->
+        <rect x="145" y="22" width="22" height="6" fill="#2a1208" rx="2"/>
+        <g class="smoke1"><ellipse cx="156" cy="20" rx="4" ry="5" fill="rgba(200,160,120,.25)"/></g>
+        <g class="smoke2"><ellipse cx="152" cy="16" rx="3" ry="4" fill="rgba(200,160,120,.18)"/></g>
+        <g class="smoke3"><ellipse cx="158" cy="13" rx="3.5" ry="5" fill="rgba(200,160,120,.15)"/></g>
         <path d="M52,120 Q200,106 348,120 L348,140 Q200,126 52,140 Z" fill="#8B2020"/>
-        <!-- ひさしの縞 -->
-        <path d="M52,120 Q116,111 180,113 L180,133 Q116,131 52,140 Z" fill="#A83030" opacity="0.6"/>
-        <path d="M220,113 Q284,111 348,120 L348,140 Q284,131 220,133 Z" fill="#A83030" opacity="0.6"/>
-        <!-- ひさしの縁 -->
+        <path d="M52,120 Q116,111 180,113 L180,133 Q116,131 52,140 Z" fill="#A83030" opacity=".6"/>
+        <path d="M220,113 Q284,111 348,120 L348,140 Q284,131 220,133 Z" fill="#A83030" opacity=".6"/>
         <path d="M52,140 Q200,126 348,140" stroke="#6b1a1a" stroke-width="2" fill="none"/>
-        <!-- フリンジ装飾 -->
-        <g fill="#6b1a1a" opacity="0.8">
-          <path d="M60,140 L58,150 L65,140"/>
-          <path d="M80,139 L78,149 L85,139"/>
-          <path d="M100,138 L98,148 L105,138"/>
-          <path d="M120,137 L118,147 L125,137"/>
-          <path d="M140,136 L138,146 L145,136"/>
-          <path d="M160,136 L158,146 L165,136"/>
-          <path d="M180,136 L178,146 L185,136"/>
-          <path d="M200,136 L198,146 L205,136"/>
-          <path d="M220,136 L218,146 L225,136"/>
-          <path d="M240,136 L238,146 L245,136"/>
-          <path d="M260,136 L258,146 L265,136"/>
-          <path d="M280,137 L278,147 L285,137"/>
-          <path d="M300,138 L298,148 L305,138"/>
-          <path d="M320,139 L318,149 L325,139"/>
+        <g fill="#6b1a1a" opacity=".8">
+          <path d="M60,140 L58,150 L65,140"/><path d="M80,139 L78,149 L85,139"/>
+          <path d="M100,138 L98,148 L105,138"/><path d="M120,137 L118,147 L125,137"/>
+          <path d="M140,136 L138,146 L145,136"/><path d="M160,136 L158,146 L165,136"/>
+          <path d="M180,136 L178,146 L185,136"/><path d="M200,136 L198,146 L205,136"/>
+          <path d="M220,136 L218,146 L225,136"/><path d="M240,136 L238,146 L245,136"/>
+          <path d="M260,136 L258,146 L265,136"/><path d="M280,137 L278,147 L285,137"/>
+          <path d="M300,138 L298,148 L305,138"/><path d="M320,139 L318,149 L325,139"/>
           <path d="M340,140 L338,150 L345,140"/>
         </g>
-
-        <!-- ===== 窓（左） ===== -->
-        <!-- 窓枠外側 -->
         <rect x="66" y="150" width="78" height="68" fill="#2a1208" rx="3"/>
-        <!-- 窓枠内側 -->
         <rect x="70" y="154" width="70" height="60" fill="#1e0e06" rx="2"/>
-        <!-- 窓の光 -->
         <rect x="72" y="156" width="66" height="56" fill="url(#winGlow)" rx="1" class="win-glow"/>
-        <!-- カーテン -->
-        <path d="M72,156 Q82,178 76,212 L86,212 Q90,178 84,156 Z" fill="rgba(180,60,30,0.45)"/>
-        <path d="M138,156 Q128,178 134,212 L124,212 Q120,178 126,156 Z" fill="rgba(180,60,30,0.45)"/>
-        <!-- 窓格子 -->
-        <line x1="105" y1="156" x2="105" y2="212" stroke="rgba(60,30,10,0.4)" stroke-width="1.5"/>
-        <line x1="72"  y1="184" x2="138" y2="184" stroke="rgba(60,30,10,0.4)" stroke-width="1.5"/>
-        <!-- 窓台 -->
+        <path d="M72,156 Q82,178 76,212 L86,212 Q90,178 84,156 Z" fill="rgba(180,60,30,.45)"/>
+        <path d="M138,156 Q128,178 134,212 L124,212 Q120,178 126,156 Z" fill="rgba(180,60,30,.45)"/>
+        <line x1="105" y1="156" x2="105" y2="212" stroke="rgba(60,30,10,.4)" stroke-width="1.5"/>
+        <line x1="72" y1="184" x2="138" y2="184" stroke="rgba(60,30,10,.4)" stroke-width="1.5"/>
         <rect x="64" y="218" width="82" height="6" fill="#2a1208" rx="1"/>
-        <!-- 植木 -->
-        <rect x="90" y="218" width="8" height="8" fill="#4a2810"/>
         <ellipse cx="94" cy="218" rx="9" ry="7" fill="#1e4010"/>
         <ellipse cx="90" cy="215" rx="5" ry="5" fill="#2e5a1a"/>
         <ellipse cx="98" cy="216" rx="4" ry="4" fill="#265014"/>
-
-        <!-- ===== 窓（右） ===== -->
         <rect x="258" y="150" width="78" height="68" fill="#2a1208" rx="3"/>
         <rect x="262" y="154" width="70" height="60" fill="#1e0e06" rx="2"/>
         <rect x="264" y="156" width="66" height="56" fill="url(#winGlow)" rx="1" class="win-glow"/>
-        <path d="M264,156 Q274,178 268,212 L278,212 Q282,178 276,156 Z" fill="rgba(180,60,30,0.45)"/>
-        <path d="M330,156 Q320,178 326,212 L316,212 Q312,178 318,156 Z" fill="rgba(180,60,30,0.45)"/>
-        <line x1="297" y1="156" x2="297" y2="212" stroke="rgba(60,30,10,0.4)" stroke-width="1.5"/>
-        <line x1="264" y1="184" x2="330" y2="184" stroke="rgba(60,30,10,0.4)" stroke-width="1.5"/>
+        <path d="M264,156 Q274,178 268,212 L278,212 Q282,178 276,156 Z" fill="rgba(180,60,30,.45)"/>
+        <path d="M330,156 Q320,178 326,212 L316,212 Q312,178 318,156 Z" fill="rgba(180,60,30,.45)"/>
+        <line x1="297" y1="156" x2="297" y2="212" stroke="rgba(60,30,10,.4)" stroke-width="1.5"/>
+        <line x1="264" y1="184" x2="330" y2="184" stroke="rgba(60,30,10,.4)" stroke-width="1.5"/>
         <rect x="256" y="218" width="82" height="6" fill="#2a1208" rx="1"/>
-        <!-- 植木 -->
-        <rect x="282" y="218" width="8" height="8" fill="#4a2810"/>
         <ellipse cx="286" cy="218" rx="9" ry="7" fill="#1e4010"/>
         <ellipse cx="282" cy="215" rx="5" ry="5" fill="#2e5a1a"/>
         <ellipse cx="290" cy="216" rx="4" ry="4" fill="#265014"/>
-
-        <!-- ===== 中央入り口 ===== -->
-        <!-- ドア枠 -->
         <rect x="158" y="170" width="86" height="106" fill="#2a1208" rx="3"/>
-        <!-- ドア -->
         <rect x="162" y="174" width="38" height="98" fill="url(#wood)" rx="2"/>
         <rect x="202" y="174" width="38" height="98" fill="url(#wood)" rx="2"/>
-        <!-- ドアパネル装飾（左） -->
-        <rect x="165" y="178" width="32" height="44" fill="rgba(0,0,0,0.2)" rx="2"/>
-        <rect x="167" y="180" width="28" height="40" fill="rgba(80,40,10,0.3)" rx="1"/>
-        <rect x="165" y="228" width="32" height="38" fill="rgba(0,0,0,0.2)" rx="2"/>
-        <rect x="167" y="230" width="28" height="34" fill="rgba(80,40,10,0.3)" rx="1"/>
-        <!-- ドアパネル装飾（右） -->
-        <rect x="205" y="178" width="32" height="44" fill="rgba(0,0,0,0.2)" rx="2"/>
-        <rect x="207" y="180" width="28" height="40" fill="rgba(80,40,10,0.3)" rx="1"/>
-        <rect x="205" y="228" width="32" height="38" fill="rgba(0,0,0,0.2)" rx="2"/>
-        <rect x="207" y="230" width="28" height="34" fill="rgba(80,40,10,0.3)" rx="1"/>
-        <!-- ドアの中央縫い目 -->
+        <rect x="165" y="178" width="32" height="44" fill="rgba(0,0,0,.2)" rx="2"/>
+        <rect x="167" y="180" width="28" height="40" fill="rgba(80,40,10,.3)" rx="1"/>
+        <rect x="165" y="228" width="32" height="38" fill="rgba(0,0,0,.2)" rx="2"/>
+        <rect x="167" y="230" width="28" height="34" fill="rgba(80,40,10,.3)" rx="1"/>
+        <rect x="205" y="178" width="32" height="44" fill="rgba(0,0,0,.2)" rx="2"/>
+        <rect x="207" y="180" width="28" height="40" fill="rgba(80,40,10,.3)" rx="1"/>
+        <rect x="205" y="228" width="32" height="38" fill="rgba(0,0,0,.2)" rx="2"/>
+        <rect x="207" y="230" width="28" height="34" fill="rgba(80,40,10,.3)" rx="1"/>
         <line x1="200" y1="174" x2="200" y2="272" stroke="#1a0e06" stroke-width="2.5"/>
-        <!-- ドアノブ -->
-        <circle cx="196" cy="226" r="4" fill="#C9A227"/>
-        <circle cx="196" cy="226" r="2.5" fill="#E8C547"/>
-        <circle cx="204" cy="226" r="4" fill="#C9A227"/>
-        <circle cx="204" cy="226" r="2.5" fill="#E8C547"/>
-        <!-- ドア上部の半円アーチ窓 -->
-        <path d="M162,174 Q162,152 200,152 Q238,152 238,174" fill="rgba(0,0,0,0.5)"/>
-        <path d="M165,174 Q165,156 200,156 Q235,156 235,174" fill="rgba(255,200,100,0.12)"/>
-        <!-- アーチ格子 -->
-        <line x1="200" y1="156" x2="200" y2="174" stroke="rgba(60,30,10,0.5)" stroke-width="1.5"/>
-        <path d="M165,168 Q182,154 200,156" stroke="rgba(60,30,10,0.4)" stroke-width="1" fill="none"/>
-        <path d="M235,168 Q218,154 200,156" stroke="rgba(60,30,10,0.4)" stroke-width="1" fill="none"/>
-
-        <!-- ドア入口の光（内部から漏れる光） -->
-        <ellipse cx="200" cy="272" rx="30" ry="5" fill="rgba(255,180,80,0.12)"/>
-
-        <!-- 階段 -->
-        <rect x="148" y="270" width="104" height="6"  fill="#2a1610" rx="1"/>
-        <rect x="152" y="264" width="96"  height="6"  fill="#32180e" rx="1"/>
-        <rect x="156" y="258" width="88"  height="6"  fill="#3a1c10" rx="1"/>
-
-        <!-- ===== 看板 ===== -->
-        <!-- 看板台座 -->
+        <circle cx="196" cy="226" r="4" fill="#C9A227"/><circle cx="196" cy="226" r="2.5" fill="#E8C547"/>
+        <circle cx="204" cy="226" r="4" fill="#C9A227"/><circle cx="204" cy="226" r="2.5" fill="#E8C547"/>
+        <path d="M162,174 Q162,152 200,152 Q238,152 238,174" fill="rgba(0,0,0,.5)"/>
+        <path d="M165,174 Q165,156 200,156 Q235,156 235,174" fill="rgba(255,200,100,.12)"/>
+        <line x1="200" y1="156" x2="200" y2="174" stroke="rgba(60,30,10,.5)" stroke-width="1.5"/>
+        <rect x="148" y="270" width="104" height="6" fill="#2a1610" rx="1"/>
+        <rect x="152" y="264" width="96" height="6" fill="#32180e" rx="1"/>
         <rect x="112" y="86" width="178" height="34" fill="#2a1208" rx="3"/>
-        <!-- 看板本体 -->
         <rect x="114" y="88" width="174" height="30" fill="#1a0804" rx="2"/>
-        <!-- 看板の縁取り（ゴールド） -->
         <rect x="115" y="89" width="172" height="28" fill="none" stroke="#C9A227" stroke-width="1.5" rx="2"/>
-        <!-- 看板テキスト -->
         <g class="sign-neon" filter="url(#glow)">
           <text x="201" y="107" font-family="serif" font-size="14" font-weight="bold"
-                fill="#FFDD88" text-anchor="middle" letter-spacing="2">洋食レストラン</text>
+            fill="#FFDD88" text-anchor="middle" letter-spacing="2">洋食レストラン</text>
         </g>
-        <!-- 看板の星飾り -->
-        <text x="124" y="107" font-size="10" fill="#C9A227" opacity="0.8">✦</text>
-        <text x="270" y="107" font-size="10" fill="#C9A227" opacity="0.8">✦</text>
-
-        <!-- ===== ランタン（左） ===== -->
+        <text x="124" y="107" font-size="10" fill="#C9A227" opacity=".8">✦</text>
+        <text x="270" y="107" font-size="10" fill="#C9A227" opacity=".8">✦</text>
         <g class="lantern-l">
-          <!-- 吊り紐 -->
           <line x1="126" y1="84" x2="126" y2="100" stroke="#5a3010" stroke-width="1.5"/>
-          <!-- ランタン本体 -->
           <rect x="116" y="100" width="20" height="28" fill="#C9A227" rx="3"/>
-          <rect x="118" y="102" width="16" height="24" fill="rgba(255,220,100,0.7)" rx="2"/>
-          <!-- ランタンの光 -->
-          <ellipse cx="126" cy="130" rx="18" ry="12" fill="url(#lantGlow)" opacity="0.7"/>
-          <!-- ランタン枠 -->
+          <rect x="118" y="102" width="16" height="24" fill="rgba(255,220,100,.7)" rx="2"/>
+          <ellipse cx="126" cy="130" rx="18" ry="12" fill="url(#lantGlow)" opacity=".7"/>
           <line x1="116" y1="114" x2="136" y2="114" stroke="#A87820" stroke-width="1"/>
           <line x1="126" y1="100" x2="126" y2="128" stroke="#A87820" stroke-width="1"/>
-          <!-- ランタンキャップ -->
           <polygon points="113,100 139,100 136,95 116,95" fill="#8B6010"/>
           <polygon points="116,128 136,128 133,136 119,136" fill="#8B6010"/>
         </g>
-
-        <!-- ===== ランタン（右） ===== -->
         <g class="lantern-r">
           <line x1="276" y1="84" x2="276" y2="100" stroke="#5a3010" stroke-width="1.5"/>
           <rect x="266" y="100" width="20" height="28" fill="#C9A227" rx="3"/>
-          <rect x="268" y="102" width="16" height="24" fill="rgba(255,220,100,0.7)" rx="2"/>
-          <ellipse cx="276" cy="130" rx="18" ry="12" fill="url(#lantGlow)" opacity="0.7"/>
+          <rect x="268" y="102" width="16" height="24" fill="rgba(255,220,100,.7)" rx="2"/>
+          <ellipse cx="276" cy="130" rx="18" ry="12" fill="url(#lantGlow)" opacity=".7"/>
           <line x1="266" y1="114" x2="286" y2="114" stroke="#A87820" stroke-width="1"/>
           <line x1="276" y1="100" x2="276" y2="128" stroke="#A87820" stroke-width="1"/>
           <polygon points="263,100 289,100 286,95 266,95" fill="#8B6010"/>
           <polygon points="266,128 286,128 283,136 269,136" fill="#8B6010"/>
         </g>
-
-        <!-- ===== 街灯（左端） ===== -->
         <rect x="22" y="148" width="5" height="128" fill="#2a1a0a" rx="2"/>
         <rect x="18" y="258" width="14" height="8" fill="#1a0e06" rx="2"/>
         <path d="M24,148 Q24,132 40,130" fill="none" stroke="#2a1a0a" stroke-width="4" stroke-linecap="round"/>
-        <!-- 街灯の光 -->
-        <circle cx="40" cy="128" r="7" fill="#FFDD88" opacity="0.9"/>
+        <circle cx="40" cy="128" r="7" fill="#FFDD88" opacity=".9"/>
         <circle cx="40" cy="128" r="4" fill="#FFEEAA"/>
-        <ellipse cx="40" cy="138" rx="16" ry="8" fill="rgba(255,220,100,0.15)"/>
-
-        <!-- ===== 街灯（右端） ===== -->
+        <ellipse cx="40" cy="138" rx="16" ry="8" fill="rgba(255,220,100,.15)"/>
         <rect x="374" y="148" width="5" height="128" fill="#2a1a0a" rx="2"/>
         <rect x="370" y="258" width="14" height="8" fill="#1a0e06" rx="2"/>
         <path d="M377,148 Q377,132 361,130" fill="none" stroke="#2a1a0a" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="361" cy="128" r="7" fill="#FFDD88" opacity="0.9"/>
+        <circle cx="361" cy="128" r="7" fill="#FFDD88" opacity=".9"/>
         <circle cx="361" cy="128" r="4" fill="#FFEEAA"/>
-        <ellipse cx="361" cy="138" rx="16" ry="8" fill="rgba(255,220,100,0.15)"/>
-
-        <!-- 地面の光の落ち込み -->
-        <ellipse cx="126" cy="275" rx="14" ry="3" fill="rgba(255,200,80,0.12)"/>
-        <ellipse cx="276" cy="275" rx="14" ry="3" fill="rgba(255,200,80,0.12)"/>
-        <ellipse cx="40"  cy="278" rx="20" ry="4" fill="rgba(255,200,80,0.1)"/>
-        <ellipse cx="361" cy="278" rx="20" ry="4" fill="rgba(255,200,80,0.1)"/>
-
-        <!-- OPEN看板（ドア前） -->
-        <rect x="88" y="220" width="44" height="22" fill="#1a0804" rx="3" transform="rotate(-8,110,231)"/>
-        <rect x="89" y="221" width="42" height="20" fill="none" stroke="#C9A227" stroke-width="1" rx="2" transform="rotate(-8,110,231)"/>
-        <text x="110" y="235" font-family="serif" font-size="10" fill="#FFDD88"
-              text-anchor="middle" transform="rotate(-8,110,231)" class="sign-neon">OPEN</text>
-
-        <!-- 地面の石畳装飾 -->
-        <rect x="0" y="284" width="400" height="36" fill="#120804"/>
-        <!-- 石畳のライン -->
-        <line x1="0" y1="284" x2="400" y2="284" stroke="#1e1008" stroke-width="1.5"/>
-        <line x1="0" y1="296" x2="400" y2="296" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="0" y1="308" x2="400" y2="308" stroke="#1a0e07" stroke-width="1"/>
-        <line x1="50"  y1="284" x2="50"  y2="320" stroke="#160c06" stroke-width="1"/>
-        <line x1="120" y1="284" x2="120" y2="320" stroke="#160c06" stroke-width="1"/>
-        <line x1="190" y1="284" x2="190" y2="320" stroke="#160c06" stroke-width="1"/>
-        <line x1="260" y1="284" x2="260" y2="320" stroke="#160c06" stroke-width="1"/>
-        <line x1="330" y1="284" x2="330" y2="320" stroke="#160c06" stroke-width="1"/>
-
-        <!-- 遠景（隣のビルシルエット） -->
-        <rect x="0"   y="130" width="48"  height="148" fill="#120608" opacity="0.7"/>
-        <rect x="352" y="110" width="48"  height="168" fill="#120608" opacity="0.7"/>
-        <!-- ビルの小窓 -->
-        <rect x="8"  y="140" width="8" height="6" fill="rgba(255,200,100,0.3)" rx="1"/>
-        <rect x="22" y="140" width="8" height="6" fill="rgba(255,200,100,0.15)" rx="1"/>
-        <rect x="8"  y="155" width="8" height="6" fill="rgba(255,200,100,0.2)" rx="1"/>
-        <rect x="22" y="155" width="8" height="6" fill="rgba(255,200,100,0.35)" rx="1"/>
-        <rect x="362" y="120" width="8" height="6" fill="rgba(255,200,100,0.25)" rx="1"/>
-        <rect x="376" y="120" width="8" height="6" fill="rgba(255,200,100,0.15)" rx="1"/>
-        <rect x="362" y="135" width="8" height="6" fill="rgba(255,200,100,0.3)" rx="1"/>
-        <rect x="376" y="135" width="8" height="6" fill="rgba(255,200,100,0.2)" rx="1"/>
-
+        <ellipse cx="361" cy="138" rx="16" ry="8" fill="rgba(255,220,100,.15)"/>
+        <rect x="0" y="130" width="48" height="148" fill="#120608" opacity=".7"/>
+        <rect x="352" y="110" width="48" height="168" fill="#120608" opacity=".7"/>
       </svg>
     </div>
-
-    <!-- タイトルテキスト＆ボタン -->
     <div id="title-bottom">
       <div class="restaurant-label">★ RETRO WESTERN DINER ★</div>
       <div class="game-main-title">なぞの料理をつくろう！</div>
@@ -926,10 +391,9 @@
       <button class="start-btn" onclick="startGame()">ゲームスタート ▶</button>
       <div class="title-footer">タップ or スワイプで移動 · 食材を集めて謎を解こう</div>
     </div>
-
   </div>
 
-  <!-- ================== GAME SCREEN ================== -->
+  <!-- ====== GAME ====== -->
   <div id="game-screen" class="screen">
     <div id="game-header">
       <div class="title">🔍 なぞの料理</div>
@@ -937,21 +401,20 @@
     </div>
     <div id="maze-container">
       <canvas id="maze-canvas"></canvas>
+      <div id="goal-proximity"></div>
+      <div id="collect-progress">食材: 0 / 8</div>
       <div id="dpad">
         <div></div>
-        <div class="dpad-btn" id="btn-up"    ontouchstart="startMove('up')"    ontouchend="stopMove()" onmousedown="startMove('up')"    onmouseup="stopMove()">▲</div>
+        <div class="dpad-btn" ontouchstart="startMove('up')" ontouchend="stopMove()" onmousedown="startMove('up')" onmouseup="stopMove()">▲</div>
         <div></div>
-        <div class="dpad-btn" id="btn-left"  ontouchstart="startMove('left')"  ontouchend="stopMove()" onmousedown="startMove('left')"  onmouseup="stopMove()">◀</div>
+        <div class="dpad-btn" ontouchstart="startMove('left')" ontouchend="stopMove()" onmousedown="startMove('left')" onmouseup="stopMove()">◀</div>
         <div class="dpad-btn dpad-center">✦</div>
-        <div class="dpad-btn" id="btn-right" ontouchstart="startMove('right')" ontouchend="stopMove()" onmousedown="startMove('right')" onmouseup="stopMove()">▶</div>
+        <div class="dpad-btn" ontouchstart="startMove('right')" ontouchend="stopMove()" onmousedown="startMove('right')" onmouseup="stopMove()">▶</div>
         <div></div>
-        <div class="dpad-btn" id="btn-down"  ontouchstart="startMove('down')"  ontouchend="stopMove()" onmousedown="startMove('down')"  onmouseup="stopMove()">▼</div>
+        <div class="dpad-btn" ontouchstart="startMove('down')" ontouchend="stopMove()" onmousedown="startMove('down')" onmouseup="stopMove()">▼</div>
         <div></div>
       </div>
-      <div id="item-count">
-        <strong id="count-num">0</strong>
-        アイテム
-      </div>
+      <div id="item-count"><strong id="count-num">0</strong>アイテム</div>
     </div>
     <div id="item-popup">
       <span id="popup-emoji">🥚</span>
@@ -960,7 +423,7 @@
     </div>
   </div>
 
-  <!-- ================== GOAL SCREEN ================== -->
+  <!-- ====== GOAL ====== -->
   <div id="goal-screen" class="screen">
     <div class="order-paper">
       <div class="order-header">
@@ -968,12 +431,11 @@
         <div class="order-title">🧑‍🍳 謎の料理は何？</div>
       </div>
       <div class="order-body">
-        <div style="font-size:12px;color:var(--brown-mid);margin-bottom:8px;">集めたもの：</div>
+        <div style="font-size:12px;color:var(--brown-mid);margin-bottom:6px;">集めたもの：</div>
         <div class="collected-grid" id="collected-grid"></div>
         <div class="order-question">
-          集めた食材と調理器具を使って<br>
-          作れる料理の名前を答えよう！<br>
-          <span style="font-size:11px;opacity:0.7;">ヒント：昭和洋食屋の定番メニューだよ</span>
+          集めた食材と調理器具を使って<br>作れる料理の名前を答えよう！<br>
+          <span style="font-size:11px;opacity:.7;">ヒント：昭和洋食屋の定番メニューだよ</span>
         </div>
         <div class="answer-area">
           <div class="answer-label">▼ これだ！と思うものを選んでね</div>
@@ -983,13 +445,12 @@
     </div>
   </div>
 
-  <!-- ================== RESULT SCREEN ================== -->
+  <!-- ====== RESULT ====== -->
   <div id="result-screen" class="screen">
     <div class="result-card" id="result-card">
       <div class="sparkles" id="sparkles"></div>
     </div>
   </div>
-
 </div>
 
 <div id="goal-overlay"></div>
@@ -998,35 +459,45 @@
 // =============================================
 // GAME DATA
 // =============================================
-const ITEMS = {
-  required: [
-    { id:'egg',     emoji:'🥚', name:'たまご',     hint:'ふわふわの秘訣！' },
-    { id:'rice',    emoji:'🍚', name:'ごはん',     hint:'主食かな？' },
-    { id:'ketchup', emoji:'🍅', name:'ケチャップ', hint:'甘酸っぱい味の鍵' },
-    { id:'chicken', emoji:'🍗', name:'とりにく',   hint:'うまみ成分たっぷり' },
-    { id:'pan',     emoji:'🍳', name:'フライパン', hint:'炒める調理道具' },
-    { id:'oil',     emoji:'🫒', name:'オリーブ油', hint:'炒め油として使う' },
-    { id:'onion',   emoji:'🧅', name:'たまねぎ',   hint:'甘みが出るね' },
-    { id:'garlic',  emoji:'🧄', name:'にんにく',   hint:'香りの秘密' },
-  ],
-  mislead: [
-    { id:'bread',   emoji:'🍞', name:'パン',       hint:'主食系？サンドイッチ？' },
-    { id:'lettuce', emoji:'🥬', name:'レタス',     hint:'さっぱりサラダ系' },
-    { id:'cheese',  emoji:'🧀', name:'チーズ',     hint:'とろける系？ピザ？' },
-    { id:'beef',    emoji:'🥩', name:'ぎゅうにく', hint:'ステーキになりそう' },
-    { id:'fish',    emoji:'🐟', name:'さかな',     hint:'和食系かも？' },
-    { id:'flour',   emoji:'🌾', name:'こむぎこ',   hint:'粉もの・パンケーキ？' },
-    { id:'butter',  emoji:'🧈', name:'バター',     hint:'トースト・洋菓子系？' },
-  ]
-};
+const REQUIRED_ITEMS = [
+  { id:'egg',     emoji:'🥚', name:'たまご',     hint:'ふわふわの秘訣！' },
+  { id:'rice',    emoji:'🍚', name:'ごはん',     hint:'主食かな？' },
+  { id:'ketchup', emoji:'🍅', name:'ケチャップ', hint:'甘酸っぱい味の鍵' },
+  { id:'chicken', emoji:'🍗', name:'とりにく',   hint:'うまみ成分たっぷり' },
+  { id:'pan',     emoji:'🍳', name:'フライパン', hint:'炒める調理道具' },
+  { id:'oil',     emoji:'🫒', name:'オリーブ油', hint:'炒め油として使う' },
+  { id:'onion',   emoji:'🧅', name:'たまねぎ',   hint:'甘みが出るね' },
+  { id:'garlic',  emoji:'🧄', name:'にんにく',   hint:'香りの秘密' },
+];
+
+// ミスリードは半分（3個に絞る）
+const MISLEAD_ITEMS = [
+  { id:'beef',    emoji:'🥩', name:'ぎゅうにく', hint:'ステーキになりそう？' },
+  { id:'cheese',  emoji:'🧀', name:'チーズ',     hint:'とろける系？ピザ？' },
+  { id:'flour',   emoji:'🌾', name:'こむぎこ',   hint:'粉もの・パンケーキ？' },
+];
+
+// オムライスのSVGイラスト（インライン）
+const OMURICE_SVG = `<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39">
+  <ellipse cx="40" cy="36" rx="32" ry="14" fill="#D4A843"/>
+  <ellipse cx="40" cy="32" rx="30" ry="16" fill="#F5C842"/>
+  <ellipse cx="40" cy="30" rx="28" ry="14" fill="#FAD860"/>
+  <path d="M20,28 Q40,18 60,28 Q60,38 40,42 Q20,38 20,28Z" fill="#FDE98A"/>
+  <path d="M28,28 Q40,36 52,28" stroke="#E8B830" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M30,26 Q34,22 40,24 Q46,22 50,26" stroke="#E8B830" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <path d="M32,30 Q36,34 40,32 Q44,30 48,32" stroke="#D4A020" stroke-width=".8" fill="none" stroke-linecap="round"/>
+  <!-- ケチャップ -->
+  <path d="M33,27 Q36,24 39,26 Q42,24 45,27" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="40" cy="48" rx="33" ry="6" fill="#C8A060" opacity=".5"/>
+</svg>`;
 
 const ANSWERS = [
-  { emoji:'🍛', name:'カレーライス' },
-  { emoji:'🍳', name:'オムライス',   correct:true },
-  { emoji:'🥗', name:'シーザーサラダ' },
-  { emoji:'🍝', name:'スパゲティ' },
-  { emoji:'🥩', name:'ビーフステーキ' },
-  { emoji:'🥞', name:'パンケーキ' },
+  { id:'curry',   svg:`<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39"><rect x="10" y="12" width="60" height="36" rx="4" fill="#C17E2A"/><rect x="14" y="16" width="52" height="28" rx="3" fill="#B5651D"/><ellipse cx="40" cy="20" rx="20" ry="8" fill="#D4A020"/><circle cx="26" cy="28" r="5" fill="#8B4513"/><circle cx="40" cy="26" r="4" fill="#E67E22"/><circle cx="52" cy="30" r="5" fill="#8B4513"/></svg>`, name:'カレーライス' },
+  { id:'omurice', svg:OMURICE_SVG, name:'オムライス', correct:true },
+  { id:'salad',   svg:`<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39"><ellipse cx="40" cy="38" rx="30" ry="12" fill="#C8E6A0"/><path d="M14,32 Q25,18 40,22 Q55,18 66,32 Q66,44 40,46 Q14,44 14,32Z" fill="#8BC34A"/><circle cx="30" cy="28" r="6" fill="#4CAF50"/><circle cx="50" cy="26" r="5" fill="#66BB6A"/><circle cx="40" cy="24" r="7" fill="#A5D6A7"/><ellipse cx="36" cy="32" rx="4" ry="3" fill="#E53935"/><ellipse cx="48" cy="34" rx="3" ry="2" fill="#FFA726"/></svg>`, name:'シーザーサラダ' },
+  { id:'pasta',   svg:`<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39"><ellipse cx="40" cy="38" rx="30" ry="10" fill="#D4A843"/><path d="M14,32 Q40,20 66,32 Q66,42 40,44 Q14,42 14,32Z" fill="#F5C842"/><path d="M20,28 Q30,22 35,30 Q40,22 45,30 Q50,22 60,28" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="35" cy="26" r="4" fill="#C0392B"/><circle cx="50" cy="24" r="3" fill="#C0392B"/></svg>`, name:'スパゲティ' },
+  { id:'steak',   svg:`<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39"><ellipse cx="40" cy="36" rx="28" ry="14" fill="#7B3F00"/><path d="M14,30 Q25,18 50,20 Q66,22 66,36 Q62,44 40,46 Q18,44 14,30Z" fill="#8B4513"/><path d="M18,32 Q28,22 48,24 Q62,26 62,36" stroke="#A0522D" stroke-width="2" fill="none"/><ellipse cx="36" cy="32" rx="6" ry="3" fill="#5D2E0C"/><ellipse cx="50" cy="34" rx="4" ry="2" fill="#5D2E0C"/></svg>`, name:'ビーフステーキ' },
+  { id:'pancake', svg:`<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="52" height="39"><ellipse cx="40" cy="44" rx="28" ry="7" fill="#C8860A"/><ellipse cx="40" cy="36" rx="27" ry="7" fill="#DDA020"/><ellipse cx="40" cy="28" rx="25" ry="7" fill="#E8B830"/><path d="M30,22 Q40,16 50,22" stroke="#FDD835" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/></svg>`, name:'パンケーキ' },
 ];
 
 // =============================================
@@ -1035,12 +506,15 @@ const ANSWERS = [
 const COLS=15, ROWS=19;
 let maze=[], playerX=1, playerY=1;
 const goalX=COLS-2, goalY=ROWS-2;
+let goalVisible=false;   // ← 全必須アイテム収集後にtrue
+let goalReached=false;
+let decorations=[];
 
 function generateMaze(){
   maze=[];
   for(let y=0;y<ROWS;y++){
     maze[y]=[];
-    for(let x=0;x<COLS;x++) maze[y][x]={wall:true,visited:false};
+    for(let x=0;x<COLS;x++) maze[y][x]={wall:true,visited:false,wallType:Math.floor(Math.random()*3)};
   }
   function carve(x,y){
     maze[y][x].wall=false; maze[y][x].visited=true;
@@ -1060,6 +534,12 @@ function generateMaze(){
     const ry=1+Math.floor(Math.random()*(ROWS-2));
     if(rx>0&&rx<COLS-1&&ry>0&&ry<ROWS-1) maze[ry][rx].wall=false;
   }
+  generateDecorations();
+}
+
+function generateDecorations(){
+  decorations=[];
+  // 道には食材のみ置く。装飾オブジェクトは配置しない。
 }
 
 function shuffle(arr){
@@ -1073,12 +553,13 @@ function shuffle(arr){
 // =============================================
 // ITEMS
 // =============================================
-let placedItems=[], collectedItems=[], selectedMisleads=[];
+let placedItems=[], collectedItems=[];
+let requiredCollected=0;
+const REQUIRED_COUNT=REQUIRED_ITEMS.length; // 8
 
 function placeItems(){
-  placedItems=[]; collectedItems=[];
-  selectedMisleads=shuffle([...ITEMS.mislead]).slice(0,4);
-  const allItems=[...ITEMS.required,...selectedMisleads];
+  placedItems=[]; collectedItems=[]; requiredCollected=0; goalVisible=false;
+  const allItems=[...REQUIRED_ITEMS,...MISLEAD_ITEMS];
   const openCells=[];
   for(let y=1;y<ROWS-1;y++)
     for(let x=1;x<COLS-1;x++)
@@ -1088,16 +569,42 @@ function placeItems(){
         if(dS>2&&dG>1) openCells.push({x,y});
       }
   shuffle(openCells).forEach((cell,i)=>{
-    if(allItems[i]) placedItems.push({...allItems[i],x:cell.x,y:cell.y,collected:false});
+    if(allItems[i]) placedItems.push({...allItems[i],x:cell.x,y:cell.y,collected:false,
+      isRequired:i<REQUIRED_ITEMS.length});
   });
 }
 
+function updateProgress(){
+  requiredCollected=collectedItems.filter(i=>i.isRequired).length;
+  const el=document.getElementById('collect-progress');
+  el.textContent=`食材: ${requiredCollected} / ${REQUIRED_COUNT}`;
+  if(requiredCollected>=REQUIRED_COUNT){
+    el.classList.add('complete');
+    el.textContent='✨ 全食材GET！ゴールを探せ！';
+    if(!goalVisible){
+      goalVisible=true;
+      prebuildBG(); // ゴール出現でBG再描画
+      showGoalAppearEffect();
+    }
+  }
+}
+
+function showGoalAppearEffect(){
+  // ゴール出現フラッシュ
+  const overlay=document.getElementById('goal-overlay');
+  overlay.classList.add('show');
+  setTimeout(()=>overlay.classList.remove('show'),1000);
+}
+
 // =============================================
-// CANVAS
+// CANVAS & BG CACHE
 // =============================================
 let canvas,ctx,cellSize=0;
 let playerPx=0,playerPy=0,targetPx=0,targetPy=0;
 let moving=false,animFrame=0,playerBounce=0,bounceDir=1;
+let playerDir='down';
+let goalPulse=0;
+let bgCanvas=null,bgCtx=null;
 
 function initCanvas(){
   canvas=document.getElementById('maze-canvas');
@@ -1114,62 +621,344 @@ function initCanvas(){
   playerPx=playerX*cellSize+cellSize/2;
   playerPy=playerY*cellSize+cellSize/2;
   targetPx=playerPx; targetPy=playerPy;
+  goalReached=false;
+  prebuildBG();
 }
 
-function drawMaze(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#2a1208'; ctx.fillRect(0,0,canvas.width,canvas.height);
+function prebuildBG(){
+  bgCanvas=document.createElement('canvas');
+  bgCanvas.width=(bgCanvas.width||(COLS*cellSize));
+  bgCanvas.height=(bgCanvas.height||(ROWS*cellSize));
+  if(canvas){bgCanvas.width=canvas.width;bgCanvas.height=canvas.height;}
+  bgCtx=bgCanvas.getContext('2d');
+  drawBG(bgCtx);
+}
+
+// =============================================
+// 3D WALL DRAW
+// =============================================
+function drawBG(c){
+  const cs=cellSize;
+  c.fillStyle='#1e0d05';
+  c.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+
   for(let y=0;y<ROWS;y++){
     for(let x=0;x<COLS;x++){
-      const px=x*cellSize, py=y*cellSize;
+      const px=x*cs, py=y*cs;
       if(maze[y][x].wall){
-        ctx.fillStyle='#3D1F0D'; ctx.fillRect(px,py,cellSize,cellSize);
-        ctx.fillStyle='#5A3020'; ctx.fillRect(px,py,cellSize-1,cellSize-1);
-        ctx.fillStyle='#3D1F0D'; ctx.fillRect(px+1,py+1,cellSize-2,cellSize-2);
+        draw3DWall(c,px,py,cs,maze[y][x].wallType,x,y);
       } else {
-        ctx.fillStyle=(x+y)%2===0?'#EAD9B8':'#D9C69A';
-        ctx.fillRect(px,py,cellSize,cellSize);
+        drawFloorCell(c,px,py,cs,x,y);
       }
     }
   }
-  // Goal
+  // 壁の3Dエッジ（通路面に面した壁の上面/側面）- パス後
+  for(let y=0;y<ROWS;y++){
+    for(let x=0;x<COLS;x++){
+      if(maze[y][x].wall) draw3DWallEdge(c,x,y,cs);
+    }
+  }
+
+  drawStart(c,1,1,cs);
+  if(goalVisible) drawGoalBG(c,goalX,goalY,cs);
+}
+
+// --- 3D壁セル本体 ---
+function draw3DWall(c,px,py,cs,wtype,wx,wy){
+  // 壁の正面色（やや明るめ）
+  const cols=['#5a2e14','#523018','#4e2810'];
+  c.fillStyle=cols[wtype];
+  c.fillRect(px,py,cs,cs);
+
+  // 木目の縦線
+  const step=Math.max(3,Math.floor(cs/4));
+  for(let i=1;i<4;i++){
+    const lx=px+Math.floor(i*step+(wx*2+wy)%step);
+    if(lx>=px&&lx<px+cs){
+      c.strokeStyle=`rgba(0,0,0,${0.12+0.06*(i%2)})`;
+      c.lineWidth=0.7;
+      c.beginPath(); c.moveTo(lx,py); c.lineTo(lx,py+cs); c.stroke();
+    }
+  }
+
+  // 上辺ハイライト（光が上から当たる）
+  c.fillStyle='rgba(255,200,130,0.18)';
+  c.fillRect(px,py,cs,2);
+
+  // 下辺影
+  c.fillStyle='rgba(0,0,0,0.45)';
+  c.fillRect(px,py+cs-3,cs,3);
+}
+
+// --- 3D壁エッジ（通路に面した側に奥行き演出） ---
+function draw3DWallEdge(c,wx,wy,cs){
+  const px=wx*cs, py=wy*cs;
+  const EDGE=Math.max(3,Math.floor(cs*0.22)); // 奥行き幅
+
+  // 下が通路 → 下エッジ（壁の底面を斜めに）
+  if(wy+1<ROWS&&!maze[wy+1][wx].wall){
+    c.fillStyle='rgba(0,0,0,0.55)';
+    c.beginPath();
+    c.moveTo(px,py+cs);
+    c.lineTo(px+cs,py+cs);
+    c.lineTo(px+cs-EDGE,py+cs-EDGE);
+    c.lineTo(px+EDGE,py+cs-EDGE);
+    c.closePath();
+    c.fill();
+    // ハイライト線
+    c.strokeStyle='rgba(255,180,80,0.12)';
+    c.lineWidth=1;
+    c.beginPath();
+    c.moveTo(px+EDGE,py+cs-EDGE);
+    c.lineTo(px+cs-EDGE,py+cs-EDGE);
+    c.stroke();
+  }
+  // 右が通路 → 右エッジ
+  if(wx+1<COLS&&!maze[wy][wx+1].wall){
+    c.fillStyle='rgba(0,0,0,0.45)';
+    c.beginPath();
+    c.moveTo(px+cs,py);
+    c.lineTo(px+cs,py+cs);
+    c.lineTo(px+cs-EDGE,py+cs-EDGE);
+    c.lineTo(px+cs-EDGE,py+EDGE);
+    c.closePath();
+    c.fill();
+  }
+  // 上が通路 → 上面（天井側：やや明るく）
+  if(wy-1>=0&&!maze[wy-1][wx].wall){
+    c.fillStyle='rgba(255,200,100,0.1)';
+    c.beginPath();
+    c.moveTo(px,py);
+    c.lineTo(px+cs,py);
+    c.lineTo(px+cs-EDGE,py+EDGE);
+    c.lineTo(px+EDGE,py+EDGE);
+    c.closePath();
+    c.fill();
+  }
+  // 左が通路 → 左エッジ（明るめ）
+  if(wx-1>=0&&!maze[wy][wx-1].wall){
+    c.fillStyle='rgba(255,180,80,0.1)';
+    c.beginPath();
+    c.moveTo(px,py);
+    c.lineTo(px,py+cs);
+    c.lineTo(px+EDGE,py+cs-EDGE);
+    c.lineTo(px+EDGE,py+EDGE);
+    c.closePath();
+    c.fill();
+  }
+}
+
+// --- 床セル ---
+function drawFloorCell(c,px,py,cs,x,y){
+  const checker=(x+y)%2===0;
+  c.fillStyle=checker?'#E4CFA0':'#D0B880';
+  c.fillRect(px,py,cs,cs);
+  c.fillStyle=checker?'rgba(255,255,255,0.14)':'rgba(255,255,255,0.07)';
+  c.fillRect(px+1,py+1,cs*0.38,cs*0.3);
+  c.strokeStyle='rgba(90,50,15,0.18)';
+  c.lineWidth=0.5;
+  c.strokeRect(px+0.5,py+0.5,cs-1,cs-1);
+  if((x+y)%4===0){
+    c.fillStyle='rgba(130,80,20,0.1)';
+    c.beginPath(); c.arc(px+cs/2,py+cs/2,cs*0.1,0,Math.PI*2); c.fill();
+  }
+}
+
+// --- スタート ---
+function drawStart(c,sx,sy,cs){
+  const px=sx*cs, py=sy*cs;
+  c.fillStyle='rgba(139,32,32,0.32)';
+  c.beginPath(); c.arc(px+cs/2,py+cs/2,cs*0.44,0,Math.PI*2); c.fill();
+  c.strokeStyle='rgba(201,162,39,0.65)';
+  c.lineWidth=1.5;
+  c.beginPath(); c.arc(px+cs/2,py+cs/2,cs*0.43,0,Math.PI*2); c.stroke();
+}
+
+// --- ゴール背景 ---
+function drawGoalBG(c,gx,gy,cs){
+  const px=gx*cs, py=gy*cs;
+  c.fillStyle='#8B1A1A'; c.fillRect(px,py,cs,cs);
+  c.fillStyle='rgba(139,32,32,0.8)'; c.fillRect(px+2,py+2,cs-4,cs-4);
+  c.strokeStyle='rgba(201,162,39,0.4)'; c.lineWidth=0.8;
+  c.beginPath();
+  c.moveTo(px+cs/2,py+2); c.lineTo(px+cs/2,py+cs-2);
+  c.moveTo(px+2,py+cs/2); c.lineTo(px+cs-2,py+cs/2);
+  c.stroke();
+}
+
+// --- 装飾 ---
+function drawDecoration(c,px,py,cs,type){
+  const cx=px+cs/2, cy=py+cs/2;
+  c.save(); c.globalAlpha=0.72;
+  if(type==='table'){
+    c.fillStyle='#5a2e10';
+    c.beginPath(); c.arc(cx,cy,cs*0.3,0,Math.PI*2); c.fill();
+    c.strokeStyle='#3a1a08'; c.lineWidth=1;
+    c.stroke();
+    c.fillStyle='rgba(255,200,100,0.15)';
+    c.beginPath(); c.arc(cx-cs*0.08,cy-cs*0.08,cs*0.09,0,Math.PI*2); c.fill();
+  } else if(type==='plant'){
+    c.fillStyle='#2e1408'; c.fillRect(cx-cs*0.09,cy,cs*0.18,cs*0.25);
+    c.fillStyle='#1e4010'; c.beginPath(); c.arc(cx,cy-cs*0.04,cs*0.21,0,Math.PI*2); c.fill();
+    c.fillStyle='#2e6018'; c.beginPath(); c.arc(cx-cs*0.1,cy-cs*0.1,cs*0.13,0,Math.PI*2); c.fill();
+    c.beginPath(); c.arc(cx+cs*0.1,cy-cs*0.08,cs*0.11,0,Math.PI*2); c.fill();
+  } else {
+    c.fillStyle='#4a2010'; c.fillRect(px+cs*0.2,py+cs*0.34,cs*0.6,cs*0.44);
+    c.fillRect(px+cs*0.2,py+cs*0.14,cs*0.6,cs*0.17);
+    c.strokeStyle='#3a1808'; c.lineWidth=0.8;
+    c.strokeRect(px+cs*0.2,py+cs*0.34,cs*0.6,cs*0.44);
+  }
+  c.restore();
+}
+
+// =============================================
+// DRAW LOOP
+// =============================================
+function drawMaze(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(bgCanvas,0,0);
+
+  // ゴールパルス（goalVisible時のみ）
   const gx=goalX*cellSize, gy=goalY*cellSize;
-  ctx.fillStyle='#FFF8E1'; ctx.fillRect(gx,gy,cellSize,cellSize);
-  const pulse=0.7+0.3*Math.sin(animFrame*0.06);
-  ctx.save();
-  ctx.translate(gx+cellSize/2,gy+cellSize/2);
-  ctx.scale(pulse,pulse);
-  ctx.font=`${cellSize*0.65}px serif`;
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('🚪',0,0);
-  ctx.restore();
-  // Items
+  goalPulse+=0.065;
+  const gp=0.5+0.5*Math.sin(goalPulse);
+
+  if(goalVisible){
+    const distToGoal=Math.abs(playerX-goalX)+Math.abs(playerY-goalY);
+    const nearBoost=distToGoal<=4?(1+(4-distToGoal)*0.18):1;
+    const grad=ctx.createRadialGradient(gx+cellSize/2,gy+cellSize/2,0,gx+cellSize/2,gy+cellSize/2,cellSize*2.8*nearBoost);
+    grad.addColorStop(0,`rgba(201,162,39,${0.6*(0.7+0.3*gp)*nearBoost})`);
+    grad.addColorStop(0.4,`rgba(201,162,39,${0.2*gp})`);
+    grad.addColorStop(1,'rgba(201,162,39,0)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(gx-cellSize*3,gy-cellSize*3,cellSize*7,cellSize*7);
+    ctx.fillStyle=`rgba(255,225,80,${0.12+0.1*gp})`;
+    ctx.fillRect(gx,gy,cellSize,cellSize);
+    // GOAL文字
+    ctx.save();
+    ctx.shadowColor='rgba(201,162,39,0.95)';
+    ctx.shadowBlur=10+5*gp;
+    ctx.font=`bold ${Math.max(7,cellSize*0.32)}px serif`;
+    ctx.fillStyle=`rgba(255,220,60,${0.92+0.08*gp})`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('GOAL',gx+cellSize/2,gy+cellSize/2);
+    ctx.restore();
+    // 近接プロキシミティ
+    if(distToGoal<=5){
+      const alpha=(5-distToGoal)/5*0.13*nearBoost;
+      const prox=document.getElementById('goal-proximity');
+      const gxPct=Math.round((gx+cellSize/2)/canvas.width*100);
+      const gyPct=Math.round((gy+cellSize/2)/canvas.height*100);
+      prox.style.background=`radial-gradient(circle at ${gxPct}% ${gyPct}%, rgba(201,162,39,${alpha*2}) 0%, rgba(201,162,39,0) 65%)`;
+    } else {
+      document.getElementById('goal-proximity').style.background='none';
+    }
+  } else {
+    document.getElementById('goal-proximity').style.background='none';
+  }
+
+  // スタートパルス
+  const sp=0.6+0.4*Math.abs(Math.sin(animFrame*0.04));
+  const spx=cellSize, spy=cellSize;
+  if(playerX!==1||playerY!==1){
+    ctx.save();
+    ctx.globalAlpha=sp*0.38;
+    const sGrad=ctx.createRadialGradient(spx+cellSize/2,spy+cellSize/2,0,spx+cellSize/2,spy+cellSize/2,cellSize*0.75);
+    sGrad.addColorStop(0,'rgba(255,255,255,0.5)'); sGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=sGrad;
+    ctx.fillRect(spx-cellSize*0.3,spy-cellSize*0.3,cellSize*1.6,cellSize*1.6);
+    ctx.restore();
+    ctx.save();
+    ctx.font=`bold ${Math.max(6,cellSize*0.27)}px serif`;
+    ctx.fillStyle='rgba(240,200,80,0.75)';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(200,150,40,0.5)'; ctx.shadowBlur=4;
+    ctx.fillText('START',spx+cellSize/2,spy+cellSize/2);
+    ctx.restore();
+  }
+
+  // アイテム
   placedItems.forEach(item=>{
     if(item.collected) return;
     const ix=item.x*cellSize+cellSize/2;
     const iy=item.y*cellSize+cellSize/2;
     const b=Math.sin(animFrame*0.08+item.x*0.7)*1.5;
+    const dist=Math.abs(item.x-playerX)+Math.abs(item.y-playerY);
+    const near=dist<=2;
     ctx.save();
-    ctx.shadowColor=ITEMS.required.find(r=>r.id===item.id)?'rgba(201,162,39,0.6)':'rgba(150,100,50,0.4)';
-    ctx.shadowBlur=8;
-    ctx.font=`${cellSize*0.6}px serif`;
+    if(near){
+      ctx.shadowColor=item.isRequired?'rgba(255,220,80,1.0)':'rgba(200,150,80,0.8)';
+      ctx.shadowBlur=14;
+      const rg=ctx.createRadialGradient(ix,iy+b,0,ix,iy+b,cellSize*0.52);
+      rg.addColorStop(0,item.isRequired?'rgba(255,220,80,0.28)':'rgba(255,180,60,0.18)');
+      rg.addColorStop(1,'rgba(255,200,80,0)');
+      ctx.fillStyle=rg;
+      ctx.fillRect(ix-cellSize,iy+b-cellSize,cellSize*2,cellSize*2);
+    } else {
+      ctx.shadowColor=item.isRequired?'rgba(201,162,39,0.45)':'rgba(140,90,40,0.3)';
+      ctx.shadowBlur=5;
+    }
+    ctx.font=`${cellSize*(near?0.65:0.6)}px serif`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(item.emoji,ix,iy+b);
     ctx.restore();
   });
-  // Player
-  playerBounce+=0.12*bounceDir;
-  if(Math.abs(playerBounce)>2) bounceDir*=-1;
-  ctx.save();
-  ctx.fillStyle='rgba(0,0,0,0.3)';
-  ctx.beginPath();
-  ctx.ellipse(playerPx,playerPy+cellSize*0.35,cellSize*0.22,cellSize*0.1,0,0,Math.PI*2);
-  ctx.fill();
-  ctx.shadowColor='rgba(192,57,43,0.5)'; ctx.shadowBlur=10;
-  ctx.font=`${cellSize*0.7}px serif`;
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('👨‍🍳',playerPx,playerPy-2+playerBounce);
-  ctx.restore();
+
+  // プレイヤー
+  drawPlayer(ctx);
+  animFrame++;
+}
+
+// =============================================
+// PLAYER DRAW（v2テイスト・大きめ）
+// =============================================
+function drawPlayer(c){
+  const px=playerPx, py=playerPy;
+  const isMoving=Math.abs(playerPx-targetPx)>0.5||Math.abs(playerPy-targetPy)>0.5;
+  playerBounce+=0.14*bounceDir;
+  if(Math.abs(playerBounce)>2.5) bounceDir*=-1;
+  const bounce=isMoving?playerBounce*1.3:playerBounce*0.45;
+  const cs=cellSize;
+
+  // 足元影
+  c.save();
+  c.fillStyle='rgba(0,0,0,0.38)';
+  c.beginPath();
+  c.ellipse(px,py+cs*0.36,cs*0.3,cs*0.1,0,0,Math.PI*2);
+  c.fill();
+  c.restore();
+
+  // ソフトグロー
+  c.save();
+  const gr=ctx.createRadialGradient(px,py-2+bounce,0,px,py-2+bounce,cs*0.62);
+  gr.addColorStop(0,'rgba(255,200,130,0.35)');
+  gr.addColorStop(1,'rgba(255,180,80,0)');
+  c.fillStyle=gr;
+  c.beginPath(); c.arc(px,py-2+bounce,cs*0.62,0,Math.PI*2); c.fill();
+  c.restore();
+
+  // 移動時残像
+  if(isMoving){
+    let tx=0,ty=0;
+    if(playerDir==='up')    ty=cs*0.22;
+    if(playerDir==='down')  ty=-cs*0.22;
+    if(playerDir==='left')  tx=cs*0.22;
+    if(playerDir==='right') tx=-cs*0.22;
+    c.save(); c.globalAlpha=0.14;
+    c.font=`${cs*0.78}px serif`;
+    c.textAlign='center'; c.textBaseline='middle';
+    c.fillText('👨‍🍳',px+tx,py-2+bounce+ty);
+    c.restore();
+  }
+
+  // シェフ本体（v2スタイル：グロー＋サイズ大きめ）
+  c.save();
+  c.shadowColor='rgba(255,160,60,0.55)';
+  c.shadowBlur=12;
+  c.font=`${cs*0.82}px serif`; // ← 大きめ
+  c.textAlign='center'; c.textBaseline='middle';
+  c.fillText('👨‍🍳',px,py-2+bounce);
+  c.restore();
 }
 
 // =============================================
@@ -1199,22 +988,27 @@ function doMove(dir){
   if(dir==='right') nx++;
   if(nx<0||nx>=COLS||ny<0||ny>=ROWS) return;
   if(maze[ny][nx].wall) return;
+  // ゴールは goalVisible 時のみ踏める
+  if(nx===goalX&&ny===goalY&&!goalVisible) return;
+  playerDir=dir;
   playerX=nx; playerY=ny;
   targetPx=playerX*cellSize+cellSize/2;
   targetPy=playerY*cellSize+cellSize/2;
   const item=placedItems.find(i=>!i.collected&&i.x===playerX&&i.y===playerY);
   if(item) collectItem(item);
-  if(playerX===goalX&&playerY===goalY) setTimeout(showGoal,300);
+  if(playerX===goalX&&playerY===goalY&&goalVisible&&!goalReached){
+    goalReached=true;
+    setTimeout(showGoal,400);
+  }
 }
 
 function animatePlayer(){
-  const lerp=0.3;
+  const lerp=0.32;
   playerPx+=(targetPx-playerPx)*lerp;
   playerPy+=(targetPy-playerPy)*lerp;
   if(Math.abs(playerPx-targetPx)<0.5&&Math.abs(playerPy-targetPy)<0.5){
     playerPx=targetPx; playerPy=targetPy; moving=false;
   } else { moving=true; }
-  animFrame++;
   drawMaze();
   requestAnimationFrame(animatePlayer);
 }
@@ -1224,6 +1018,8 @@ function animatePlayer(){
 // =============================================
 function collectItem(item){
   item.collected=true; collectedItems.push(item);
+  prebuildBG();
+  updateProgress();
   const popup=document.getElementById('item-popup');
   document.getElementById('popup-emoji').textContent=item.emoji;
   document.getElementById('popup-name').textContent=item.name+' をゲット！';
@@ -1248,15 +1044,15 @@ function updateTray(){
 // =============================================
 // SWIPE
 // =============================================
-let touchStartX=0, touchStartY=0;
+let touchStartX=0,touchStartY=0;
 
 function initSwipe(){
-  const c=document.getElementById('maze-container');
-  c.addEventListener('touchstart',e=>{ touchStartX=e.touches[0].clientX; touchStartY=e.touches[0].clientY; },{passive:true});
-  c.addEventListener('touchend',e=>{
+  const con=document.getElementById('maze-container');
+  con.addEventListener('touchstart',e=>{ touchStartX=e.touches[0].clientX; touchStartY=e.touches[0].clientY; },{passive:true});
+  con.addEventListener('touchend',e=>{
     const dx=e.changedTouches[0].clientX-touchStartX;
     const dy=e.changedTouches[0].clientY-touchStartY;
-    const aDx=Math.abs(dx), aDy=Math.abs(dy);
+    const aDx=Math.abs(dx),aDy=Math.abs(dy);
     if(Math.max(aDx,aDy)<12) return;
     if(aDx>aDy) doMove(dx>0?'right':'left');
     else doMove(dy>0?'down':'up');
@@ -1284,20 +1080,104 @@ function startGame(){
   showScreen('game-screen');
   generateMaze(); placeItems();
   playerX=1; playerY=1;
+  playerDir='down'; goalReached=false; goalVisible=false;
   initCanvas(); initSwipe();
   document.getElementById('item-tray').innerHTML='';
   document.getElementById('count-num').textContent='0';
+  document.getElementById('collect-progress').classList.remove('complete');
+  updateProgress();
   requestAnimationFrame(animatePlayer);
 }
 
 function showGoal(){
   const overlay=document.getElementById('goal-overlay');
   overlay.classList.add('show');
-  setTimeout(()=>overlay.classList.remove('show'),800);
-  setTimeout(()=>{ showScreen('goal-screen'); buildGoalScreen(); },600);
+  setTimeout(()=>overlay.classList.remove('show'),1000);
+  setTimeout(()=>{ showScreen('goal-screen'); buildGoalScreen(); },700);
 }
 
 function buildGoalScreen(){
+  const grid=document.getElementById('collected-grid');
+  grid.innerHTML='';
+  collectedItems.forEach(item=>{
+    const div=document.createElement('div');
+    div.className='collected-item';
+    div.innerHTML=`${item.emoji}<span class="cname">${item.name}</span>`;
+    grid.appendChild(div);
+  });
+
+  // 選択肢（タッチ対応版）
+  const choices=shuffle([...ANSWERS]);
+  const container=document.getElementById('answer-choices');
+  container.innerHTML='';
+  choices.forEach(ans=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.type='button';
+    // ★ SVGイメージ + ラベル
+    btn.innerHTML=`<span class="dish-img">${ans.svg}</span><span class="dish-label">${ans.name}</span>`;
+
+    // ★ touchend でも clickと同等に動作させる
+    let tapped=false;
+    btn.addEventListener('touchend',function(e){
+      e.preventDefault();
+      if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    },{passive:false});
+    btn.addEventListener('click',function(){
+      if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    });
+    container.appendChild(btn);
+  });
+}
+
+function checkAnswer(ans,btn,container){
+  container.querySelectorAll('.choice-btn').forEach(b=>b.classList.add('disabled'));
+  if(ans.correct){
+    btn.classList.add('correct'); btn.classList.remove('disabled');
+    setTimeout(()=>showResult(true),800);
+  } else {
+    btn.classList.add('wrong');
+    setTimeout(()=>{
+      container.querySelectorAll('.choice-btn').forEach(b=>{
+        b.classList.remove('disabled');
+        // tappedフラグリセット
+        b._tapped=false;
+      });
+      btn.classList.remove('wrong');
+      // 再タップ可能にするためイベントを再設定
+      rebuildChoiceEvents(container);
+    },700);
+  }
+}
+
+function rebuildChoiceEvents(container){
+  container.querySelectorAll('.choice-btn').forEach(btn=>{
+    const clone=btn.cloneNode(true);
+    btn.parentNode.replaceChild(clone,btn);
+  });
+  // 再登録
+  const choices=Array.from(container.querySelectorAll('.choice-btn'));
+  choices.forEach((btn,i)=>{
+    // ANSWERSとの対応をdata属性で保持
+    const ansId=btn.dataset.ansId;
+    const ans=ANSWERS.find(a=>a.id===ansId);
+    if(!ans) return;
+    let tapped=false;
+    btn.addEventListener('touchend',function(e){
+      e.preventDefault(); if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    },{passive:false});
+    btn.addEventListener('click',function(){
+      if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    });
+  });
+}
+
+// buildGoalScreen で data-ans-id を付与するよう修正
+function buildGoalScreenFull(){
   const grid=document.getElementById('collected-grid');
   grid.innerHTML='';
   collectedItems.forEach(item=>{
@@ -1312,24 +1192,28 @@ function buildGoalScreen(){
   choices.forEach(ans=>{
     const btn=document.createElement('button');
     btn.className='choice-btn';
-    btn.innerHTML=`<span>${ans.emoji}</span>${ans.name}`;
-    btn.onclick=()=>checkAnswer(ans,btn,container);
+    btn.type='button';
+    btn.dataset.ansId=ans.id;
+    btn.innerHTML=`<span class="dish-img">${ans.svg}</span><span class="dish-label">${ans.name}</span>`;
+    let tapped=false;
+    btn.addEventListener('touchend',function(e){
+      e.preventDefault(); if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    },{passive:false});
+    btn.addEventListener('click',function(){
+      if(tapped) return; tapped=true;
+      checkAnswer(ans,btn,container);
+    });
     container.appendChild(btn);
   });
 }
 
-function checkAnswer(ans,btn,container){
-  container.querySelectorAll('.choice-btn').forEach(b=>b.classList.add('disabled'));
-  if(ans.correct){
-    btn.classList.add('correct'); btn.classList.remove('disabled');
-    setTimeout(()=>showResult(true),800);
-  } else {
-    btn.classList.add('wrong');
-    setTimeout(()=>{
-      container.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('disabled'));
-      btn.classList.remove('wrong');
-    },600);
-  }
+// showGoal から呼ぶ関数をこちらに差し替え
+function showGoal(){
+  const overlay=document.getElementById('goal-overlay');
+  overlay.classList.add('show');
+  setTimeout(()=>overlay.classList.remove('show'),1000);
+  setTimeout(()=>{ showScreen('goal-screen'); buildGoalScreenFull(); },700);
 }
 
 function showResult(correct){
@@ -1343,7 +1227,9 @@ function showResult(correct){
         <div class="result-sub">PERFECT · EXCELLENT</div>
       </div>
       <div class="result-dish">
-        <span class="dish-emoji">🍱</span>
+        <div style="font-size:80px;display:block;margin:0 auto;line-height:1;animation:dish-appear .6s .2s both cubic-bezier(.175,.885,.32,1.275)">
+          ${OMURICE_SVG}
+        </div>
         <div class="dish-name">オムライス</div>
         <div class="dish-desc">
           卵でごはんを包んだ<br>昭和洋食の名作！<br>
@@ -1354,12 +1240,11 @@ function showResult(correct){
         <div style="font-size:12px;color:var(--brown-mid);line-height:1.8;">
           🥚たまご ＋ 🍚ごはん ＋ 🍅ケチャップ<br>
           ＋ 🍗とりにく ＋ 🧅たまねぎ ＋ 🧄にんにく<br>
-          ＋ 🫒オリーブ油 ＋ フライパン<br>
+          ＋ 🫒オリーブ油 ＋ 🍳フライパン<br>
           <span style="color:var(--red);font-size:11px;">→ 完璧なオムライスの完成！</span>
         </div>
         <button class="replay-btn" onclick="restartGame()">もう一度あそぶ ↺</button>
-      </div>
-    `;
+      </div>`;
     const sparkles=document.getElementById('sparkles');
     const symbols=['✨','⭐','🌟','💫','✦'];
     for(let i=0;i<12;i++){
@@ -1376,7 +1261,7 @@ function showResult(correct){
     card.innerHTML=`
       <div class="result-header-wrong">
         <div class="result-label" style="color:#FFE0B2;">🤔 うーん…</div>
-        <div class="result-sub" style="color:rgba(255,200,150,0.8);">ちがうかも？</div>
+        <div class="result-sub" style="color:rgba(255,200,150,.8);">ちがうかも？</div>
       </div>
       <div class="result-dish" style="background:none;padding:20px;">
         <span style="font-size:50px;display:block;">💭</span>
@@ -1386,28 +1271,21 @@ function showResult(correct){
       <div class="result-body">
         <button class="replay-btn" onclick="retryGoal()">答えを考え直す 🔄</button>
         <button class="replay-btn" style="margin-top:8px;background:transparent;color:var(--brown-mid);border:2px solid var(--brown-mid);box-shadow:none;" onclick="restartGame()">最初からやり直す ↺</button>
-      </div>
-    `;
+      </div>`;
   }
 }
 
-function retryGoal(){ showScreen('goal-screen'); buildGoalScreen(); }
-
-function restartGame(){
-  collectedItems=[]; placedItems=[];
-  stopMove();
-  showScreen('title-screen');
-}
+function retryGoal(){ showScreen('goal-screen'); buildGoalScreenFull(); }
+function restartGame(){ collectedItems=[]; placedItems=[]; goalReached=false; goalVisible=false; stopMove(); showScreen('title-screen'); }
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
     const l=document.getElementById('loading');
-    l.style.opacity='0'; l.style.transition='opacity 0.4s';
+    l.style.opacity='0'; l.style.transition='opacity .4s';
     setTimeout(()=>l.style.display='none',400);
     showScreen('title-screen');
   },800);
 });
-
 document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 </script>
 </body>
