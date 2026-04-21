@@ -239,25 +239,24 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 /* ═══ RESULT ═══ */
-#result-screen{padding:20px;background:radial-gradient(ellipse at 50% 100%,#3a1a06,#1a0804);}
+#result-screen{padding:16px 16px 32px;background:radial-gradient(ellipse at 50% 100%,#3a1a06,#1a0804);overflow-y:auto;justify-content:flex-start;align-items:center;}
 .rcard{background:linear-gradient(180deg,#fdfaf0,#f8f2e2);border-radius:5px;width:min(360px,92vw);
-  text-align:center;box-shadow:0 10px 50px rgba(0,0,0,.72),0 0 0 1px rgba(107,58,31,.1);overflow:hidden;position:relative;}
+  text-align:center;box-shadow:0 10px 50px rgba(0,0,0,.72),0 0 0 1px rgba(107,58,31,.1);overflow:hidden;position:relative;margin-bottom:20px;}
 .rcard::before{content:'';position:absolute;inset:6px;
   border:1.5px solid rgba(107,58,31,.22);border-radius:2px;pointer-events:none;z-index:1;}
 .rhd-ok{background:linear-gradient(180deg,var(--red-hi),var(--red) 55%,var(--red-lo));padding:20px;position:relative;overflow:hidden;}
-.rhd-ok::before{content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.04) 8px,rgba(255,255,255,.04) 16px);}
+.rhd-ok::before{display:none;}
 .rhd-ng{background:var(--mid);padding:20px;}
 .rlbl{font-family:'Zen Kurenaido',serif;font-size:28px;color:var(--glight);
-  text-shadow:0 2px 10px rgba(0,0,0,.55),0 0 20px rgba(232,197,71,.25);position:relative;}
-.rsub{font-size:12px;color:rgba(255,230,180,.8);letter-spacing:2px;margin-top:4px;position:relative;}
+  text-shadow:0 2px 10px rgba(0,0,0,.55),0 0 20px rgba(232,197,71,.25);position:relative;z-index:2;}
+.rsub{font-size:12px;color:rgba(255,230,180,.8);letter-spacing:2px;margin-top:4px;position:relative;z-index:2;}
 .rdish{padding:20px 20px 14px;background:linear-gradient(180deg,rgba(245,237,214,.5) 0%,transparent);}
 .dname{font-family:'Zen Kurenaido',serif;font-size:26px;color:var(--brown);margin:8px 0 4px;}
 .ddesc{font-size:12px;color:var(--mid);line-height:1.8;}
 .sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .spark{position:absolute;font-size:16px;animation:spfl 2s infinite;opacity:0;}
 @keyframes spfl{0%{opacity:0;transform:translateY(0) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translateY(-65px) scale(1.2)}}
-.rbdy{padding:14px 20px 22px;}
+.rbdy{padding:14px 20px 28px;}
 .rbtn{display:block;width:100%;background:linear-gradient(180deg,var(--red-hi),var(--red) 55%,var(--red-lo));color:var(--glight);
   border:none;border-radius:4px;padding:14px;
   font-family:'Zen Kurenaido',serif;font-size:17px;letter-spacing:2px;
@@ -274,348 +273,336 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 <!-- ═══ TITLE ═══ -->
 <div id="title-screen" class="screen">
   <div id="restaurant-scene">
-    <svg id="restaurant-svg" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
+    <svg id="restaurant-svg" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="hSky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#02030a"/>
-          <stop offset="55%" stop-color="#080c1c"/>
-          <stop offset="100%" stop-color="#0e1228"/>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#020408"/>
+          <stop offset="40%" stop-color="#06081a"/>
+          <stop offset="100%" stop-color="#0c1030"/>
         </linearGradient>
-        <linearGradient id="hFacade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#e8ecf4"/>
-          <stop offset="50%" stop-color="#d4d8e8"/>
+        <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#eaeef8"/>
+          <stop offset="60%" stop-color="#d4daea"/>
           <stop offset="100%" stop-color="#b0b8cc"/>
         </linearGradient>
-        <linearGradient id="hFacade2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#d8dce8"/>
-          <stop offset="100%" stop-color="#a8b0c4"/>
+        <linearGradient id="wall2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#dde2ef"/>
+          <stop offset="100%" stop-color="#a8b2c8"/>
         </linearGradient>
-        <linearGradient id="hGround" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1a1828"/>
-          <stop offset="100%" stop-color="#080610"/>
+        <linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#18162a"/>
+          <stop offset="100%" stop-color="#08060e"/>
         </linearGradient>
-        <linearGradient id="hDoor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1e2438"/>
-          <stop offset="100%" stop-color="#0c1020"/>
+        <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fffad0"/>
+          <stop offset="45%" stop-color="#eac848"/>
+          <stop offset="100%" stop-color="#a07608"/>
         </linearGradient>
-        <linearGradient id="hGold" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#FFF8D0"/>
-          <stop offset="40%" stop-color="#EAC84A"/>
-          <stop offset="100%" stop-color="#A87808"/>
+        <linearGradient id="sgn" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#12162a"/>
+          <stop offset="100%" stop-color="#080c18"/>
         </linearGradient>
-        <linearGradient id="hSign" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#16182a"/>
-          <stop offset="100%" stop-color="#0a0c18"/>
-        </linearGradient>
-        <radialGradient id="hWin" cx="38%" cy="22%" r="65%">
-          <stop offset="0%" stop-color="#ffe8a0" stop-opacity="1"/>
-          <stop offset="70%" stop-color="#d09828" stop-opacity=".5"/>
-          <stop offset="100%" stop-color="#806010" stop-opacity=".1"/>
+        <radialGradient id="win" cx="35%" cy="20%" r="70%">
+          <stop offset="0%" stop-color="#ffe89a" stop-opacity="1"/>
+          <stop offset="80%" stop-color="#c09020" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#806010" stop-opacity=".05"/>
         </radialGradient>
-        <radialGradient id="hLamp" cx="50%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#fff5c0" stop-opacity="1"/>
+        <radialGradient id="lamp" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff8c0" stop-opacity="1"/>
           <stop offset="100%" stop-color="#ffaa20" stop-opacity="0"/>
         </radialGradient>
-        <filter id="hGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="5" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="5"/>
         </filter>
-        <filter id="hGlow2" x="-30%" y="-30%" width="160%" height="160%">
+        <filter id="glow2" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="2.5" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <filter id="hTextGlow" x="-15%" y="-60%" width="130%" height="220%">
+        <filter id="tglow" x="-15%" y="-50%" width="130%" height="200%">
           <feGaussianBlur stdDeviation="2" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
 
       <!-- 夜空 -->
-      <rect width="400" height="360" fill="url(#hSky)"/>
+      <rect width="400" height="380" fill="url(#sky)"/>
 
       <!-- 星 -->
-      <circle cx="22"  cy="12" r="1.2" fill="white" opacity=".9"/>
-      <circle cx="58"  cy="6"  r="0.9" fill="white" opacity=".75"/>
-      <circle cx="96"  cy="18" r="0.8" fill="white" opacity=".6"/>
-      <circle cx="138" cy="5"  r="1.1" fill="white" opacity=".85"/>
-      <circle cx="185" cy="14" r="0.7" fill="white" opacity=".55"/>
-      <circle cx="228" cy="8"  r="1.0" fill="white" opacity=".7"/>
-      <circle cx="268" cy="16" r="1.2" fill="white" opacity=".8"/>
-      <circle cx="312" cy="4"  r="1.0" fill="white" opacity=".9"/>
-      <circle cx="356" cy="13" r="0.8" fill="white" opacity=".65"/>
-      <circle cx="384" cy="7"  r="1.1" fill="white" opacity=".8"/>
-      <circle cx="42"  cy="28" r="0.7" fill="white" opacity=".4"/>
-      <circle cx="165" cy="26" r="0.6" fill="white" opacity=".4"/>
-      <circle cx="335" cy="24" r="0.7" fill="white" opacity=".45"/>
+      <circle cx="18"  cy="10" r="1.2" fill="white" opacity=".9"/>
+      <circle cx="52"  cy="5"  r="0.9" fill="white" opacity=".75"/>
+      <circle cx="90"  cy="16" r="0.7" fill="white" opacity=".6"/>
+      <circle cx="130" cy="4"  r="1.1" fill="white" opacity=".85"/>
+      <circle cx="172" cy="12" r="0.8" fill="white" opacity=".55"/>
+      <circle cx="218" cy="7"  r="1.0" fill="white" opacity=".7"/>
+      <circle cx="260" cy="15" r="1.2" fill="white" opacity=".8"/>
+      <circle cx="305" cy="3"  r="1.0" fill="white" opacity=".9"/>
+      <circle cx="348" cy="11" r="0.8" fill="white" opacity=".65"/>
+      <circle cx="385" cy="6"  r="1.1" fill="white" opacity=".8"/>
+      <circle cx="38"  cy="26" r="0.7" fill="white" opacity=".4"/>
+      <circle cx="156" cy="23" r="0.6" fill="white" opacity=".4"/>
+      <circle cx="332" cy="22" r="0.7" fill="white" opacity=".45"/>
+      <circle cx="72"  cy="34" r="0.5" fill="white" opacity=".3"/>
+      <circle cx="288" cy="30" r="0.5" fill="white" opacity=".3"/>
 
-      <!-- 月（右上） -->
-      <circle cx="365" cy="30" r="20" fill="#fff8e8" opacity=".08"/>
-      <circle cx="365" cy="30" r="15" fill="#fff5d8" opacity=".12"/>
-      <circle cx="365" cy="30" r="10" fill="#fff2c8" opacity=".16"/>
-      <circle cx="368" cy="27" r="6"  fill="#fffae0" opacity=".25"/>
 
-      <!-- 背景の左高層ビル -->
-      <rect x="0"   y="60"  width="58" height="300" fill="#101420" rx="1"/>
-      <rect x="5"   y="70"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".6"/>
-      <rect x="19"  y="70"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".3"/>
-      <rect x="33"  y="70"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".7"/>
-      <rect x="5"   y="86"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".4"/>
-      <rect x="19"  y="86"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".8"/>
-      <rect x="33"  y="86"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".2"/>
-      <rect x="5"   y="102" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".55"/>
-      <rect x="19"  y="102" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".25"/>
-      <rect x="33"  y="102" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".65"/>
-      <rect x="5"   y="118" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".35"/>
-      <rect x="19"  y="118" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".7"/>
-      <rect x="33"  y="118" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".45"/>
+      <!-- 背景左ビル -->
+      <rect x="0"   y="50"  width="54" height="330" fill="#0e1220" rx="1"/>
+      <rect x="0"   y="50"  width="54" height="4"   fill="#181e30" rx="1"/>
+      <rect x="4"   y="60"  width="10" height="8" fill="url(#win)" rx="1" opacity=".6"/>
+      <rect x="17"  y="60"  width="10" height="8" fill="url(#win)" rx="1" opacity=".3"/>
+      <rect x="30"  y="60"  width="10" height="8" fill="url(#win)" rx="1" opacity=".75"/>
+      <rect x="4"   y="76"  width="10" height="8" fill="url(#win)" rx="1" opacity=".4"/>
+      <rect x="17"  y="76"  width="10" height="8" fill="url(#win)" rx="1" opacity=".8"/>
+      <rect x="30"  y="76"  width="10" height="8" fill="url(#win)" rx="1" opacity=".2"/>
+      <rect x="4"   y="92"  width="10" height="8" fill="url(#win)" rx="1" opacity=".55"/>
+      <rect x="17"  y="92"  width="10" height="8" fill="url(#win)" rx="1" opacity=".25"/>
+      <rect x="30"  y="92"  width="10" height="8" fill="url(#win)" rx="1" opacity=".65"/>
+      <rect x="4"   y="108" width="10" height="8" fill="url(#win)" rx="1" opacity=".35"/>
+      <rect x="17"  y="108" width="10" height="8" fill="url(#win)" rx="1" opacity=".7"/>
+      <rect x="30"  y="108" width="10" height="8" fill="url(#win)" rx="1" opacity=".45"/>
 
-      <!-- 背景の右高層ビル -->
-      <rect x="342" y="50"  width="58" height="310" fill="#0e1218" rx="1"/>
-      <rect x="347" y="62"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".5"/>
-      <rect x="361" y="62"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".75"/>
-      <rect x="375" y="62"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".3"/>
-      <rect x="347" y="78"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".65"/>
-      <rect x="361" y="78"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".2"/>
-      <rect x="375" y="78"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".55"/>
-      <rect x="347" y="94"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".35"/>
-      <rect x="361" y="94"  width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".85"/>
-      <rect x="375" y="94"  width="11" height="8"  fill="url(#hWin)" rx=".1" opacity=".4"/>
-      <rect x="347" y="110" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".6"/>
-      <rect x="361" y="110" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".3"/>
-      <rect x="375" y="110" width="11" height="8"  fill="url(#hWin)" rx="1" opacity=".7"/>
+      <!-- 背景右ビル -->
+      <rect x="346" y="40"  width="54" height="340" fill="#0c1018" rx="1"/>
+      <rect x="346" y="40"  width="54" height="4"   fill="#161a28" rx="1"/>
+      <rect x="350" y="52"  width="10" height="8" fill="url(#win)" rx="1" opacity=".5"/>
+      <rect x="363" y="52"  width="10" height="8" fill="url(#win)" rx="1" opacity=".8"/>
+      <rect x="376" y="52"  width="10" height="8" fill="url(#win)" rx="1" opacity=".25"/>
+      <rect x="350" y="68"  width="10" height="8" fill="url(#win)" rx="1" opacity=".7"/>
+      <rect x="363" y="68"  width="10" height="8" fill="url(#win)" rx=".1" opacity=".2"/>
+      <rect x="376" y="68"  width="10" height="8" fill="url(#win)" rx="1" opacity=".6"/>
+      <rect x="350" y="84"  width="10" height="8" fill="url(#win)" rx="1" opacity=".3"/>
+      <rect x="363" y="84"  width="10" height="8" fill="url(#win)" rx="1" opacity=".85"/>
+      <rect x="376" y="84"  width="10" height="8" fill="url(#win)" rx="1" opacity=".4"/>
+      <rect x="350" y="100" width="10" height="8" fill="url(#win)" rx="1" opacity=".65"/>
+      <rect x="363" y="100" width="10" height="8" fill="url(#win)" rx="1" opacity=".35"/>
+      <rect x="376" y="100" width="10" height="8" fill="url(#win)" rx="1" opacity=".75"/>
 
-      <!-- ホテル本体：メインファサード（石造り） -->
-      <!-- 土台シャドウ -->
-      <rect x="50" y="44" width="300" height="316" rx="3" fill="rgba(0,0,0,.45)"/>
-      <!-- 本体 -->
-      <rect x="48" y="40" width="304" height="316" rx="3" fill="url(#hFacade)"/>
 
-      <!-- 石積みの質感（横ライン） -->
-      <line x1="48" y1="80"  x2="352" y2="80"  stroke="rgba(160,168,190,.55)" stroke-width="1.2"/>
-      <line x1="48" y1="120" x2="352" y2="120" stroke="rgba(160,168,190,.45)" stroke-width="1"/>
-      <line x1="48" y1="160" x2="352" y2="160" stroke="rgba(160,168,190,.45)" stroke-width="1"/>
-      <line x1="48" y1="200" x2="352" y2="200" stroke="rgba(160,168,190,.4)"  stroke-width="0.8"/>
-      <line x1="48" y1="240" x2="352" y2="240" stroke="rgba(160,168,190,.4)"  stroke-width="0.8"/>
-      <line x1="48" y1="280" x2="352" y2="280" stroke="rgba(160,168,190,.35)" stroke-width="0.8"/>
+      <!-- ホテル本体 -->
+      <rect x="52" y="48" width="296" height="330" fill="url(#wall)" rx="3"/>
+      <!-- 石積み横ライン -->
+      <line x1="52" y1="90"  x2="348" y2="90"  stroke="rgba(150,160,185,.5)" stroke-width="1.2"/>
+      <line x1="52" y1="130" x2="348" y2="130" stroke="rgba(150,160,185,.42)" stroke-width="1"/>
+      <line x1="52" y1="168" x2="348" y2="168" stroke="rgba(150,160,185,.38)" stroke-width=".9"/>
+      <line x1="52" y1="206" x2="348" y2="206" stroke="rgba(150,160,185,.35)" stroke-width=".8"/>
+      <line x1="52" y1="244" x2="348" y2="244" stroke="rgba(150,160,185,.32)" stroke-width=".8"/>
+      <line x1="52" y1="282" x2="348" y2="282" stroke="rgba(150,160,185,.28)" stroke-width=".7"/>
+      <!-- 縦ピラスター -->
+      <rect x="70"  y="48" width="10" height="330" fill="rgba(255,255,255,.15)" rx="2"/>
+      <rect x="68"  y="48" width="2"  height="330" fill="rgba(0,0,0,.08)"/>
+      <rect x="136" y="48" width="7"  height="330" fill="rgba(255,255,255,.1)"  rx="1"/>
+      <rect x="257" y="48" width="7"  height="330" fill="rgba(255,255,255,.1)"  rx="1"/>
+      <rect x="320" y="48" width="10" height="330" fill="rgba(255,255,255,.15)" rx="2"/>
+      <rect x="328" y="48" width="2"  height="330" fill="rgba(0,0,0,.08)"/>
+      <!-- コーニス（屋根飾り） -->
+      <rect x="52" y="46" width="296" height="5" fill="#ecf0fa" rx="1"/>
+      <rect x="52" y="45" width="296" height="3" fill="#f5f8ff" rx="1"/>
+      <rect x="54" y="50" width="292" height="2" fill="rgba(0,0,0,.14)"/>
 
-      <!-- 縦のピラスター（太めの柱） -->
-      <rect x="68"  y="40" width="10" height="316" fill="rgba(255,255,255,.14)" rx="2"/>
-      <rect x="135" y="40" width="8"  height="316" fill="rgba(255,255,255,.1)"  rx="1"/>
-      <rect x="257" y="40" width="8"  height="316" fill="rgba(255,255,255,.1)"  rx="1"/>
-      <rect x="322" y="40" width="10" height="316" fill="rgba(255,255,255,.14)" rx="2"/>
-      <!-- ピラスターの陰影 -->
-      <rect x="66"  y="40" width="2"  height="316" fill="rgba(0,0,0,.12)"/>
-      <rect x="322" y="40" width="2"  height="316" fill="rgba(0,0,0,.12)"/>
+      <!-- ヘリポート（屋上：y=48の真上） -->
+      <!-- コンクリートパッド -->
+      <rect x="170" y="42" width="60" height="8" fill="#4a5060" rx="1"/>
+      <rect x="171" y="43" width="58" height="6" fill="#555a6a" rx="1"/>
+      <!-- H マーク -->
+      <rect x="182" y="44" width="2.5" height="4" fill="#E8C547" opacity=".9"/>
+      <rect x="190" y="44" width="2.5" height="4" fill="#E8C547" opacity=".9"/>
+      <rect x="182" y="45.8" width="10.5" height="2" fill="#E8C547" opacity=".9"/>
+      <!-- 外周の黄色ライン -->
+      <rect x="170" y="42" width="60" height="8" fill="none" stroke="#E8C547" stroke-width="1" rx="1" opacity=".7"/>
+      <!-- 四隅の小さな赤ライト -->
+      <circle cx="173" cy="44" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite"/>
+      <circle cx="227" cy="44" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite;animation-delay:.8s"/>
+      <circle cx="173" cy="49" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite;animation-delay:.4s"/>
+      <circle cx="227" cy="49" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite;animation-delay:1.2s"/>
 
-      <!-- 上部タワー（中央） -->
-      <rect x="136" y="14" width="128" height="30" fill="url(#hFacade2)" rx="2"/>
-      <rect x="168" y="2"  width="64"  height="16" fill="url(#hFacade2)" rx="2"/>
-      <!-- 尖塔 -->
-      <polygon points="200,0 195,4 205,4" fill="#c8ccd8"/>
-      <rect x="199" y="0" width="2" height="6" fill="#b8bec8"/>
-      <!-- 金の旗 -->
-      <polygon points="201.5,0 216,3.5 201.5,7" fill="#C9A227" filter="url(#hGlow2)"/>
-      <!-- タワーの窓 -->
-      <rect x="152" y="20" width="14" height="10" fill="url(#hWin)" rx="1" opacity=".6"/>
-      <rect x="173" y="18" width="12" height="10" fill="url(#hWin)" rx="1" opacity=".8"/>
-      <rect x="215" y="18" width="12" height="10" fill="url(#hWin)" rx="1" opacity=".6"/>
-      <rect x="234" y="20" width="14" height="10" fill="url(#hWin)" rx="1" opacity=".5"/>
+      <!-- ヘリコプターアニメーション -->
+      <!-- 座標メモ: viewBox 400x380, ヘリポート中央(200,46), ヘリ基点translate(188,26) -->
+      <!-- ヘリ中心=(188+12, 26+9)=(200,35), スキッドy=49 ≈ ヘリポy=46 OK -->
+      <!-- 右端外スタート: ヘリ基点x=188, 右端まで=400-188=212 → translate(212,0)で右端外ぴったり -->
+      <!-- 左斜め上: x方向 -（188+212+50）=-450, y方向 -60（上方） -->
+      <style>
+        @keyframes rotor{to{transform:rotate(360deg)}}
+        @keyframes blink{0%,100%{opacity:.9}50%{opacity:.1}}
+        @keyframes helifly{
+          0%   {transform:translate(212px, 0px)}
+          25%  {transform:translate(0px,   0px)}
+          42%  {transform:translate(0px,   0px)}
+          67%  {transform:translate(-450px,-60px)}
+          100% {transform:translate(-450px,-60px)}
+        }
+        @keyframes heliopacity{
+          0%   {opacity:0}
+          2%   {opacity:1}
+          60%  {opacity:1}
+          70%  {opacity:0}
+          100% {opacity:0}
+        }
+        .heli-wrap{
+          animation:
+            helifly     12s linear infinite,
+            heliopacity 12s linear infinite;
+          animation-delay:1s;
+        }
+      </style>
 
-      <!-- コーニス（屋根飾り帯） -->
-      <rect x="48" y="38" width="304" height="6"  fill="#e2e6f2" rx="1"/>
-      <rect x="48" y="37" width="304" height="3"  fill="#f0f2fa" rx="1"/>
-      <rect x="50" y="43" width="300" height="2"  fill="rgba(0,0,0,.15)"/>
+      <g class="heli-wrap" transform="translate(188,26)">
+        <!-- ボディ -->
+        <ellipse cx="12" cy="9" rx="13" ry="5.5" fill="#22293a"/>
+        <ellipse cx="11" cy="8" rx="11" ry="4.5" fill="#2e3850"/>
+        <!-- キャビン窓 -->
+        <ellipse cx="9" cy="7" rx="4.5" ry="3.5" fill="rgba(160,210,255,.6)"/>
+        <ellipse cx="9" cy="7" rx="4.5" ry="3.5" fill="none" stroke="rgba(255,255,255,.35)" stroke-width=".8"/>
+        <!-- テールブーム -->
+        <rect x="22" y="7.5" width="16" height="2.5" fill="#1e2538" rx="1"/>
+        <!-- テールローター -->
+        <rect x="35" y="4" width="1.5" height="8" fill="#3a4560" rx=".5"
+          style="transform-origin:35.75px 8px;animation:rotor .25s linear infinite"/>
+        <rect x="32" y="7.2" width="8" height="1.5" fill="#3a4560" rx=".5"
+          style="transform-origin:35.75px 7.95px;animation:rotor .25s linear infinite;animation-delay:.125s"/>
+        <!-- ランディングスキッド -->
+        <line x1="5"  y1="14" x2="21" y2="14" stroke="#1a2030" stroke-width="2" stroke-linecap="round"/>
+        <line x1="7"  y1="12" x2="7"  y2="14" stroke="#1a2030" stroke-width="1.5"/>
+        <line x1="17" y1="12" x2="17" y2="14" stroke="#1a2030" stroke-width="1.5"/>
+        <!-- メインローター（ボディ中心x=12,y=4） -->
+        <rect x="-10" y="3" width="44" height="1.5" fill="#3a4560" rx=".5"
+          style="transform-origin:12px 3.75px;animation:rotor .28s linear infinite"/>
+        <rect x="11.2" y="-8" width="1.5" height="24" fill="#3a4560" rx=".5"
+          style="transform-origin:11.95px 3.75px;animation:rotor .28s linear infinite;animation-delay:.14s"/>
+        <!-- 機体ライト -->
+        <circle cx="1" cy="9" r="2" fill="#ff3030"
+          style="animation:blink 1.2s ease-in-out infinite"/>
+        <circle cx="23" cy="9" r="1.5" fill="#50ff50" opacity=".8"/>
+        <!-- スポットライト -->
+        <path d="M8,14 L2,26 L14,26 Z" fill="rgba(255,248,180,.12)"/>
+      </g>
 
-      <!-- フロア1の窓（左右） y=48〜88 -->
-      <rect x="56"  y="52" width="22" height="32" fill="url(#hWin)" rx="2" opacity=".85"/>
-      <rect x="85"  y="52" width="22" height="32" fill="url(#hWin)" rx="2" opacity=".55"/>
-      <rect x="113" y="52" width="18" height="32" fill="url(#hWin)" rx="2" opacity=".7"/>
-      <rect x="269" y="52" width="18" height="32" fill="url(#hWin)" rx="2" opacity=".5"/>
-      <rect x="293" y="52" width="22" height="32" fill="url(#hWin)" rx="2" opacity=".75"/>
-      <rect x="322" y="52" width="22" height="32" fill="url(#hWin)" rx="2" opacity=".6"/>
-      <!-- 窓枠 -->
-      <rect x="56"  y="52" width="22" height="32" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2" rx="2"/>
-      <rect x="85"  y="52" width="22" height="32" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1"   rx="2"/>
-      <rect x="113" y="52" width="18" height="32" fill="none" stroke="rgba(255,255,255,.4)"  stroke-width="1"   rx="2"/>
-      <rect x="269" y="52" width="18" height="32" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1"   rx="2"/>
-      <rect x="293" y="52" width="22" height="32" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="1.2" rx="2"/>
-      <rect x="322" y="52" width="22" height="32" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1"   rx="2"/>
-      <!-- 窓の縦桟 -->
-      <line x1="67"  y1="52" x2="67"  y2="84" stroke="rgba(200,210,230,.35)" stroke-width=".8"/>
-      <line x1="96"  y1="52" x2="96"  y2="84" stroke="rgba(200,210,230,.3)"  stroke-width=".8"/>
-      <line x1="333" y1="52" x2="333" y2="84" stroke="rgba(200,210,230,.32)" stroke-width=".8"/>
-      <line x1="304" y1="52" x2="304" y2="84" stroke="rgba(200,210,230,.28)" stroke-width=".8"/>
+      <!-- 旗（屋上端） -->
+      <rect x="338" y="34" width="2" height="14" fill="#8090a0"/>
+      <polygon points="340,34 350,37 340,40" fill="#C9A227" filter="url(#glow2)"/>
 
-      <!-- フロア2の窓 y=90〜130 -->
-      <rect x="56"  y="92" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".5"/>
-      <rect x="85"  y="92" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".8"/>
-      <rect x="113" y="92" width="18" height="24" fill="url(#hWin)" rx="1.5" opacity=".45"/>
-      <rect x="269" y="92" width="18" height="24" fill="url(#hWin)" rx="1.5" opacity=".7"/>
-      <rect x="293" y="92" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".35"/>
-      <rect x="322" y="92" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".65"/>
-      <rect x="56"  y="92" width="22" height="24" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1" rx="1.5"/>
-      <rect x="85"  y="92" width="22" height="24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1" rx="1.5"/>
-      <rect x="293" y="92" width="22" height="24" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1" rx="1.5"/>
-      <rect x="322" y="92" width="22" height="24" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1" rx="1.5"/>
+      <!-- フロア1窓（y52〜82） -->
+      <rect x="58"  y="55" width="20" height="30" fill="url(#win)" rx="2" opacity=".85"/>
+      <rect x="82"  y="55" width="20" height="30" fill="url(#win)" rx="2" opacity=".5"/>
+      <rect x="110" y="55" width="16" height="30" fill="url(#win)" rx="2" opacity=".7"/>
+      <rect x="274" y="55" width="16" height="30" fill="url(#win)" rx="2" opacity=".45"/>
+      <rect x="298" y="55" width="20" height="30" fill="url(#win)" rx="2" opacity=".8"/>
+      <rect x="322" y="55" width="20" height="30" fill="url(#win)" rx="2" opacity=".55"/>
+      <rect x="58"  y="55" width="20" height="30" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="1.2" rx="2"/>
+      <rect x="82"  y="55" width="20" height="30" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1"   rx="2"/>
+      <rect x="298" y="55" width="20" height="30" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1.2" rx="2"/>
+      <rect x="322" y="55" width="20" height="30" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1"   rx="2"/>
+      <line x1="68" y1="55" x2="68" y2="85" stroke="rgba(200,210,230,.32)" stroke-width=".8"/>
+      <line x1="92" y1="55" x2="92" y2="85" stroke="rgba(200,210,230,.25)" stroke-width=".8"/>
 
-      <!-- フロア3の窓 y=132〜164 -->
-      <rect x="56"  y="132" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".75"/>
-      <rect x="85"  y="132" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".4"/>
-      <rect x="113" y="132" width="18" height="24" fill="url(#hWin)" rx="1.5" opacity=".6"/>
-      <rect x="269" y="132" width="18" height="24" fill="url(#hWin)" rx="1.5" opacity=".35"/>
-      <rect x="293" y="132" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".7"/>
-      <rect x="322" y="132" width="22" height="24" fill="url(#hWin)" rx="1.5" opacity=".5"/>
+      <!-- フロア2窓（y94〜116） -->
+      <rect x="58"  y="95" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".5"/>
+      <rect x="82"  y="95" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".8"/>
+      <rect x="110" y="95" width="16" height="22" fill="url(#win)" rx="1.5" opacity=".4"/>
+      <rect x="274" y="95" width="16" height="22" fill="url(#win)" rx="1.5" opacity=".7"/>
+      <rect x="298" y="95" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".35"/>
+      <rect x="322" y="95" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".65"/>
+      <!-- フロア3窓（y134〜156） -->
+      <rect x="58"  y="134" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".72"/>
+      <rect x="82"  y="134" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".38"/>
+      <rect x="110" y="134" width="16" height="22" fill="url(#win)" rx="1.5" opacity=".6"/>
+      <rect x="274" y="134" width="16" height="22" fill="url(#win)" rx="1.5" opacity=".3"/>
+      <rect x="298" y="134" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".75"/>
+      <rect x="322" y="134" width="20" height="22" fill="url(#win)" rx="1.5" opacity=".45"/>
+      <!-- フロア4窓（y172〜192） -->
+      <rect x="58"  y="173" width="20" height="20" fill="url(#win)" rx="1.5" opacity=".4"/>
+      <rect x="82"  y="173" width="20" height="20" fill="url(#win)" rx="1.5" opacity=".65"/>
+      <rect x="298" y="173" width="20" height="20" fill="url(#win)" rx="1.5" opacity=".55"/>
+      <rect x="322" y="173" width="20" height="20" fill="url(#win)" rx="1.5" opacity=".32"/>
 
-      <!-- フロア4 y=172〜196 -->
-      <rect x="56"  y="172" width="22" height="22" fill="url(#hWin)" rx="1.5" opacity=".4"/>
-      <rect x="85"  y="172" width="22" height="22" fill="url(#hWin)" rx="1.5" opacity=".65"/>
-      <rect x="293" y="172" width="22" height="22" fill="url(#hWin)" rx="1.5" opacity=".55"/>
-      <rect x="322" y="172" width="22" height="22" fill="url(#hWin)" rx="1.5" opacity=".35"/>
+      <!-- 中央大アーチ窓 -->
+      <rect x="152" y="52" width="96" height="76" rx="4" fill="url(#win)" opacity=".55"/>
+      <path d="M152,94 Q200,52 248,94" fill="url(#win)" opacity=".6"/>
+      <rect x="152" y="52" width="96" height="76" rx="4" fill="none" stroke="rgba(255,240,185,.52)" stroke-width="2"/>
+      <line x1="200" y1="54" x2="200" y2="128" stroke="rgba(255,240,185,.35)" stroke-width="1.2"/>
+      <line x1="176" y1="56" x2="176" y2="128" stroke="rgba(255,240,185,.2)"  stroke-width=".8"/>
+      <line x1="224" y1="56" x2="224" y2="128" stroke="rgba(255,240,185,.2)"  stroke-width=".8"/>
+      <line x1="154" y1="92" x2="246" y2="92" stroke="rgba(255,240,185,.25)"  stroke-width=".8"/>
 
-      <!-- 中央の大アーチ窓（エントランス上） -->
-      <rect x="150" y="44" width="100" height="82" rx="4" fill="url(#hWin)" opacity=".55"/>
-      <path d="M150,90 Q200,44 250,90" fill="url(#hWin)" opacity=".6"/>
-      <rect x="150" y="44" width="100" height="82" rx="4" fill="none" stroke="rgba(255,240,190,.55)" stroke-width="1.8"/>
-      <line x1="200" y1="46" x2="200" y2="126" stroke="rgba(255,240,190,.38)" stroke-width="1.2"/>
-      <line x1="175" y1="48" x2="175" y2="126" stroke="rgba(255,240,190,.22)" stroke-width=".8"/>
-      <line x1="225" y1="48" x2="225" y2="126" stroke="rgba(255,240,190,.22)" stroke-width=".8"/>
-      <line x1="152" y1="88" x2="248" y2="88" stroke="rgba(255,240,190,.28)" stroke-width=".8"/>
-      <!-- アーチ上の扇形装飾 -->
-      <path d="M150,90 Q200,44 250,90 Q225,72 200,68 Q175,72 150,90Z" fill="rgba(255,220,120,.12)"/>
-
-      <!-- ポルティコ（大きな玄関庇） -->
-      <rect x="96"  y="220" width="208" height="12" fill="#d8dce8" rx="1"/>
-      <rect x="92"  y="216" width="216" height="6"  fill="#e8ecf8" rx="1"/>
-      <rect x="94"  y="226" width="212" height="3"  fill="rgba(0,0,0,.18)"/>
-      <!-- 庇ハイライト -->
-      <rect x="94"  y="217" width="212" height="2"  fill="rgba(255,255,255,.5)"/>
-
-      <!-- ポルティコ支柱（4本・太め） -->
-      <rect x="108" y="228" width="12" height="72" fill="#d0d4e2" rx="3"/>
-      <rect x="108" y="228" width="12" height="72" fill="none" stroke="rgba(255,255,255,.2)" stroke-width=".8" rx="3"/>
-      <rect x="108" y="228" width="3"  height="72" fill="rgba(255,255,255,.18)" rx="2"/>
-
-      <rect x="168" y="228" width="10" height="72" fill="#c8ccd8" rx="2"/>
-      <rect x="222" y="228" width="10" height="72" fill="#c8ccd8" rx="2"/>
-
-      <rect x="280" y="228" width="12" height="72" fill="#d0d4e2" rx="3"/>
-      <rect x="280" y="228" width="12" height="72" fill="none" stroke="rgba(255,255,255,.2)" stroke-width=".8" rx="3"/>
-      <rect x="280" y="228" width="3"  height="72" fill="rgba(255,255,255,.18)" rx="2"/>
-
-      <!-- 支柱キャップ -->
-      <rect x="105" y="224" width="18" height="6" fill="#dce0ee" rx="2"/>
-      <rect x="277" y="224" width="18" height="6" fill="#dce0ee" rx="2"/>
-
-      <!-- エントランスドア（3枚・高さあり） -->
-      <rect x="154" y="228" width="92" height="98" fill="url(#hDoor)" rx="3"/>
-      <!-- ドア3枚 -->
-      <rect x="158" y="232" width="26" height="90" fill="#181c2c" rx="1.5"/>
-      <rect x="187" y="232" width="26" height="90" fill="#181c2c" rx="1.5"/>
-      <rect x="216" y="232" width="26" height="90" fill="#181c2c" rx="1.5"/>
-      <!-- ドア枠（金） -->
-      <rect x="158" y="232" width="26" height="90" fill="none" stroke="rgba(201,162,39,.55)" stroke-width="1" rx="1.5"/>
-      <rect x="187" y="232" width="26" height="90" fill="none" stroke="rgba(201,162,39,.55)" stroke-width="1" rx="1.5"/>
-      <rect x="216" y="232" width="26" height="90" fill="none" stroke="rgba(201,162,39,.55)" stroke-width="1" rx="1.5"/>
-      <!-- ドアの中段横桟 -->
-      <line x1="159" y1="278" x2="183" y2="278" stroke="rgba(201,162,39,.4)" stroke-width=".8"/>
-      <line x1="188" y1="278" x2="212" y2="278" stroke="rgba(201,162,39,.4)" stroke-width=".8"/>
-      <line x1="217" y1="278" x2="241" y2="278" stroke="rgba(201,162,39,.4)" stroke-width=".8"/>
-      <!-- ドアノブ -->
-      <circle cx="183" cy="280" r="2.5" fill="#C9A227"/>
-      <circle cx="189" cy="280" r="2.5" fill="#C9A227"/>
-      <circle cx="211" cy="280" r="2.5" fill="#C9A227"/>
-      <circle cx="217" cy="280" r="2.5" fill="#C9A227"/>
-      <!-- ファンライト（3ドア上） -->
-      <path d="M154,228 Q200,208 246,228" fill="rgba(255,210,90,.15)"/>
-      <path d="M154,228 Q200,208 246,228" fill="none" stroke="rgba(201,162,39,.42)" stroke-width="1.2"/>
-
-      <!-- 地面 -->
-      <rect x="0"   y="326" width="400" height="34" fill="url(#hGround)"/>
-      <rect x="48"  y="316" width="304" height="12" fill="#1a1828" rx="1"/>
-      <!-- 赤カーペット -->
-      <rect x="166" y="316" width="68"  height="12" fill="#8B1818" rx="1"/>
-      <rect x="170" y="318" width="60"  height="8"  fill="#a02020" rx="1"/>
-      <!-- カーペット中央ライン -->
-      <line x1="200" y1="316" x2="200" y2="328" stroke="rgba(201,162,39,.4)" stroke-width=".8"/>
-
-      <!-- 外灯（左右 2セット） -->
-      <!-- 左 外 -->
-      <rect x="74"  y="228" width="4" height="90" fill="#707888" rx="1"/>
-      <path d="M76,228 Q76,216 88,214" stroke="#707888" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <circle cx="90" cy="212" r="9"  fill="rgba(255,220,100,.1)" filter="url(#hGlow)"/>
-      <circle cx="90" cy="213" r="6"  fill="#ffe070" opacity=".85" filter="url(#hGlow)"/>
-      <circle cx="90" cy="213" r="3.5" fill="#fff8d0"/>
-      <!-- 左 内 -->
-      <rect x="143" y="228" width="3" height="90" fill="#808898" rx="1"/>
-      <circle cx="144" cy="226" r="5"  fill="rgba(255,215,90,.12)" filter="url(#hGlow)"/>
-      <circle cx="144" cy="227" r="4"  fill="#ffe068" opacity=".8"/>
-      <circle cx="144" cy="227" r="2.2" fill="#fff5c0"/>
-      <!-- 右 内 -->
-      <rect x="254" y="228" width="3" height="90" fill="#808898" rx="1"/>
-      <circle cx="255" cy="226" r="5"  fill="rgba(255,215,90,.12)" filter="url(#hGlow)"/>
-      <circle cx="255" cy="227" r="4"  fill="#ffe068" opacity=".8"/>
-      <circle cx="255" cy="227" r="2.2" fill="#fff5c0"/>
-      <!-- 右 外 -->
-      <rect x="322" y="228" width="4" height="90" fill="#707888" rx="1"/>
-      <path d="M324,228 Q324,216 312,214" stroke="#707888" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <circle cx="310" cy="212" r="9"  fill="rgba(255,220,100,.1)" filter="url(#hGlow)"/>
-      <circle cx="310" cy="213" r="6"  fill="#ffe070" opacity=".85" filter="url(#hGlow)"/>
-      <circle cx="310" cy="213" r="3.5" fill="#fff8d0"/>
-
-      <!-- 看板（大きく・文字がしっかり見えるように） -->
-      <!-- 看板シャドウ -->
-      <rect x="74" y="130" width="252" height="72" rx="6" fill="rgba(0,0,0,.7)"/>
-      <!-- 看板ベース（濃紺） -->
-      <rect x="72" y="126" width="256" height="72" rx="6" fill="url(#hSign)"/>
-      <!-- 上面ハイライト -->
-      <rect x="74" y="127" width="252" height="5" rx="4" fill="rgba(255,235,180,.12)"/>
-      <!-- 金外枠（太） -->
-      <rect x="72" y="126" width="256" height="72" rx="6" fill="none" stroke="#C9A227" stroke-width="2.5"/>
-      <!-- 金内枠（細） -->
-      <rect x="77" y="131" width="246" height="62" rx="4" fill="none" stroke="rgba(201,162,39,.42)" stroke-width="1"/>
-
-      <!-- コーナー装飾（大ダイヤ） -->
-      <polygon points="77,139 83,133 89,139 83,145" fill="#C9A227" filter="url(#hGlow2)"/>
-      <polygon points="311,139 317,133 323,139 317,145" fill="#C9A227" filter="url(#hGlow2)"/>
-      <polygon points="77,189 83,183 89,189 83,195" fill="#C9A227" filter="url(#hGlow2)"/>
-      <polygon points="311,189 317,183 323,189 317,195" fill="#C9A227" filter="url(#hGlow2)"/>
-
-      <!-- サブテキスト（PATISSERIE） -->
-      <text x="200" y="144"
-        font-family="'Hiragino Mincho ProN','Georgia','Times New Roman',serif"
-        font-size="8.5" fill="rgba(201,162,39,.8)"
-        text-anchor="middle" letter-spacing="5">
-        ✦  P A T I S S E R I E  ✦
-      </text>
-
-      <!-- 細い区切り線 -->
-      <line x1="95" y1="150" x2="305" y2="150" stroke="rgba(201,162,39,.35)" stroke-width=".8"/>
-
-      <!-- メイン店名（大きく・グロー付き） -->
-      <g filter="url(#hTextGlow)">
-        <text x="200" y="172"
-          font-family="'Hiragino Mincho ProN','Yu Mincho','Georgia',serif"
+      <!-- 看板（大・中央寄り・余裕あり） -->
+      <rect x="64" y="134" width="272" height="78" rx="7" fill="rgba(0,0,0,.65)"/>
+      <rect x="62" y="130" width="276" height="78" rx="7" fill="url(#sgn)"/>
+      <rect x="64" y="131" width="272" height="5"  rx="5" fill="rgba(255,230,170,.11)"/>
+      <rect x="62" y="130" width="276" height="78" rx="7" fill="none" stroke="#C9A227" stroke-width="2.8"/>
+      <rect x="67" y="135" width="266" height="68" rx="5" fill="none" stroke="rgba(201,162,39,.4)" stroke-width="1"/>
+      <!-- PATISSERIE サブ -->
+      <text x="200" y="148"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="8" fill="rgba(201,162,39,.75)"
+        text-anchor="middle" letter-spacing="2">PATISSERIE · TECHNOA</text>
+      <line x1="84" y1="154" x2="316" y2="154" stroke="rgba(201,162,39,.32)" stroke-width=".8"/>
+      <!-- メイン店名 -->
+      <g filter="url(#tglow)">
+        <text x="200" y="178"
+          font-family="'Hiragino Mincho ProN','Yu Mincho',Georgia,serif"
           font-size="20" font-weight="bold"
-          fill="url(#hGold)"
-          text-anchor="middle" letter-spacing="2">
+          fill="url(#gld)" text-anchor="middle" letter-spacing="1">
           パティスリー・テクノア
         </text>
       </g>
+      <line x1="96" y1="185" x2="304" y2="185" stroke="rgba(201,162,39,.26)" stroke-width=".7"/>
+      <!-- HOTEL サブ -->
+      <text x="200" y="197"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="8" fill="rgba(201,162,39,.55)"
+        text-anchor="middle" letter-spacing="6">H O T E L</text>
 
-      <!-- 下の区切り線 -->
-      <line x1="105" y1="180" x2="295" y2="180" stroke="rgba(201,162,39,.28)" stroke-width=".7"/>
+      <!-- ポルティコ庇 -->
+      <rect x="90"  y="236" width="220" height="10" fill="#d8dce8" rx="1"/>
+      <rect x="86"  y="233" width="228" height="5"  fill="#e8ecf8" rx="1"/>
+      <rect x="88"  y="245" width="224" height="3"  fill="rgba(0,0,0,.2)"/>
+      <rect x="88"  y="234" width="224" height="2"  fill="rgba(255,255,255,.5)"/>
+      <!-- 支柱4本 -->
+      <rect x="100" y="244" width="12" height="76" fill="#d2d6e4" rx="3"/>
+      <rect x="100" y="244" width="3"  height="76" fill="rgba(255,255,255,.2)" rx="2"/>
+      <rect x="100" y="241" width="18" height="5"  fill="#dce0ee" rx="2"/>
+      <rect x="162" y="244" width="9"  height="76" fill="#c8ccd8" rx="2"/>
+      <rect x="229" y="244" width="9"  height="76" fill="#c8ccd8" rx="2"/>
+      <rect x="288" y="244" width="12" height="76" fill="#d2d6e4" rx="3"/>
+      <rect x="288" y="244" width="3"  height="76" fill="rgba(255,255,255,.2)" rx="2"/>
+      <rect x="282" y="241" width="18" height="5"  fill="#dce0ee" rx="2"/>
 
-      <!-- 左右装飾 -->
-      <text x="91"  y="174" font-size="11" fill="#C9A227" opacity=".9" font-family="serif">✿</text>
-      <text x="293" y="174" font-size="11" fill="#C9A227" opacity=".9" font-family="serif">✿</text>
+      <!-- エントランス -->
+      <rect x="158" y="244" width="84" height="96" fill="#101428" rx="2"/>
+      <rect x="162" y="248" width="25" height="88" fill="#171c30" rx="1"/>
+      <rect x="191" y="248" width="25" height="88" fill="#171c30" rx="1"/>
+      <rect x="220" y="248" width="18" height="88" fill="#171c30" rx="1"/>
+      <rect x="162" y="248" width="25" height="88" fill="none" stroke="rgba(201,162,39,.52)" stroke-width="1" rx="1"/>
+      <rect x="191" y="248" width="25" height="88" fill="none" stroke="rgba(201,162,39,.52)" stroke-width="1" rx="1"/>
+      <rect x="220" y="248" width="18" height="88" fill="none" stroke="rgba(201,162,39,.42)" stroke-width="1" rx="1"/>
+      <line x1="163" y1="292" x2="186" y2="292" stroke="rgba(201,162,39,.38)" stroke-width=".8"/>
+      <line x1="192" y1="292" x2="215" y2="292" stroke="rgba(201,162,39,.38)" stroke-width=".8"/>
+      <circle cx="186" cy="294" r="2.5" fill="#C9A227"/>
+      <circle cx="192" cy="294" r="2.5" fill="#C9A227"/>
+      <path d="M158,244 Q200,224 242,244" fill="rgba(255,205,90,.14)"/>
+      <path d="M158,244 Q200,224 242,244" fill="none" stroke="rgba(201,162,39,.4)" stroke-width="1.2"/>
 
-      <!-- 看板サブ（HOTEL） -->
-      <text x="200" y="191"
-        font-family="'Hiragino Mincho ProN','Georgia',serif"
-        font-size="7.5" fill="rgba(201,162,39,.6)"
-        text-anchor="middle" letter-spacing="6">
-        H O T E L  ·  P A T I S S E R I E
-      </text>
+      <!-- 地面 -->
+      <rect x="0"   y="340" width="400" height="40" fill="url(#gnd)"/>
+      <rect x="52"  y="330" width="296" height="14" fill="#141228" rx="1"/>
+      <rect x="168" y="330" width="64"  height="14" fill="#8a1818" rx="1"/>
+      <rect x="172" y="332" width="56"  height="10" fill="#a02020" rx="1"/>
+      <line x1="200" y1="330" x2="200" y2="344" stroke="rgba(201,162,39,.38)" stroke-width=".8"/>
+
+      <!-- 外灯 -->
+      <rect x="78"  y="244" width="4" height="88" fill="#6a7080" rx="1"/>
+      <path d="M80,244 Q80,232 92,230" stroke="#6a7080" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="94" cy="228" r="8"  fill="rgba(255,220,100,.12)" filter="url(#glow)"/>
+      <circle cx="94" cy="229" r="5"  fill="#ffe060" opacity=".88"/>
+      <circle cx="94" cy="229" r="3"  fill="#fff8c8"/>
+      <rect x="318" y="244" width="4" height="88" fill="#6a7080" rx="1"/>
+      <path d="M320,244 Q320,232 308,230" stroke="#6a7080" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="306" cy="228" r="8"  fill="rgba(255,220,100,.12)" filter="url(#glow)"/>
+      <circle cx="306" cy="229" r="5"  fill="#ffe060" opacity=".88"/>
+      <circle cx="306" cy="229" r="3"  fill="#fff8c8"/>
+
+      <!-- 外灯グロー（地面への反射） -->
+      <ellipse cx="94"  cy="340" rx="30" ry="8" fill="rgba(255,210,80,.06)"/>
+      <ellipse cx="306" cy="340" rx="30" ry="8" fill="rgba(255,210,80,.06)"/>
     </svg>
   </div>
   <div id="title-bottom">
@@ -901,7 +888,7 @@ function sfl(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(
 // ══════════════════════════════
 let px=1,py=1;
 let bounce=0,bounceDir=1; // 歩行アニメ
-let animT=0,flashAlpha=0; // フレームカウンタ
+let animT=0; // フレームカウンタ
 
 const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 let heldDir=null,moveTimer=null;
@@ -909,7 +896,7 @@ let heldDir=null,moveTimer=null;
 let _lastPressTime=0;
 function press(d){
   const now=Date.now();
-  if(now-_lastPressTime<30) return; // 30ms以内の重複を無視
+  if(now-_lastPressTime<16) return;
   _lastPressTime=now;
   if(heldDir===d) return;
   if(heldDir) rel(heldDir);
@@ -928,10 +915,7 @@ function rel(d){
 document.addEventListener('touchcancel',()=>{if(heldDir)rel(heldDir);});
 
 // dpadボタンをJS初期化（touch専用・mouseイベント無効化で2コマ防止）
-let _dpadReady=false;
 function initDpad(){
-  if(_dpadReady) return; // 2回目以降は何もしない
-  _dpadReady=true;
   ['up','down','left','right'].forEach(d=>{
     const btn=document.getElementById('db-'+d);
     if(!btn) return;
@@ -1093,16 +1077,6 @@ function draw(){
   cx2.textBaseline='middle';
   cx2.fillText('🧑‍🍳', px2, py2+bv);
 
-  // ゴール開放フラッシュ（canvas内のみ・DOM操作なし）
-  if(flashAlpha>0){
-    cx2.globalAlpha=flashAlpha*0.4;
-    cx2.fillStyle='#C9A227';
-    cx2.fillRect(0,0,CW,CH);
-    cx2.globalAlpha=1.0;
-    cx2.shadowBlur=0;
-    cx2.shadowColor='rgba(0,0,0,0)';
-    flashAlpha=Math.max(0,flashAlpha-0.03);
-  }
 }
 
 // ── 壁セル ──
@@ -1217,7 +1191,6 @@ function collectItem(it){
     el.classList.add('done');
     el.textContent='✨ 全材料GET！キッチンへ急げ！';
     // キャンバス内でフラッシュ（DOM操作なし）
-    flashAlpha=1.0;
   }
   // ポップアップ
   const pop=document.getElementById('popup');
@@ -1293,7 +1266,6 @@ function startGame(){
   document.getElementById('prog').classList.remove('done');
   document.getElementById('prog').textContent='食材: 0 / 8';
   stopLoop();
-  initDpad(); // 初回のみ有効（2回目以降はガードで無視）
   // レイアウト確定後にキャンバス初期化
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
@@ -1478,7 +1450,7 @@ function showResult(ok){
           <div style="font-size:11px;color:var(--mid);line-height:1.7;
             background:rgba(255,255,255,.6);border-radius:8px;padding:8px 10px;">
             📍 受付スタッフに<br>
-            <strong>「クッキーのレシピ、見つけました！」</strong><br>
+            <strong>「クッキーを作りたいです！」</strong><br>
             と伝えよう！
           </div>
         </div>
@@ -1725,7 +1697,7 @@ function playSE(type){
 
 
 
-window.addEventListener('load',()=>{ showSc('title-screen'); });
+window.addEventListener('load',()=>{ initDpad(); showSc('title-screen'); });
 // ズーム・スクロール制御
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
