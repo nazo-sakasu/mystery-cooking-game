@@ -415,65 +415,125 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
       <circle cx="173" cy="49" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite;animation-delay:.4s"/>
       <circle cx="227" cy="49" r="1.5" fill="#ff3030" style="animation:blink 2s ease-in-out infinite;animation-delay:1.2s"/>
 
-      <!-- ヘリコプターアニメーション -->
-      <!-- 座標メモ: viewBox 400x380, ヘリポート中央(200,46), ヘリ基点translate(188,26) -->
-      <!-- ヘリ中心=(188+12, 26+9)=(200,35), スキッドy=49 ≈ ヘリポy=46 OK -->
-      <!-- 右端外スタート: ヘリ基点x=188, 右端まで=400-188=212 → translate(212,0)で右端外ぴったり -->
-      <!-- 左斜め上: x方向 -（188+212+50）=-450, y方向 -60（上方） -->
-      <style>
-        @keyframes rotor{to{transform:rotate(360deg)}}
-        @keyframes blink{0%,100%{opacity:.9}50%{opacity:.1}}
-        @keyframes helifly{
-          0%   {transform:translate(212px, 0px)}
-          25%  {transform:translate(0px,   0px)}
-          42%  {transform:translate(0px,   0px)}
-          67%  {transform:translate(-450px,-60px)}
-          100% {transform:translate(-450px,-60px)}
-        }
-        @keyframes heliopacity{
-          0%   {opacity:0}
-          2%   {opacity:1}
-          60%  {opacity:1}
-          70%  {opacity:0}
-          100% {opacity:0}
-        }
-        .heli-wrap{
-          animation:
-            helifly     12s linear infinite,
-            heliopacity 12s linear infinite;
-          animation-delay:1s;
-        }
-      </style>
+      <!-- ヘリコプターアニメーション（SMIL：iOS Safariで確実動作） -->
+      <!-- ヘリ基点 translate(188,26)、ヘリポート中央(200,46)の上に着地 -->
+      <!-- タイムライン: 0-1s非表示 / 1-4s飛来 / 4-6s停止(2秒) / 6-9s飛去 / 9-12s待機 -->
+      <defs>
+        <linearGradient id="heliBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3a4660"/>
+          <stop offset="50%" stop-color="#242b3f"/>
+          <stop offset="100%" stop-color="#16192a"/>
+        </linearGradient>
+        <linearGradient id="heliGlass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#a8d4ff" stop-opacity=".9"/>
+          <stop offset="50%" stop-color="#4a80c0" stop-opacity=".7"/>
+          <stop offset="100%" stop-color="#2a4a78" stop-opacity=".6"/>
+        </linearGradient>
+        <radialGradient id="heliSpot" cx="50%" cy="0%" r="100%">
+          <stop offset="0%" stop-color="#fff8b0" stop-opacity=".6"/>
+          <stop offset="100%" stop-color="#ffd040" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <g transform="translate(188,26)">
+        <g>
+          <!-- 位置アニメ -->
+          <animateTransform attributeName="transform" attributeType="XML"
+            type="translate"
+            values="212,0; 212,0; 0,0; 0,0; -450,-60; -450,-60"
+            keyTimes="0; 0.083; 0.333; 0.5; 0.75; 1"
+            dur="12s" repeatCount="indefinite"/>
+          <!-- 透明度 -->
+          <animate attributeName="opacity"
+            values="0; 0; 1; 1; 0; 0"
+            keyTimes="0; 0.083; 0.167; 0.667; 0.75; 1"
+            dur="12s" repeatCount="indefinite"/>
 
-      <g class="heli-wrap" transform="translate(188,26)">
-        <!-- ボディ -->
-        <ellipse cx="12" cy="9" rx="13" ry="5.5" fill="#22293a"/>
-        <ellipse cx="11" cy="8" rx="11" ry="4.5" fill="#2e3850"/>
-        <!-- キャビン窓 -->
-        <ellipse cx="9" cy="7" rx="4.5" ry="3.5" fill="rgba(160,210,255,.6)"/>
-        <ellipse cx="9" cy="7" rx="4.5" ry="3.5" fill="none" stroke="rgba(255,255,255,.35)" stroke-width=".8"/>
-        <!-- テールブーム -->
-        <rect x="22" y="7.5" width="16" height="2.5" fill="#1e2538" rx="1"/>
-        <!-- テールローター -->
-        <rect x="35" y="4" width="1.5" height="8" fill="#3a4560" rx=".5"
-          style="transform-origin:35.75px 8px;animation:rotor .25s linear infinite"/>
-        <rect x="32" y="7.2" width="8" height="1.5" fill="#3a4560" rx=".5"
-          style="transform-origin:35.75px 7.95px;animation:rotor .25s linear infinite;animation-delay:.125s"/>
-        <!-- ランディングスキッド -->
-        <line x1="5"  y1="14" x2="21" y2="14" stroke="#1a2030" stroke-width="2" stroke-linecap="round"/>
-        <line x1="7"  y1="12" x2="7"  y2="14" stroke="#1a2030" stroke-width="1.5"/>
-        <line x1="17" y1="12" x2="17" y2="14" stroke="#1a2030" stroke-width="1.5"/>
-        <!-- メインローター（ボディ中心x=12,y=4） -->
-        <rect x="-10" y="3" width="44" height="1.5" fill="#3a4560" rx=".5"
-          style="transform-origin:12px 3.75px;animation:rotor .28s linear infinite"/>
-        <rect x="11.2" y="-8" width="1.5" height="24" fill="#3a4560" rx=".5"
-          style="transform-origin:11.95px 3.75px;animation:rotor .28s linear infinite;animation-delay:.14s"/>
-        <!-- 機体ライト -->
-        <circle cx="1" cy="9" r="2" fill="#ff3030"
-          style="animation:blink 1.2s ease-in-out infinite"/>
-        <circle cx="23" cy="9" r="1.5" fill="#50ff50" opacity=".8"/>
-        <!-- スポットライト -->
-        <path d="M8,14 L2,26 L14,26 Z" fill="rgba(255,248,180,.12)"/>
+          <!-- ヘリ下の影（地面反射） -->
+          <ellipse cx="12" cy="18" rx="14" ry="1.5" fill="rgba(0,0,0,.4)"/>
+
+          <!-- スポットライトビーム -->
+          <path d="M8,13 L-2,30 L18,30 Z" fill="url(#heliSpot)" opacity=".55"/>
+
+          <!-- テールブーム -->
+          <path d="M22,7 L38,7.5 L38,10 L22,11 Z" fill="url(#heliBody)"/>
+          <rect x="22" y="7" width="16" height="4" fill="none" stroke="#16192a" stroke-width=".3"/>
+          <!-- テール翼（垂直安定板） -->
+          <path d="M37,4 L40,3 L40,9 L37,8 Z" fill="#2e3850"/>
+          <path d="M37,10 L40,11 L40,13 L37,12 Z" fill="#2e3850"/>
+
+          <!-- メインボディ（流線形） -->
+          <path d="M0,9 Q0,4 6,3 L20,3 Q25,4 26,9 Q26,13 20,14 L6,14 Q0,13 0,9 Z"
+            fill="url(#heliBody)"/>
+          <!-- ボディハイライト -->
+          <path d="M2,6 Q3,4 6,4 L20,4 Q23,4 24,6" stroke="rgba(255,255,255,.25)" stroke-width=".8" fill="none"/>
+          <!-- ボディ下部の暗い線 -->
+          <path d="M3,13 L23,13" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
+
+          <!-- 操縦席ガラス（大きく・リアル） -->
+          <path d="M4,8 Q4,4 9,4 L14,4 Q15,4 15,9 L15,12 L4,12 Z" fill="url(#heliGlass)"/>
+          <path d="M4,8 Q4,4 9,4 L14,4 Q15,4 15,9 L15,12 L4,12 Z" fill="none"
+            stroke="rgba(255,255,255,.5)" stroke-width=".6"/>
+          <!-- 窓の反射 -->
+          <path d="M6,5.5 Q8,5 11,5" stroke="rgba(255,255,255,.7)" stroke-width=".8" fill="none"/>
+          <!-- ドア窓枠 -->
+          <line x1="15" y1="5" x2="15" y2="12" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
+          <rect x="16" y="6" width="5" height="5" fill="rgba(100,140,180,.5)" rx=".5"/>
+          <rect x="16" y="6" width="5" height="5" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".4" rx=".5"/>
+
+          <!-- エンジンカバー（上部） -->
+          <ellipse cx="13" cy="3" rx="5" ry="1.5" fill="#1a2030"/>
+          <rect x="12" y="1.5" width="2" height="2" fill="#6a7080"/>
+
+          <!-- テールローター（回転） -->
+          <g>
+            <rect x="38.5" y="3.5" width="1.2" height="8" fill="#2a3040" rx=".5"/>
+            <rect x="35.5" y="6.7" width="7" height="1.2" fill="#2a3040" rx=".5"/>
+            <circle cx="39" cy="7.3" r="0.8" fill="#6a7080"/>
+            <animateTransform attributeName="transform" attributeType="XML"
+              type="rotate" from="0 39 7.3" to="360 39 7.3"
+              dur="0.12s" repeatCount="indefinite"/>
+          </g>
+
+          <!-- ランディングスキッド（リアル形状） -->
+          <path d="M3,14.5 Q3,16 5,16 L19,16 Q21,16 21,14.5" stroke="#0e1220" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M3,15 L21,15" stroke="#1a2030" stroke-width="2" stroke-linecap="round"/>
+          <!-- スキッド支柱 -->
+          <path d="M6,13 L5,15 M8,13 L7,15" stroke="#1a2030" stroke-width=".8"/>
+          <path d="M18,13 L19,15 M16,13 L17,15" stroke="#1a2030" stroke-width=".8"/>
+
+          <!-- メインローター（ブラー付き・高速回転） -->
+          <g>
+            <!-- ブラー効果：円盤状に薄く -->
+            <ellipse cx="12" cy="3" rx="22" ry="1" fill="rgba(150,160,180,.15)"/>
+            <ellipse cx="12" cy="3" rx="22" ry="0.6" fill="rgba(200,210,230,.25)"/>
+            <!-- ブレード1 -->
+            <rect x="-10" y="2.5" width="44" height="1" fill="#2a3040" rx=".3"/>
+            <rect x="-10" y="2.5" width="44" height=".3" fill="rgba(255,255,255,.2)"/>
+            <!-- ブレード2（十字） -->
+            <rect x="11.5" y="-8" width="1" height="22" fill="#2a3040" rx=".3"/>
+            <!-- ローター軸 -->
+            <circle cx="12" cy="3" r="1.5" fill="#4a5568"/>
+            <circle cx="12" cy="3" r="0.8" fill="#6a7080"/>
+            <animateTransform attributeName="transform" attributeType="XML"
+              type="rotate" from="0 12 3" to="360 12 3"
+              dur="0.15s" repeatCount="indefinite"/>
+          </g>
+
+          <!-- 航行灯：赤（左・点滅） -->
+          <circle cx="0" cy="9" r="1.5" fill="#ff2020">
+            <animate attributeName="opacity" values="1;.2;1;.2;1" dur="1.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="0" cy="9" r="3" fill="#ff2020" opacity=".3">
+            <animate attributeName="opacity" values=".4;.05;.4;.05;.4" dur="1.2s" repeatCount="indefinite"/>
+          </circle>
+          <!-- 航行灯：緑（右） -->
+          <circle cx="24" cy="9" r="1.2" fill="#30ff30" opacity=".95"/>
+          <circle cx="24" cy="9" r="2.5" fill="#30ff30" opacity=".25"/>
+          <!-- ストロボ（上部・白点滅） -->
+          <circle cx="13" cy="1.5" r="0.8" fill="#ffffff">
+            <animate attributeName="opacity" values="1;0;0;1;0;0" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+        </g>
       </g>
 
       <!-- 旗（屋上端） -->
@@ -523,33 +583,121 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
       <line x1="224" y1="56" x2="224" y2="128" stroke="rgba(255,240,185,.2)"  stroke-width=".8"/>
       <line x1="154" y1="92" x2="246" y2="92" stroke="rgba(255,240,185,.25)"  stroke-width=".8"/>
 
-      <!-- 看板（大・中央寄り・余裕あり） -->
-      <rect x="64" y="134" width="272" height="78" rx="7" fill="rgba(0,0,0,.65)"/>
+      <!-- ═══ 看板（高級感・立体感UP） ═══ -->
+      <!-- 看板ぶら下げチェーン -->
+      <line x1="130" y1="126" x2="138" y2="134" stroke="#6a5020" stroke-width="1.5"/>
+      <line x1="270" y1="126" x2="262" y2="134" stroke="#6a5020" stroke-width="1.5"/>
+      <circle cx="130" cy="126" r="2" fill="#C9A227"/>
+      <circle cx="270" cy="126" r="2" fill="#C9A227"/>
+      <!-- 看板影（ぼかし風・複数レイヤー） -->
+      <rect x="66" y="138" width="268" height="78" rx="8" fill="rgba(0,0,0,.55)"/>
+      <rect x="64" y="135" width="272" height="78" rx="8" fill="rgba(0,0,0,.35)"/>
+      <!-- 看板本体：深い黒に微グラデ -->
       <rect x="62" y="130" width="276" height="78" rx="7" fill="url(#sgn)"/>
-      <rect x="64" y="131" width="272" height="5"  rx="5" fill="rgba(255,230,170,.11)"/>
-      <rect x="62" y="130" width="276" height="78" rx="7" fill="none" stroke="#C9A227" stroke-width="2.8"/>
-      <rect x="67" y="135" width="266" height="68" rx="5" fill="none" stroke="rgba(201,162,39,.4)" stroke-width="1"/>
-      <!-- PATISSERIE サブ -->
-      <text x="200" y="148"
+      <!-- ベルベット質感：細かいノイズ風ライン -->
+      <rect x="62" y="130" width="276" height="78" rx="7"
+        fill="rgba(40,48,72,.25)"/>
+      <!-- 上部光沢ハイライト -->
+      <rect x="66" y="132" width="268" height="8" rx="6"
+        fill="rgba(255,235,180,.14)"/>
+      <!-- 下部シャドウ -->
+      <rect x="66" y="200" width="268" height="6" rx="3"
+        fill="rgba(0,0,0,.35)"/>
+      <!-- 金の外枠：二重（太） -->
+      <rect x="62" y="130" width="276" height="78" rx="7" fill="none"
+        stroke="#8a6810" stroke-width="4"/>
+      <rect x="62" y="130" width="276" height="78" rx="7" fill="none"
+        stroke="url(#gld)" stroke-width="2.5"/>
+      <!-- 内側の細い金線 -->
+      <rect x="68" y="136" width="264" height="66" rx="5" fill="none"
+        stroke="rgba(201,162,39,.55)" stroke-width=".8"/>
+      <rect x="71" y="139" width="258" height="60" rx="4" fill="none"
+        stroke="rgba(201,162,39,.22)" stroke-width=".5"/>
+
+      <!-- 四隅の金飾り（フルーリス装飾） -->
+      <g fill="#E8C547" opacity=".9">
+        <!-- 左上 -->
+        <path d="M73,138 Q76,138 76,141 Q79,141 79,138 Q82,138 82,141 L79,141 L79,145 L76,145 L76,141 Z"/>
+        <!-- 右上 -->
+        <path d="M327,138 Q324,138 324,141 Q321,141 321,138 Q318,138 318,141 L321,141 L321,145 L324,145 L324,141 Z"/>
+        <!-- 左下 -->
+        <path d="M73,200 Q76,200 76,197 Q79,197 79,200 Q82,200 82,197 L79,197 L79,193 L76,193 L76,197 Z"/>
+        <!-- 右下 -->
+        <path d="M327,200 Q324,200 324,197 Q321,197 321,200 Q318,200 318,197 L321,197 L321,193 L324,193 L324,197 Z"/>
+      </g>
+
+      <!-- サブテキスト：PATISSERIE（彫り風：暗い影＋金テキスト） -->
+      <text x="200.5" y="149.5"
         font-family="Georgia,'Times New Roman',serif"
-        font-size="8" fill="rgba(201,162,39,.75)"
-        text-anchor="middle" letter-spacing="2">PATISSERIE · TECHNOA</text>
-      <line x1="84" y1="154" x2="316" y2="154" stroke="rgba(201,162,39,.32)" stroke-width=".8"/>
-      <!-- メイン店名 -->
+        font-size="8" font-weight="bold"
+        fill="#2a1e08"
+        text-anchor="middle" letter-spacing="2.5">PATISSERIE · TECHNOA</text>
+      <text x="200" y="149"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="8" font-weight="bold"
+        fill="rgba(201,162,39,.9)"
+        text-anchor="middle" letter-spacing="2.5">PATISSERIE · TECHNOA</text>
+
+      <!-- 装飾：両端の金スクロール -->
+      <g fill="#C9A227" opacity=".65">
+        <path d="M82,155 Q88,152 94,155 Q88,158 82,155 M96,155 L104,155" stroke="#C9A227" stroke-width=".8" fill="none"/>
+        <circle cx="98" cy="155" r="1"/>
+        <circle cx="102" cy="155" r="0.7"/>
+      </g>
+      <g fill="#C9A227" opacity=".65">
+        <path d="M318,155 Q312,152 306,155 Q312,158 318,155 M304,155 L296,155" stroke="#C9A227" stroke-width=".8" fill="none"/>
+        <circle cx="302" cy="155" r="1"/>
+        <circle cx="298" cy="155" r="0.7"/>
+      </g>
+      <!-- 中央の金ラインとダイヤ -->
+      <line x1="112" y1="155" x2="180" y2="155" stroke="rgba(201,162,39,.4)" stroke-width=".6"/>
+      <line x1="220" y1="155" x2="288" y2="155" stroke="rgba(201,162,39,.4)" stroke-width=".6"/>
+      <polygon points="196,155 200,151 204,155 200,159" fill="#E8C547" opacity=".85"/>
+
+      <!-- メイン店名：立体彫り風（3層重ね） -->
+      <!-- 層1: 深い影 -->
+      <text x="201.5" y="181"
+        font-family="'Hiragino Mincho ProN','Yu Mincho',Georgia,serif"
+        font-size="20" font-weight="bold"
+        fill="rgba(0,0,0,.6)" text-anchor="middle" letter-spacing="1.5">
+        パティスリー・テクノア
+      </text>
+      <!-- 層2: グロー -->
       <g filter="url(#tglow)">
-        <text x="200" y="178"
+        <text x="200" y="179.5"
           font-family="'Hiragino Mincho ProN','Yu Mincho',Georgia,serif"
           font-size="20" font-weight="bold"
-          fill="url(#gld)" text-anchor="middle" letter-spacing="1">
+          fill="url(#gld)" text-anchor="middle" letter-spacing="1.5">
           パティスリー・テクノア
         </text>
       </g>
-      <line x1="96" y1="185" x2="304" y2="185" stroke="rgba(201,162,39,.26)" stroke-width=".7"/>
-      <!-- HOTEL サブ -->
-      <text x="200" y="197"
+      <!-- 層3: ハイライト上側 -->
+      <text x="200" y="179"
+        font-family="'Hiragino Mincho ProN','Yu Mincho',Georgia,serif"
+        font-size="20" font-weight="bold"
+        fill="rgba(255,250,220,.35)" text-anchor="middle" letter-spacing="1.5">
+        パティスリー・テクノア
+      </text>
+
+      <!-- 下段区切り -->
+      <line x1="108" y1="190" x2="180" y2="190" stroke="rgba(201,162,39,.3)" stroke-width=".5"/>
+      <line x1="220" y1="190" x2="292" y2="190" stroke="rgba(201,162,39,.3)" stroke-width=".5"/>
+      <circle cx="200" cy="190" r="1.3" fill="#E8C547" opacity=".75"/>
+
+      <!-- HOTEL サブ（エンボス風） -->
+      <text x="200.3" y="200.3"
         font-family="Georgia,'Times New Roman',serif"
-        font-size="8" fill="rgba(201,162,39,.55)"
-        text-anchor="middle" letter-spacing="6">H O T E L</text>
+        font-size="7.5" font-weight="bold"
+        fill="rgba(0,0,0,.5)"
+        text-anchor="middle" letter-spacing="7">H O T E L</text>
+      <text x="200" y="200"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="7.5" font-weight="bold"
+        fill="rgba(201,162,39,.75)"
+        text-anchor="middle" letter-spacing="7">H O T E L</text>
+
+      <!-- 看板下の小さなスポットライト -->
+      <ellipse cx="200" cy="214" rx="120" ry="3" fill="rgba(255,220,120,.08)"/>
 
       <!-- ポルティコ庇 -->
       <rect x="90"  y="236" width="220" height="10" fill="#d8dce8" rx="1"/>
@@ -1065,18 +1213,31 @@ function draw(){
     cx2.fillText(it.emoji, ix, iy+bob);
   });
 
-  // シェフ描画（大きめ・くっきり）
+  // シェフ描画（最優先・state完全リセット）
+  cx2.save();
+  cx2.setTransform(1,0,0,1,0,0); // transform完全リセット
+  cx2.globalAlpha=1.0;
+  cx2.globalCompositeOperation='source-over';
+  cx2.shadowBlur=0;
+  cx2.shadowOffsetX=0;
+  cx2.shadowOffsetY=0;
+  cx2.shadowColor='rgba(0,0,0,0)';
+  cx2.filter='none';
   const px2=ox+px*CS+CS/2;
   const py2=oy+py*CS+CS/2;
   const bv=Math.sin(animT*0.14)*(heldDir?2:0.8);
-  cx2.globalAlpha=1.0;
-  cx2.shadowBlur=0;
-  cx2.shadowColor='rgba(0,0,0,0)';
-  cx2.font=`${Math.floor(CS*1.1)}px serif`;
+  // シェフ下の黄色円で視認性UP
+  cx2.fillStyle='rgba(255,220,80,0.35)';
+  cx2.beginPath();
+  cx2.arc(px2, py2+bv+CS*0.15, CS*0.45, 0, Math.PI*2);
+  cx2.fill();
+  // シェフ本体
+  cx2.font=`${Math.floor(CS*1.15)}px serif`;
   cx2.textAlign='center';
   cx2.textBaseline='middle';
+  cx2.fillStyle='#000';
   cx2.fillText('🧑‍🍳', px2, py2+bv);
-
+  cx2.restore();
 }
 
 // ── 壁セル ──
