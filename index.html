@@ -265,8 +265,9 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   box-shadow:0 4px 16px rgba(139,32,32,.48),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .1s;text-shadow:0 1px 3px rgba(0,0,0,.4);}
 .rbtn:active{transform:scale(.97);}
 
-#loading{position:fixed;inset:0;background:linear-gradient(160deg,#3D1F0D,#221004);z-index:200;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+#loading{width:100%;height:100%;background:linear-gradient(160deg,#3D1F0D,#221004);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;
+  position:fixed;inset:0;z-index:9999;transition:opacity .4s;}
 #loading .logo{font-family:'Zen Kurenaido',serif;color:var(--gold);font-size:20px;letter-spacing:2px;}
 .ldots{display:flex;gap:8px;}
 .ldot{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:db .8s ease-in-out infinite;}
@@ -1607,11 +1608,15 @@ function playSE(type){
 
 
 window.addEventListener('load',()=>{
+  // まず title-screen を表示
+  showSc('title-screen');
+  // ローディングを800ms後にフェードアウトして完全削除
   setTimeout(()=>{
     const l=document.getElementById('loading');
-    l.style.opacity='0';l.style.transition='opacity .4s';
-    setTimeout(()=>l.style.display='none',400);
-    showSc('title-screen');
+    l.style.opacity='0';
+    setTimeout(()=>{
+      l.parentNode && l.parentNode.removeChild(l);
+    },450);
   },800);
 });
 // ズーム・スクロール制御
