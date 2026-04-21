@@ -1611,7 +1611,6 @@ function showResult(ok){
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    // ドットを消してタップ待ち表示
     const dots=document.getElementById('ld-dots');
     const tap=document.getElementById('ld-tap');
     if(dots) dots.style.display='none';
@@ -1621,14 +1620,18 @@ window.addEventListener('load',()=>{
 
 // ローディング画面タップ → BGM開始＋タイトルへ
 document.getElementById('loading').addEventListener('click',function launchGame(){
-  this.removeEventListener('click',launchGame);
-  getAC(); // AudioContext unlock
-  startBGM(0.42);
-  showSc('title-screen'); // 先にタイトルを表示
   const l=document.getElementById('loading');
+  // 即座に操作を受け付けなくする
+  l.style.pointerEvents='none';
+  getAC();
+  startBGM(0.42);
+  showSc('title-screen');
+  // フェードアウトして完全に消す
+  l.style.transition='opacity .35s';
   l.style.opacity='0';
-  l.style.transition='opacity .4s';
-  setTimeout(()=>{l.style.display='none';},400);
+  setTimeout(()=>{
+    l.style.display='none';
+  },380);
 },{once:true});
 
 // 画面回転・リサイズ時にキャンバスを再初期化
