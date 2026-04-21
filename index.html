@@ -282,14 +282,9 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 </style>
 </head>
 <body>
-<div id="loading" style="cursor:pointer;">
-  <div class="logo" style="margin-bottom:16px;">🍪 パティスリー・テクノア</div>
-  <div class="ldots" id="ld-dots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>
-  <div id="ld-tap" style="display:none;margin-top:22px;font-family:'Zen Kurenaido',serif;
-    font-size:16px;color:var(--glight);letter-spacing:3px;
-    animation:tapblink 1.2s ease-in-out infinite alternate;">
-    ✦ タップしてはじめる ✦
-  </div>
+<div id="loading">
+  <div class="logo">🏨 パティスリー・テクノア</div>
+  <div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>
 </div>
 <div id="app">
 
@@ -1100,7 +1095,7 @@ function showSc(id){
 
 // Story
 let sPage=0;
-function goStory(){showSc('story-screen');sPage=0;updStory();}
+function goStory(){getAC();startBGM(0.42);showSc('story-screen');sPage=0;updStory();}
 function storyNext(){sPage++;if(sPage>=3){startGame();return;}updStory();}
 function updStory(){
   for(let i=0;i<3;i++){
@@ -1550,7 +1545,7 @@ function playSE(type){
 // ── 画面遷移とBGM/SEの紐付け ──
 // タイトル→BGM開始（最初のタップで AudioContext unlock）
 const _origShowSc=showSc;
-function showSc(id){
+showSc=function(id){
   _origShowSc(id);
   const ac=_ac?_ac:null;
   if(id==='title-screen'){
@@ -1582,7 +1577,7 @@ function showSc(id){
 
 // move()にSEを追加
 const _origMove=move;
-function move(d){
+move=function(d){
   const prevX=px,prevY=py;
   _origMove(d);
   if(px!==prevX||py!==prevY) playSE('step');
@@ -1590,62 +1585,32 @@ function move(d){
 
 // collectItem後にSEを鳴らす（collectItem内のpopup表示後）
 const _origCollect=collectItem;
-function collectItem(it){
+collectItem=function(it){
   _origCollect(it);
   playSE('collect');
 }
 
 // doGoal にSEを追加
 const _origDoGoal=doGoal;
-function doGoal(){
+doGoal=function(){
   playSE('goal');
   _origDoGoal();
 }
 
 // showResult にSEを追加
 const _origShowResult=showResult;
-function showResult(ok){
+showResult=function(ok){
   _origShowResult(ok);
   setTimeout(()=>playSE(ok?'correct':'wrong'),300);
 }
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const dots=document.getElementById('ld-dots');
-    const tap=document.getElementById('ld-tap');
-    if(dots) dots.style.display='none';
-    if(tap)  tap.style.display='block';
-  },900);
-});
-
-// ローディング画面タップ → BGM開始＋タイトルへ
-document.getElementById('loading').addEventListener('click',function launchGame(){
-  const l=document.getElementById('loading');
-  // 即座に操作を受け付けなくする
-  l.style.pointerEvents='none';
-  getAC();
-  startBGM(0.42);
-  showSc('title-screen');
-  // フェードアウトして完全に消す
-  l.style.transition='opacity .35s';
-  l.style.opacity='0';
-  setTimeout(()=>{
-    l.style.display='none';
-  },380);
-},{once:true});
-
-// 画面回転・リサイズ時にキャンバスを再初期化
-window.addEventListener('resize',()=>{
-  const gs=document.getElementById('game-screen');
-  if(gs.classList.contains('active')){
-    stopLoop();
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        initCanvas();
-        startLoop();
-      });
-    });
-  }
+    const l=document.getElementById('loading');
+    l.style.opacity='0';l.style.transition='opacity .4s';
+    setTimeout(()=>l.style.display='none',400);
+    showSc('title-screen');
+  },800);
 });
 // ズーム・スクロール制御
 document.addEventListener('touchmove',e=>{
