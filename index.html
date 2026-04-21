@@ -204,13 +204,6 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 #db-down{grid-column:2;grid-row:2;}
 #db-right{grid-column:3;grid-row:2;}
 
-/* ゴール到達フラッシュ */
-#gov{position:absolute;inset:0;pointer-events:none;z-index:5;display:none;overflow:hidden;}
-#gov.show{display:block;
-  background:radial-gradient(circle,rgba(201,162,39,.28) 0%,transparent 68%);
-  animation:gfl 1.1s ease-out;}
-@keyframes gfl{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
-
 /* ═══ GOAL SCREEN ═══ */
 #goal-screen{padding:14px;background:radial-gradient(ellipse at 50% 100%,#3a1a06,#1a0804);}
 .order-paper{background:linear-gradient(180deg,#fdfaf0,#f8f2e2);width:min(360px,93vw);border-radius:2px;
@@ -634,7 +627,6 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   </div>
 </div>
 </div><!-- #app -->
-<div id="gov"></div>
 
 <script>
 'use strict';
@@ -782,7 +774,7 @@ function sfl(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(
 // ══════════════════════════════
 let px=1,py=1;
 let bounce=0,bounceDir=1; // 歩行アニメ
-let animT=0; // フレームカウンタ
+let animT=0,flashAlpha=0; // フレームカウンタ
 
 const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 let heldDir=null,moveTimer=null;
@@ -972,6 +964,17 @@ function draw(){
   cx2.textAlign='center';
   cx2.textBaseline='middle';
   cx2.fillText('🧑‍🍳', px2, py2+bv);
+
+  // ゴール開放フラッシュ（canvas内のみ・DOM操作なし）
+  if(flashAlpha>0){
+    cx2.globalAlpha=flashAlpha*0.4;
+    cx2.fillStyle='#C9A227';
+    cx2.fillRect(0,0,CW,CH);
+    cx2.globalAlpha=1.0;
+    cx2.shadowBlur=0;
+    cx2.shadowColor='rgba(0,0,0,0)';
+    flashAlpha=Math.max(0,flashAlpha-0.03);
+  }
 }
 
 // ── 壁セル ──
@@ -1085,11 +1088,8 @@ function collectItem(it){
     goalVis=true;
     el.classList.add('done');
     el.textContent='✨ 全材料GET！キッチンへ急げ！';
-    const ov=document.getElementById('gov');
-    ov.classList.remove('show');
-    void ov.offsetWidth;
-    ov.classList.add('show');
-    setTimeout(()=>{ ov.classList.remove('show'); ov.style.display='none'; },1150);
+    // キャンバス内でフラッシュ（DOM操作なし）
+    flashAlpha=1.0;
   }
   // ポップアップ
   const pop=document.getElementById('popup');
@@ -1163,16 +1163,7 @@ function startGame(){
 function doGoal(){
   playSE('goal');
   stopLoop();
-  const ov=document.getElementById('gov');
-  ov.classList.add('show');
-  setTimeout(()=>{
-    ov.classList.remove('show');
-    ov.style.display='none';  // 確実に非表示
-  },1100);
-  setTimeout(()=>{
-    ov.style.display='';  // リセット
-    showSc('goal-screen');
-    buildGoal();
+  setTimeout(()=>{showSc('goal-screen');buildGoal();},700);
   },700);
 }
 
