@@ -1624,10 +1624,11 @@ document.getElementById('loading').addEventListener('click',function launchGame(
   this.removeEventListener('click',launchGame);
   getAC(); // AudioContext unlock
   startBGM(0.42);
+  showSc('title-screen'); // 先にタイトルを表示
   const l=document.getElementById('loading');
-  l.style.opacity='0';l.style.transition='opacity .4s';
-  setTimeout(()=>l.style.display='none',400);
-  showSc('title-screen');
+  l.style.opacity='0';
+  l.style.transition='opacity .4s';
+  setTimeout(()=>{l.style.display='none';},400);
 },{once:true});
 
 // 画面回転・リサイズ時にキャンバスを再初期化
