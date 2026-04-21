@@ -205,7 +205,7 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 #db-right{grid-column:3;grid-row:2;}
 
 /* ゴール到達フラッシュ */
-#gov{position:absolute;inset:0;pointer-events:none;z-index:5;display:none;}
+#gov{position:absolute;inset:0;pointer-events:none;z-index:5;display:none;overflow:hidden;}
 #gov.show{display:block;
   background:radial-gradient(circle,rgba(201,162,39,.28) 0%,transparent 68%);
   animation:gfl 1.1s ease-out;}
@@ -1086,8 +1086,10 @@ function collectItem(it){
     el.classList.add('done');
     el.textContent='✨ 全材料GET！キッチンへ急げ！';
     const ov=document.getElementById('gov');
+    ov.classList.remove('show');
+    void ov.offsetWidth;
     ov.classList.add('show');
-    setTimeout(()=>ov.classList.remove('show'),1100);
+    setTimeout(()=>{ ov.classList.remove('show'); ov.style.display='none'; },1150);
   }
   // ポップアップ
   const pop=document.getElementById('popup');
@@ -1101,6 +1103,7 @@ function collectItem(it){
   document.getElementById('p-sub').textContent=it.hint||'';
   pop.classList.add('show');
   setTimeout(()=>pop.classList.remove('show'),1800);
+  playSE('collect');
   // トレイ更新
   const tray=document.getElementById('item-tray');
   tray.innerHTML='';
@@ -1158,6 +1161,7 @@ function startGame(){
 
 // Goal
 function doGoal(){
+  playSE('goal');
   stopLoop();
   const ov=document.getElementById('gov');
   ov.classList.add('show');
@@ -1305,6 +1309,7 @@ function checkAns(ans,btn,con){
 
 function showResult(ok){
   showSc('result-screen');
+  setTimeout(()=>playSE(ok?'correct':'wrong'),300);
   const card=document.getElementById('result-card');
   if(ok){
     card.innerHTML=`
@@ -1622,26 +1627,8 @@ move=function(d){
   if(px!==prevX||py!==prevY) playSE('step');
 }
 
-// collectItem後にSEを鳴らす（collectItem内のpopup表示後）
-const _origCollect=collectItem;
-collectItem=function(it){
-  _origCollect(it);
-  playSE('collect');
-}
 
-// doGoal にSEを追加
-const _origDoGoal=doGoal;
-doGoal=function(){
-  playSE('goal');
-  _origDoGoal();
-}
 
-// showResult にSEを追加
-const _origShowResult=showResult;
-showResult=function(ok){
-  _origShowResult(ok);
-  setTimeout(()=>playSE(ok?'correct':'wrong'),300);
-}
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
@@ -1652,6 +1639,8 @@ window.addEventListener('load',()=>{
   },800);
 });
 // ズーム・スクロール制御
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
 document.addEventListener('touchmove',e=>{
   // ゴール・リザルト画面のスクロール可能要素は通す
   const target=e.target;
