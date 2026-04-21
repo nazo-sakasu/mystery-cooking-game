@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>なぞの料理をつくろう！</title>
+<title>ひみつのレシピをさがせ！</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Kosugi+Maru&display=swap');
 :root{
-  --cream:#F5EDD6;--cream-dark:#E8D9BC;
-  --red:#8B2020;--red-hi:#a83030;--red-lo:#681818;
-  --brown:#3D1F0D;--mid:#6B3A1F;--light:#9C5E30;
-  --gold:#C9A227;--glight:#EAC84A;--green:#2E7D32;
-  --bg:#0c0502;
+  --cream:#FAF6EE;--cream-dark:#EDE5D0;
+  --red:#1a3a5c;--red-hi:#234e7a;--red-lo:#122840;
+  --brown:#2C2018;--mid:#5a4a2a;--light:#8a7040;
+  --gold:#B8922A;--glight:#D4AA40;--green:#2E7D32;
+  --bg:#0a0c12;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{width:100%;height:100%;overflow:hidden;touch-action:none;-ms-touch-action:none;}
@@ -25,7 +25,7 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 
 /* ═══ TITLE ═══ */
 #title-screen{
-  background:linear-gradient(180deg,#06030c 0%,#0e0612 28%,#18090a 60%,#200e05 100%);
+  background:linear-gradient(180deg,#04060e 0%,#080c18 30%,#0c1020 60%,#080a14 100%);
   justify-content:flex-end;overflow:hidden;padding:0;}
 #title-screen::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background-image:
@@ -119,13 +119,13 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 .sdot.on{background:var(--red);}
 
 /* ═══ GAME ═══ */
-#game-screen{flex-direction:column;background:linear-gradient(180deg,#120804,#0a0402);justify-content:flex-start;}
+#game-screen{flex-direction:column;background:linear-gradient(180deg,#0c0e18,#080a12);justify-content:flex-start;}
 
 /* ヘッダー：高さ固定・折り返し禁止 */
 #ghd{
-  width:100%;background:linear-gradient(180deg,#2e1408,#1a0a04);
+  width:100%;background:linear-gradient(180deg,#1a2038,#0e1428);
   padding:5px 10px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:2px solid rgba(180,130,40,.38);box-shadow:0 2px 10px rgba(0,0,0,.5);
+  border-bottom:2px solid rgba(184,146,42,.45);box-shadow:0 2px 14px rgba(0,0,0,.6);
   flex-shrink:0;z-index:10;
   min-height:42px;max-height:42px;overflow:hidden;}
 #ghd-title{font-family:'Zen Kurenaido',serif;color:var(--glight);font-size:13px;
@@ -187,9 +187,9 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   gap:5px;
   padding:5px 12px 8px;
   height:120px; /* 固定高さ */
-  background:linear-gradient(0deg,rgba(6,2,1,1) 0%,rgba(6,2,1,.52) 100%);
+  background:linear-gradient(0deg,rgba(4,5,10,1) 0%,rgba(4,5,10,.52) 100%);
 }
-.db{background:linear-gradient(180deg,rgba(44,18,5,.94),rgba(24,9,2,.97));border:1.5px solid rgba(175,125,38,.35);
+.db{background:linear-gradient(180deg,rgba(28,38,68,.96),rgba(16,22,42,.98));border:1.5px solid rgba(184,146,42,.38);
   border-radius:10px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:1px;
   font-size:22px;color:rgba(245,237,214,.92);
@@ -282,9 +282,14 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 </style>
 </head>
 <body>
-<div id="loading">
-  <div class="logo">🌙 準備中...</div>
-  <div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>
+<div id="loading" style="cursor:pointer;">
+  <div class="logo" style="margin-bottom:16px;">🍪 パティスリー・テクノア</div>
+  <div class="ldots" id="ld-dots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>
+  <div id="ld-tap" style="display:none;margin-top:22px;font-family:'Zen Kurenaido',serif;
+    font-size:16px;color:var(--glight);letter-spacing:3px;
+    animation:tapblink 1.2s ease-in-out infinite alternate;">
+    ✦ タップしてはじめる ✦
+  </div>
 </div>
 <div id="app">
 
@@ -377,15 +382,98 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
       <path d="M162,174 Q162,152 200,152 Q238,152 238,174" fill="rgba(0,0,0,.5)"/>
       <path d="M165,174 Q165,156 200,156 Q235,156 235,174" fill="rgba(255,200,100,.12)"/>
       <rect x="148" y="270" width="104" height="6" fill="#2a1610" rx="1"/>
-      <rect x="112" y="86" width="178" height="34" fill="#2a1208" rx="3"/>
-      <rect x="114" y="88" width="174" height="30" fill="#1a0804" rx="2"/>
-      <rect x="115" y="89" width="172" height="28" fill="none" stroke="#C9A227" stroke-width="1.5" rx="2"/>
-      <g class="sign-neon" filter="url(#gl)">
-        <text x="201" y="107" font-family="serif" font-size="14" font-weight="bold"
-          fill="#FFDD88" text-anchor="middle" letter-spacing="2">洋食レストラン</text>
+      <!-- ═══ おしゃれな看板 ═══ -->
+      <defs>
+        <linearGradient id="sgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a1e14"/>
+          <stop offset="40%" stop-color="#1e1510"/>
+          <stop offset="100%" stop-color="#120e08"/>
+        </linearGradient>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFF8D0"/>
+          <stop offset="45%" stop-color="#E8C84A"/>
+          <stop offset="100%" stop-color="#B8900A"/>
+        </linearGradient>
+        <linearGradient id="ropeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5a3a10"/>
+          <stop offset="50%" stop-color="#8a6030"/>
+          <stop offset="100%" stop-color="#5a3a10"/>
+        </linearGradient>
+        <filter id="sglow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="tglow" x="-20%" y="-60%" width="140%" height="220%">
+          <feGaussianBlur stdDeviation="1.8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- 吊り金具（左右） -->
+      <rect x="148" y="56" width="6" height="4" rx="1" fill="#B8922A"/>
+      <rect x="248" y="56" width="6" height="4" rx="1" fill="#B8922A"/>
+      <!-- チェーン風の紐 -->
+      <line x1="151" y1="60" x2="158" y2="82" stroke="url(#ropeGrad)" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="251" y1="60" x2="244" y2="82" stroke="url(#ropeGrad)" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- チェーンの結び目 -->
+      <circle cx="152" cy="62" r="2" fill="#C9A227"/>
+      <circle cx="250" cy="62" r="2" fill="#C9A227"/>
+      <circle cx="157" cy="74" r="1.5" fill="#A87820"/>
+      <circle cx="245" cy="74" r="1.5" fill="#A87820"/>
+
+      <!-- 看板本体：シャドウ -->
+      <rect x="100" y="85" width="202" height="52" rx="6" fill="rgba(0,0,0,.55)"/>
+      <!-- 看板本体：黒ベース -->
+      <rect x="98" y="82" width="206" height="52" rx="6" fill="#0e0c0a"/>
+      <!-- 看板本体：グラデーション面 -->
+      <rect x="100" y="83" width="202" height="50" rx="5" fill="url(#sgGrad)"/>
+      <!-- 上面ハイライト -->
+      <rect x="102" y="84" width="198" height="5" rx="4" fill="rgba(255,230,180,.14)"/>
+
+      <!-- 外枠：金（太） -->
+      <rect x="100" y="83" width="202" height="50" rx="5" fill="none"
+        stroke="#C9A227" stroke-width="2"/>
+      <!-- 内枠：金（細） -->
+      <rect x="104" y="87" width="194" height="42" rx="3" fill="none"
+        stroke="rgba(201,162,39,.45)" stroke-width="0.8"/>
+
+      <!-- コーナー装飾（四隅に小さなダイヤ） -->
+      <polygon points="104,91 108,87 112,91 108,95" fill="#C9A227" opacity=".9"/>
+      <polygon points="288,91 292,87 296,91 292,95" fill="#C9A227" opacity=".9"/>
+      <polygon points="104,121 108,117 112,121 108,125" fill="#C9A227" opacity=".9"/>
+      <polygon points="288,121 292,117 296,121 292,125" fill="#C9A227" opacity=".9"/>
+
+      <!-- サブテキスト：PATISSERIE -->
+      <text x="201" y="97"
+        font-family="'Hiragino Mincho ProN','Georgia','Times New Roman',serif"
+        font-size="7.5" fill="rgba(201,162,39,.75)"
+        text-anchor="middle" letter-spacing="4">
+        ✦ P A T I S S E R I E ✦
+      </text>
+
+      <!-- 区切りライン -->
+      <line x1="120" y1="101" x2="282" y2="101"
+        stroke="rgba(201,162,39,.3)" stroke-width="0.6"/>
+
+      <!-- メインテキスト：グローあり -->
+      <g filter="url(#tglow)">
+        <text x="201" y="116"
+          font-family="'Hiragino Mincho ProN','Yu Mincho','Georgia',serif"
+          font-size="15" font-weight="bold"
+          fill="url(#goldGrad)"
+          text-anchor="middle" letter-spacing="1.5">
+          パティスリー・テクノア
+        </text>
       </g>
-      <text x="124" y="107" font-size="10" fill="#C9A227" opacity=".8">✦</text>
-      <text x="270" y="107" font-size="10" fill="#C9A227" opacity=".8">✦</text>
+
+      <!-- 区切りライン（下） -->
+      <line x1="130" y1="121" x2="272" y2="121"
+        stroke="rgba(201,162,39,.25)" stroke-width="0.5"/>
+
+      <!-- 左右装飾フルール -->
+      <text x="116" y="117" font-size="10" fill="#C9A227" opacity=".85"
+        font-family="'Georgia',serif">✿</text>
+      <text x="279" y="117" font-size="10" fill="#C9A227" opacity=".85"
+        font-family="'Georgia',serif">✿</text>
       <g class="lantern-l">
         <line x1="126" y1="84" x2="126" y2="100" stroke="#5a3010" stroke-width="1.5"/>
         <rect x="116" y="100" width="20" height="28" fill="#C9A227" rx="3"/>
@@ -415,7 +503,7 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
     </svg>
   </div>
   <div id="title-bottom">
-    <div class="restaurant-label">★ RETRO WESTERN DINER ★</div>
+    <div class="restaurant-label">PATISSERIE TECHNOA</div>
     <div class="game-main-title">なぞの料理をつくろう！</div>
     <div class="game-sub-title">～ Mysterious Kitchen ～</div>
     <button class="start-btn" onclick="goStory()">ゲームスタート ▶</button>
@@ -427,29 +515,29 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 <div id="story-screen" class="screen">
   <div class="story-card">
     <div class="story-hd">
-      <div class="story-badge">👨‍🍳 STORY</div>
-      <div class="story-ttl">たいへんだ！</div>
+      <div class="story-badge">🏨 STORY</div>
+      <div class="story-ttl">ひみつのレシピ！</div>
     </div>
     <div class="story-body">
       <div class="story-panel active" id="sp0">
-        <span class="story-chef s-worry">😱</span>
+        <span class="story-chef s-worry">😲</span>
         <div class="story-text">
-          洋食屋の<strong>看板メニュー</strong>を作ろうとしたら…<br>
-          必要な食材や道具が<strong>店内中に散らばって</strong>しまった！
+          ホテルの<strong>ひみつのレシピ</strong>を作ろうとしたら…<br>
+          必要な材料や道具が<strong>ホテル中に散らばって</strong>しまった！
         </div>
       </div>
       <div class="story-panel" id="sp1">
         <span class="story-chef s-run">🏃</span>
         <div class="story-text">
-          シェフになって、<strong>洋食屋の店内</strong>を<br>
-          進みながら食材を<strong>すべて集めよう！</strong>
+          ホテルの<strong>廊下や部屋</strong>を進みながら<br>
+          材料を<strong>すべて集めよう！</strong>
         </div>
       </div>
       <div class="story-panel" id="sp2">
         <span class="story-chef">🤔</span>
         <div class="story-text">
-          全部そろえたら<strong>厨房</strong>が開く！<br>
-          最後に「<strong>何の料理か</strong>」を答えれば完成！
+          全部そろえたら<strong>キッチン</strong>が開く！<br>
+          最後に「<strong>何を作るレシピか</strong>」を<br>答えれば完成！
         </div>
       </div>
     </div>
@@ -468,12 +556,12 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 <!-- ═══ GAME ═══ -->
 <div id="game-screen" class="screen">
   <div id="ghd">
-    <div id="ghd-title">👨‍🍳 洋食屋を探索中</div>
+    <div id="ghd-title">👨‍🍳 ひみつのお店を探索中</div>
     <div id="tray-wrap"><div id="item-tray"></div></div>
   </div>
   <div id="canvas-wrap">
     <canvas id="gc"></canvas>
-    <div id="prog">食材: 0 / 8</div>
+    <div id="prog">材料: 0 / 8</div>
     <div id="popup">
       <span id="p-emoji">🥚</span>
       <div id="p-name">たまご <em>をゲット！</em></div>
@@ -502,19 +590,50 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 <div id="goal-screen" class="screen">
   <div class="order-paper">
     <div class="ohd">
-      <div class="oshop">MYSTERY KITCHEN — 注文伝票</div>
-      <div class="ottl">🧑‍🍳 謎の料理は何？</div>
+      <div class="oshop">SECRET RECIPE — ひみつのレシピ帳</div>
+      <div class="ottl">🍪 何をつくるレシピ？</div>
     </div>
     <div class="obdy">
-      <div style="font-size:12px;color:var(--mid);margin-bottom:6px;">【仕込みメモ】集めた食材：</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:6px;">【集めた材料】</div>
       <div class="cgrid" id="collected-grid"></div>
       <div class="oq">
-        集めた食材である料理がつくれます！<br>
-        それは何の料理でしょう？<br>
-        <span style="font-size:11px;opacity:.7;">ヒント：卵が主役の昭和洋食屋の定番</span>
+        集めた材料で何かつくれます！<br>
+        それは何でしょう？<br>
+        <span style="font-size:11px;opacity:.7;">答えを入力してね</span>
       </div>
-      <div style="margin:12px 0;">
-        <div class="albl">▼ これだ！と思うものを選んでね</div>
+      <!-- 自由記述エリア -->
+      <div id="free-input-area" style="margin:12px 0;">
+        <div class="albl">▼ 答えを入力してね</div>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <input id="ans-input" type="text" placeholder="ここに入力…"
+            style="flex:1;padding:12px 14px;font-size:16px;font-family:'Kosugi Maru',sans-serif;
+            border:2px solid rgba(107,58,31,.3);border-radius:8px;
+            background:linear-gradient(180deg,#fdfaf0,#f5edd6);color:var(--brown);
+            outline:none;box-shadow:inset 0 1px 4px rgba(0,0,0,.1);">
+          <button id="ans-submit" type="button"
+            style="padding:12px 18px;background:linear-gradient(180deg,var(--red-hi),var(--red) 55%,var(--red-lo));
+            color:var(--glight);border:none;border-radius:8px;font-family:'Zen Kurenaido',serif;
+            font-size:16px;letter-spacing:1px;cursor:pointer;white-space:nowrap;
+            box-shadow:0 3px 10px rgba(26,58,92,.45),inset 0 1px 0 rgba(255,255,255,.2);
+            touch-action:manipulation;">決定</button>
+        </div>
+        <div id="ans-error" style="display:none;margin-top:6px;font-size:12px;color:var(--red);
+          padding:6px 10px;background:rgba(26,58,92,.07);border-radius:6px;text-align:center;"></div>
+        <!-- ヒント：60秒後に選択肢出現 -->
+        <div id="hint-timer-bar" style="margin-top:14px;display:none;">
+          <div style="font-size:11px;color:var(--mid);margin-bottom:5px;text-align:center;">
+            ⏱ もうすこし考えてみて… <span id="hint-countdown">120</span>秒後にヒントが出るよ
+          </div>
+          <div style="height:4px;background:rgba(107,58,31,.15);border-radius:2px;overflow:hidden;">
+            <div id="hint-bar-fill" style="height:100%;width:100%;
+              background:linear-gradient(90deg,var(--gold),var(--glight));
+              border-radius:2px;transition:width 1s linear;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 選択肢（60秒後に表示） -->
+      <div id="choice-area" style="display:none;margin-top:10px;">
+        <div class="albl">💡 ヒント！これかな？</div>
         <div class="achoices" id="answer-choices"></div>
       </div>
     </div>
@@ -536,43 +655,54 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 // ══════════════════════════════
 // DATA
 // ══════════════════════════════
-const OMUSVG=`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="96" height="72">
-  <ellipse cx="60" cy="80" rx="50" ry="8" fill="#D4B896" opacity=".5"/>
-  <ellipse cx="60" cy="77" rx="48" ry="6" fill="#E8D0B0"/>
-  <ellipse cx="60" cy="62" rx="44" ry="20" fill="#E8A820"/>
-  <path d="M16,54 Q30,28 60,26 Q90,28 104,54 Q98,74 60,76 Q22,74 16,54Z" fill="#FAE050"/>
-  <path d="M20,52 Q34,30 60,28 Q86,30 100,52 Q94,72 60,74 Q26,72 20,52Z" fill="#FDE87A"/>
-  <path d="M34,40 Q50,28 70,32" stroke="rgba(255,255,255,0.52)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-  <path d="M38,48 Q52,40 66,42" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <path d="M36,48 Q46,37 58,44 Q64,37 70,44 Q78,37 88,48" stroke="#C0392B" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M16,54 Q30,28 60,26 Q90,28 104,54" stroke="#D4A020" stroke-width="1.5" fill="none" opacity=".6"/>
-  <ellipse cx="90" cy="36" rx="6" ry="4" fill="#2E8B20" transform="rotate(-20,90,36)"/>
-  <ellipse cx="93" cy="33" rx="5" ry="3.5" fill="#3AAA28" transform="rotate(10,93,33)"/>
+// ── クッキーSVG（結果画面用・大） ──
+const COOKIESVG=`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="96" height="72">
+  <!-- 皿 -->
+  <ellipse cx="60" cy="82" rx="50" ry="7" fill="#D4C4A0" opacity=".45"/>
+  <!-- クッキー3枚重ね -->
+  <ellipse cx="72" cy="68" rx="22" ry="6" fill="#B8902A" opacity=".6" transform="rotate(-12,72,68)"/>
+  <ellipse cx="50" cy="70" rx="24" ry="7" fill="#C8A030" opacity=".7" transform="rotate(8,50,70)"/>
+  <!-- メインクッキー -->
+  <ellipse cx="60" cy="54" rx="34" ry="10" fill="#B07820"/>
+  <ellipse cx="60" cy="50" rx="34" ry="10" fill="#C89030"/>
+  <ellipse cx="60" cy="46" rx="34" ry="10" fill="#D4A038"/>
+  <ellipse cx="60" cy="43" rx="34" ry="10" fill="#E0B048"/>
+  <path d="M26,43 Q44,32 60,34 Q76,32 94,43 Q88,54 60,56 Q32,54 26,43Z" fill="#EEC058"/>
+  <!-- 表面の焼き色 -->
+  <ellipse cx="44" cy="40" rx="8" ry="5" fill="#C89030" opacity=".5" transform="rotate(-10,44,40)"/>
+  <ellipse cx="74" cy="42" rx="7" ry="4" fill="#C89030" opacity=".4" transform="rotate(15,74,42)"/>
+  <ellipse cx="60" cy="50" rx="9" ry="5" fill="#B87820" opacity=".4"/>
+  <!-- チョコチップ -->
+  <ellipse cx="42" cy="38" rx="4" ry="3" fill="#4A2A08" transform="rotate(-15,42,38)"/>
+  <ellipse cx="58" cy="36" rx="3.5" ry="2.5" fill="#3A2008" transform="rotate(5,58,36)"/>
+  <ellipse cx="72" cy="40" rx="4" ry="3" fill="#4A2A08" transform="rotate(20,72,40)"/>
+  <ellipse cx="50" cy="46" rx="3" ry="2" fill="#3A2008" transform="rotate(-8,50,46)"/>
+  <ellipse cx="68" cy="48" rx="3.5" ry="2.5" fill="#4A2A08" transform="rotate(12,68,48)"/>
+  <!-- ハイライト -->
+  <path d="M36,36 Q54,28 72,34" stroke="rgba(255,240,200,0.4)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 </svg>`;
 
 const REQ=[
-  {id:'egg',    emoji:'🥚',name:'たまご',    hint:'ふわふわの秘訣！',   isReq:true},
-  {id:'rice',   emoji:'🍚',name:'ごはん',    hint:'主食の基本！',       isReq:true},
-  {id:'ketchup',emoji:'🍅',name:'ケチャップ',hint:'甘酸っぱい味の鍵',   isReq:true},
-  {id:'chicken',emoji:'🍗',name:'とりにく',  hint:'うまみたっぷり！',   isReq:true},
-  {id:'pan',    emoji:'🍳',name:'フライパン',hint:'炒める調理道具',     isReq:true},
-  {id:'oil',    emoji:'🫒',name:'オリーブ油',hint:'炒め油として使う',   isReq:true},
-  {id:'onion',  emoji:'🧅',name:'たまねぎ',  hint:'甘みが出るよ',      isReq:true},
-  {id:'garlic', emoji:'🧄',name:'にんにく',  hint:'香りの秘密！',      isReq:true},
+  {id:'flour',  emoji:'🌾',name:'小麦粉',      isReq:true},
+  {id:'butter', emoji:'🧈',name:'無塩バター',   isReq:true},
+  {id:'sugar',  emoji:'🍚',name:'グラニュー糖', isReq:true},
+  {id:'egg',    emoji:'🥚',name:'卵',           isReq:true},
+  {id:'pin',    emoji:'🪄',name:'麺棒',         isReq:true},
+  {id:'cutter', emoji:'⭐',name:'抜き型',   isReq:true},
+  {id:'sheet',  emoji:'🫓',name:'ベーキングシート',isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><rect x="3" y="6" width="30" height="24" rx="1" fill="#f0ede0" stroke="#c8b890" stroke-width="1.2"/><rect x="3" y="6" width="30" height="24" rx="1" fill="none" stroke="#d4c4a0" stroke-width="0.6" stroke-dasharray="3,2"/><rect x="6" y="9" width="24" height="18" rx="0.5" fill="none" stroke="#c0a878" stroke-width="0.8" stroke-dasharray="2,2"/><circle cx="10" cy="15" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/><circle cx="18" cy="15" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/><circle cx="26" cy="15" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/><circle cx="10" cy="23" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/><circle cx="18" cy="23" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/><circle cx="26" cy="23" r="2.5" fill="none" stroke="#b8a060" stroke-width="0.8"/></svg>`},
+  {id:'oven',   emoji:'🫕',name:'オーブン',     isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><rect x="2" y="4" width="32" height="28" rx="3" fill="#c0c8d0" stroke="#8090a0" stroke-width="1.2"/><rect x="2" y="4" width="32" height="28" rx="3" fill="url(#ovg)"/><defs><linearGradient id="ovg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d8dde2"/><stop offset="100%" stop-color="#a8b0ba"/></linearGradient></defs><rect x="5" y="8" width="26" height="16" rx="2" fill="#1a1a1a" stroke="#404040" stroke-width="0.8"/><rect x="6" y="9" width="24" height="14" rx="1.5" fill="#0d0d0d"/><rect x="6" y="9" width="24" height="14" rx="1.5" fill="rgba(255,120,30,0.18)"/><path d="M8,16 Q18,12 28,16" stroke="rgba(255,140,40,0.5)" stroke-width="1.5" fill="none"/><path d="M8,18 Q18,14 28,18" stroke="rgba(255,100,20,0.35)" stroke-width="1" fill="none"/><rect x="5" y="26" width="26" height="4" rx="1.5" fill="#9098a4" stroke="#707880" stroke-width="0.6"/><circle cx="10" cy="28" r="2" fill="#606870"/><circle cx="10" cy="28" r="1.2" fill="#404850"/><circle cx="18" cy="28" r="2" fill="#606870"/><circle cx="18" cy="28" r="1.2" fill="#404850"/><circle cx="26" cy="28" r="2" fill="#606870"/><circle cx="26" cy="28" r="1.2" fill="#404850"/></svg>`},
 ];
-const MIS=[]; // ダミーなし
+const MIS=[];
+// 選択肢（60秒後ヒントとして表示）
 const ANSWERS=[
-  {id:'curry',  name:'カレーライス',
-   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="78" rx="44" ry="7" fill="#C8A870" opacity=".4"/><rect x="16" y="26" width="88" height="48" rx="6" fill="#C17E2A"/><rect x="20" y="30" width="80" height="40" rx="4" fill="#B5651D"/><rect x="62" y="30" width="38" height="40" fill="#EEE4B8"/><path d="M20,30 L62,30 L62,70 L20,70 Q16,68 16,50Z" fill="#C8780A"/><circle cx="32" cy="46" r="7" fill="#8B4513"/><circle cx="44" cy="54" r="6" fill="#E67E22"/><circle cx="48" cy="40" r="5" fill="#7B3A10"/></svg>`},
-  {id:'omurice',name:'オムライス',svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="78" rx="42" ry="5" fill="#F0DEC0"/><ellipse cx="60" cy="58" rx="40" ry="18" fill="#E8A820"/><path d="M20,52 Q32,30 60,28 Q88,30 100,52 Q94,70 60,72 Q26,70 20,52Z" fill="#FDE87A"/><path d="M32,36 Q46,26 64,28" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M34,46 Q44,36 56,42 Q62,36 68,42 Q76,36 84,46" stroke="#C0392B" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>`,correct:true},
-  {id:'salad',  name:'シーザーサラダ',
-   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="76" rx="44" ry="8" fill="#C8A870" opacity=".4"/><path d="M16,52 Q28,24 60,20 Q92,24 104,52 Q98,72 60,76 Q22,72 16,52Z" fill="#6AAA30"/><path d="M20,50 Q32,26 60,22 Q88,26 100,50 Q94,70 60,74 Q26,70 20,50Z" fill="#8BC34A"/><path d="M26,44 Q38,28 54,34 Q44,48 34,54Z" fill="#5A9A20"/><path d="M94,44 Q82,28 66,34 Q76,48 86,54Z" fill="#5A9A20"/><circle cx="34" cy="52" r="6" fill="#E53935"/><circle cx="74" cy="56" r="5" fill="#E53935"/><rect x="36" y="48" width="9" height="9" rx="1.5" fill="#D4A030" transform="rotate(15,40,52)"/></svg>`},
-  {id:'pasta',  name:'スパゲティ',
-   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="76" rx="44" ry="8" fill="#C8A870" opacity=".4"/><path d="M16,54 Q28,28 60,24 Q92,28 104,54 Q98,74 60,78 Q22,74 16,54Z" fill="#F0D070"/><path d="M26,46 Q38,36 50,42 Q56,36 62,42 Q68,36 74,42 Q84,36 94,46" stroke="#C8A020" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M28,56 Q40,46 52,52 Q58,46 64,52 Q70,46 76,52 Q86,46 92,56" stroke="#BCA010" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="42" cy="38" r="9" fill="#8B3A10"/><circle cx="76" cy="36" r="8" fill="#8B3A10"/><ellipse cx="60" cy="32" rx="6" ry="4" fill="#2E8B20" transform="rotate(-15,60,32)"/></svg>`},
-  {id:'steak',  name:'ビーフステーキ',
-   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="76" rx="44" ry="8" fill="#C8A870" opacity=".4"/><path d="M20,42 Q32,16 66,14 Q90,16 100,42 Q98,64 64,70 Q28,68 20,42Z" fill="#6B2E06"/><path d="M24,42 Q36,18 66,16 Q88,18 96,42 Q94,62 64,68 Q30,66 24,42Z" fill="#8B4513"/><path d="M28,40 Q40,22 66,20 Q84,22 92,40 Q90,60 64,66 Q32,64 28,40Z" fill="#A0522D"/><path d="M32,30 Q52,20 72,24" stroke="#5D2E0C" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/><path d="M30,42 Q50,32 74,36" stroke="#5D2E0C" stroke-width="4" fill="none" stroke-linecap="round" opacity=".75"/><rect x="50" y="22" width="18" height="9" rx="2.5" fill="#FFE066" opacity=".9" transform="rotate(-5,60,27)"/></svg>`},
-  {id:'pancake',name:'パンケーキ',
-   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="76" rx="44" ry="8" fill="#C8A870" opacity=".4"/><ellipse cx="60" cy="70" rx="42" ry="10" fill="#B8720A"/><path d="M18,62 Q40,52 60,54 Q80,52 102,62 L102,68 Q80,78 60,76 Q40,78 18,68Z" fill="#D89020"/><ellipse cx="60" cy="56" rx="40" ry="9" fill="#BF7A10"/><path d="M20,48 Q42,38 60,40 Q78,38 100,48 L100,56 Q78,66 60,64 Q42,66 20,56Z" fill="#E4A020"/><ellipse cx="60" cy="42" rx="38" ry="8.5" fill="#DCA018"/><path d="M22,34 Q44,24 60,26 Q76,24 98,34 L98,42 Q76,52 60,50 Q44,52 22,42Z" fill="#EEB828"/><path d="M42,22 Q56,16 74,20" stroke="#FFE566" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/></svg>`},
+  {id:'cookie',  name:'クッキー',  correct:true,
+   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><ellipse cx="60" cy="50" rx="30" ry="9" fill="#C89030"/><path d="M30,50 Q48,36 60,38 Q72,36 90,50 Q84,60 60,62 Q36,60 30,50Z" fill="#E0B048"/><ellipse cx="46" cy="44" rx="4" ry="3" fill="#4A2A08" transform="rotate(-15,46,44)"/><ellipse cx="62" cy="41" rx="3.5" ry="2.5" fill="#3A2008"/><ellipse cx="74" cy="46" rx="4" ry="3" fill="#4A2A08" transform="rotate(15,74,46)"/></svg>`},
+  {id:'cake',    name:'ケーキ',    correct:false,
+   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><rect x="22" y="38" width="76" height="34" rx="4" fill="#F5C0C0"/><rect x="22" y="38" width="76" height="14" rx="4" fill="#FAD8D8"/><path d="M22,52 L98,52" stroke="#E8A0A0" stroke-width="1.5"/><rect x="50" y="22" width="8" height="16" rx="2" fill="#FFD700"/><ellipse cx="54" cy="20" rx="4" ry="3" fill="#FF6060"/></svg>`},
+  {id:'bread',   name:'パン',      correct:false,
+   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><path d="M20,60 Q20,30 60,28 Q100,30 100,60 Q100,72 60,74 Q20,72 20,60Z" fill="#D4900A"/><path d="M24,58 Q24,34 60,32 Q96,34 96,58" stroke="#B87808" stroke-width="2" fill="none"/></svg>`},
+  {id:'muffin',  name:'マフィン',  correct:false,
+   svg:`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="54" height="40"><rect x="34" y="50" width="52" height="26" rx="4" fill="#D4A020" opacity=".9"/><path d="M26,52 Q36,28 60,26 Q84,28 94,52 Q88,60 60,62 Q32,60 26,52Z" fill="#E8B830"/><ellipse cx="50" cy="38" rx="6" ry="5" fill="#C84040" opacity=".8"/><ellipse cx="70" cy="36" rx="5" ry="4" fill="#C84040" opacity=".8"/></svg>`},
 ];
 
 // ══════════════════════════════
@@ -767,7 +897,7 @@ function draw(){
   cx2.shadowOffsetY=0;
   cx2.shadowColor='rgba(0,0,0,0)';
   cx2.clearRect(0,0,CW,CH);
-  cx2.fillStyle='#0c0502';
+  cx2.fillStyle='#0a0c14';
   cx2.fillRect(0,0,CW,CH);
 
   const ox=Math.floor((CW-COLS*CS)/2);
@@ -928,27 +1058,34 @@ function collectItem(it){
   if(rn>=RCOUNT&&!goalVis){
     goalVis=true;
     el.classList.add('done');
-    el.textContent='✨ 全食材GET！厨房へ急げ！';
+    el.textContent='✨ 全材料GET！キッチンへ急げ！';
     const ov=document.getElementById('gov');
     ov.classList.add('show');
     setTimeout(()=>ov.classList.remove('show'),1100);
   }
   // ポップアップ
   const pop=document.getElementById('popup');
-  document.getElementById('p-emoji').textContent=it.emoji;
+  const pEmoji=document.getElementById('p-emoji');
+  if(it.svg){
+    pEmoji.innerHTML=`<span style="display:inline-block;">${it.svg.replace('width="36"','width="52"').replace('height="36"','height="52"')}</span>`;
+  } else {
+    pEmoji.textContent=it.emoji;
+  }
   document.getElementById('p-name').innerHTML=it.name+' <em>をゲット！</em>';
-  document.getElementById('p-sub').textContent=it.hint;
+  document.getElementById('p-sub').textContent=it.hint||'';
   pop.classList.add('show');
   setTimeout(()=>pop.classList.remove('show'),1800);
-  // トレイ更新（横並び、最大8個）
+  // トレイ更新
   const tray=document.getElementById('item-tray');
   tray.innerHTML='';
-  // 最新8件のみ表示（古いものは後ろに消える）
-  const show=collected.slice(-8);
-  show.forEach(x=>{
+  collected.slice(-8).forEach(x=>{
     const s=document.createElement('div');
     s.className='tslot filled';
-    s.textContent=x.emoji;
+    if(x.svg){
+      s.innerHTML=x.svg.replace('width="36"','width="16"').replace('height="36"','height="16"');
+    } else {
+      s.textContent=x.emoji;
+    }
     tray.appendChild(s);
   });
 }
@@ -1001,18 +1138,71 @@ function doGoal(){
   setTimeout(()=>{showSc('goal-screen');buildGoal();},700);
 }
 
+// ── ヒントタイマー管理 ──
+let hintTimer=null, hintCountdown=120;
+
 function buildGoal(){
+  // 集めた材料グリッド
   const g=document.getElementById('collected-grid');
   g.innerHTML='';
   collected.forEach(it=>{
     const d=document.createElement('div');d.className='ci';
-    d.innerHTML=`${it.emoji}<span class="cn">${it.name}</span>`;
+    d.innerHTML=`${it.svg?`<span style="display:block;line-height:1;">${it.svg}</span>`:it.emoji}<span class="cn">${it.name}</span>`;
     g.appendChild(d);
   });
-  const ch=sfl([...ANSWERS]);
+
+  // 入力欄・エラー・選択肢をリセット
+  const inp=document.getElementById('ans-input');
+  const err=document.getElementById('ans-error');
+  const choiceArea=document.getElementById('choice-area');
+  const timerBar=document.getElementById('hint-timer-bar');
+  inp.value='';
+  err.style.display='none';
+  choiceArea.style.display='none';
+  timerBar.style.display='block';
+
+  // 決定ボタンのイベント（cloneで二重登録防止）
+  const submitBtn=document.getElementById('ans-submit');
+  const newBtn=submitBtn.cloneNode(true);
+  submitBtn.parentNode.replaceChild(newBtn,submitBtn);
+  newBtn.addEventListener('touchend',e=>{e.preventDefault();doFreeInput();},{passive:false});
+  newBtn.addEventListener('click',doFreeInput);
+
+  // Enterキー
+  const newInp=inp.cloneNode(true);
+  inp.parentNode.replaceChild(newInp,inp);
+  newInp.addEventListener('keydown',e=>{if(e.key==='Enter')doFreeInput();});
+
+  // ヒントタイマー開始
+  if(hintTimer) clearInterval(hintTimer);
+  hintCountdown=120;
+  updateHintTimer();
+  hintTimer=setInterval(()=>{
+    hintCountdown--;
+    updateHintTimer();
+    if(hintCountdown<=0){
+      clearInterval(hintTimer);hintTimer=null;
+      showHintChoices();
+    }
+  },1000);
+}
+
+function updateHintTimer(){
+  const cd=document.getElementById('hint-countdown');
+  const bar=document.getElementById('hint-bar-fill');
+  if(cd) cd.textContent=hintCountdown;
+  if(bar) bar.style.width=(hintCountdown/120*100)+'%';
+}
+
+function showHintChoices(){
+  const timerBar=document.getElementById('hint-timer-bar');
+  const choiceArea=document.getElementById('choice-area');
+  if(timerBar) timerBar.style.display='none';
+  if(!choiceArea) return;
+  choiceArea.style.display='block';
   const con=document.getElementById('answer-choices');
   con.innerHTML='';
-  ch.forEach(ans=>{
+  sfl([...ANSWERS]).forEach(ans=>{
     const btn=document.createElement('button');
     btn.className='cbtn';btn.type='button';btn.dataset.id=ans.id;
     btn.innerHTML=`<span class="di">${ans.svg}</span><span class="dl">${ans.name}</span>`;
@@ -1023,7 +1213,40 @@ function buildGoal(){
   });
 }
 
+function doFreeInput(){
+  if(hintTimer){clearInterval(hintTimer);hintTimer=null;}
+  const inp=document.getElementById('ans-input');
+  const err=document.getElementById('ans-error');
+  const raw=(inp?inp.value:'').trim();
+  // 正解判定：「クッキー」「cookie」「Cookie」「くっきー」など許容
+  const normalized=raw.replace(/\s/g,'').toLowerCase()
+    .replace(/[ａ-ｚ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+    .replace(/[ぁ-ん]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+  const ok=['クッキー','cookie','くっきー'].some(k=>normalized.includes(k.toLowerCase()));
+  if(ok){
+    document.getElementById('hint-timer-bar').style.display='none';
+    document.getElementById('choice-area').style.display='none';
+    setTimeout(()=>showResult(true),400);
+  } else if(raw===''){
+    if(err){err.textContent='何か入力してみて！';err.style.display='block';}
+  } else {
+    if(err){err.textContent=`「${raw}」…ちがうかも🤔 もう一度考えてみよう！`;err.style.display='block';}
+    if(inp) inp.value='';
+    // 不正解後60秒たっていなければタイマー継続、たっていれば即ヒント
+    if(!document.getElementById('choice-area').style.display||document.getElementById('choice-area').style.display==='none'){
+      // タイマーが止まっていたら再開
+      if(!hintTimer&&hintCountdown>0){
+        hintTimer=setInterval(()=>{
+          hintCountdown--;updateHintTimer();
+          if(hintCountdown<=0){clearInterval(hintTimer);hintTimer=null;showHintChoices();}
+        },1000);
+      }
+    }
+  }
+}
+
 function checkAns(ans,btn,con){
+  if(hintTimer){clearInterval(hintTimer);hintTimer=null;}
   con.querySelectorAll('.cbtn').forEach(b=>b.classList.add('off'));
   if(ans.correct){
     btn.classList.add('ok');btn.classList.remove('off');
@@ -1032,7 +1255,7 @@ function checkAns(ans,btn,con){
     btn.classList.add('ng');
     setTimeout(()=>{
       con.querySelectorAll('.cbtn').forEach(b=>{
-        b.classList.remove('off');
+        b.classList.remove('off','ng');
         const clone=b.cloneNode(true);
         const a2=ANSWERS.find(a=>a.id===clone.dataset.id);
         if(a2){
@@ -1057,26 +1280,38 @@ function showResult(ok){
         <div class="rsub">PERFECT · EXCELLENT</div>
       </div>
       <div class="rdish">
-        <div style="text-align:center;margin:8px auto;">
-          ${OMUSVG}
-        </div>
-        <div class="dname">オムライス</div>
+        <div style="text-align:center;margin:8px auto;">${COOKIESVG}</div>
+        <div class="dname">クッキー</div>
         <div class="ddesc">
-          卵でごはんを包んだ昭和洋食の名作！<br>
-          <span style="color:var(--gold);font-size:11px;">★ ケチャップ&とりにくのチキンライスを<br>ふわふわ卵でくるんで完成 ★</span>
+          ホテルのひみつのレシピで焼き上げた<br>特製クッキーをゲット！<br>
+          <span style="color:var(--gold);font-size:11px;">★ 🌾 ＋ 🧈 ＋ 🍚 ＋ 🥚 ＋ 🔥 ＝ 🍪 ★</span>
         </div>
       </div>
       <div class="rbdy">
-        <div style="font-size:12px;color:var(--mid);line-height:1.85;">
-          🥚たまご ＋ 🍚ごはん ＋ 🍅ケチャップ<br>
-          ＋ 🍗とりにく ＋ 🧅たまねぎ ＋ 🧄にんにく<br>
-          ＋ 🫒オリーブ油 ＋ 🍳フライパン<br>
-          <span style="color:var(--red);font-size:11px;">→ 完璧なオムライスの完成！</span>
+        <!-- テクノア・マーケット動線 -->
+        <div style="background:linear-gradient(135deg,rgba(26,58,92,.1),rgba(184,146,42,.12));
+          border:2px solid rgba(184,146,42,.5);border-radius:12px;
+          padding:16px 14px;margin-bottom:14px;text-align:center;">
+          <div style="font-size:11px;color:var(--mid);letter-spacing:2px;margin-bottom:6px;">
+            ✨ NEXT STEP ✨
+          </div>
+          <div style="font-family:'Zen Kurenaido',serif;font-size:17px;color:var(--brown);
+            line-height:1.7;margin-bottom:8px;">
+            <strong style="color:var(--red);">テクノア・マーケット</strong><br>
+            <span style="font-size:13px;">ー ひみつのセレクトショップ ー</span><br>
+            <span style="font-size:13px;">へ行ってね！</span>
+          </div>
+          <div style="font-size:11px;color:var(--mid);line-height:1.7;
+            background:rgba(255,255,255,.6);border-radius:8px;padding:8px 10px;">
+            📍 受付スタッフに<br>
+            <strong>「クッキーのレシピ、見つけました！」</strong><br>
+            と伝えよう！
+          </div>
         </div>
         <button class="rbtn" onclick="restart()">もう一度あそぶ ↺</button>
       </div>`;
     const sp=document.getElementById('sparks');
-    ['✨','⭐','🌟','💫','✦'].forEach((s,i)=>{
+    ['✨','⭐','🍪','💫','✦'].forEach(s=>{
       for(let j=0;j<3;j++){
         const el=document.createElement('div');el.className='spark';el.textContent=s;
         el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;
@@ -1093,28 +1328,307 @@ function showResult(ok){
       <div class="rdish" style="background:none;padding:20px;">
         <span style="font-size:50px;display:block;">💭</span>
         <div class="dname" style="font-size:18px;margin-top:8px;">もう一度考えてみよう</div>
-        <div class="ddesc" style="margin-top:8px;">集めた食材をよく見ると…<br>ヒント：洋食屋の看板メニューといえば？</div>
+        <div class="ddesc" style="margin-top:8px;">集めた材料をよく見てみよう！</div>
       </div>
       <div class="rbdy">
-        <button class="rbtn" onclick="retry()">答えを考え直す 🔄</button>
+        <button class="rbtn" onclick="retry()">もう一度入力する 🔄</button>
         <button class="rbtn" style="margin-top:8px;background:transparent;color:var(--mid);border:2px solid var(--mid);box-shadow:none;" onclick="restart()">最初からやり直す ↺</button>
       </div>`;
   }
 }
-function retry(){showSc('goal-screen');buildGoal();}
-function restart(){stopLoop();collected=[];items=[];goalVis=false;goalDone=false;showSc('title-screen');}
+function retry(){
+  if(hintTimer){clearInterval(hintTimer);hintTimer=null;}
+  showSc('goal-screen');
+  buildGoal();
+}
+function restart(){
+  if(hintTimer){clearInterval(hintTimer);hintTimer=null;}
+  stopLoop();collected=[];items=[];goalVis=false;goalDone=false;
+  showSc('title-screen');
+}
 
 // ══════════════════════════════
-// INIT
+// BGM / SE  (Web Audio API)
+// ── 外部ファイル不要・完全自前生成 ──
 // ══════════════════════════════
+let _ac=null, _bgmNode=null, _bgmGain=null, _bgmRunning=false;
+
+function getAC(){
+  if(!_ac) _ac=new(window.AudioContext||window.webkitAudioContext)();
+  if(_ac.state==='suspended') _ac.resume();
+  return _ac;
+}
+
+// ── ノート→周波数 ──
+const NOTE={
+  C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.00,A4:440.00,B4:493.88,
+  C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880.00,B5:987.77,
+  C6:1046.50,G3:196.00,A3:220.00,B3:246.94,
+  Cs4:277.18,Ds4:311.13,Fs4:369.99,Gs4:415.30,As4:466.16,
+  Cs5:554.37,Ds5:622.25,Fs5:739.99,Gs5:830.61
+};
+
+// ── BGM：かわいい冒険系（グロッケン風 + ベース + 和音） ──
+// テーマメロディー（C major / A minor、8小節ループ）
+const MELODY=[
+  // [周波数, 長さ(秒), 音量]
+  [NOTE.E5,.25,.7],[NOTE.G5,.25,.6],[NOTE.A5,.5,.75],
+  [NOTE.G5,.25,.6],[NOTE.E5,.25,.6],[NOTE.C5,.5,.7],
+  [NOTE.D5,.25,.6],[NOTE.F5,.25,.6],[NOTE.E5,.5,.72],
+  [NOTE.C5,.25,.55],[NOTE.D5,.25,.55],[NOTE.E5,.5,.65],
+
+  [NOTE.G5,.25,.7],[NOTE.A5,.25,.68],[NOTE.B5,.5,.75],
+  [NOTE.A5,.25,.65],[NOTE.G5,.25,.62],[NOTE.E5,.5,.7],
+  [NOTE.F5,.25,.6],[NOTE.E5,.25,.6],[NOTE.D5,.375,.65],
+  [NOTE.C5,.125,.55],[NOTE.E5,.25,.6],[NOTE.G5,.25,.65],[NOTE.C5,.5,.72],
+
+  [NOTE.A4,.25,.6],[NOTE.C5,.25,.6],[NOTE.E5,.5,.7],
+  [NOTE.D5,.25,.65],[NOTE.C5,.25,.6],[NOTE.B4,.5,.65],
+  [NOTE.C5,.25,.6],[NOTE.E5,.25,.62],[NOTE.G5,.5,.72],
+  [NOTE.A5,.25,.7],[NOTE.G5,.25,.65],[NOTE.E5,.5,.68],
+
+  [NOTE.F5,.25,.65],[NOTE.E5,.25,.6],[NOTE.D5,.25,.6],[NOTE.C5,.25,.55],
+  [NOTE.D5,.5,.65],[NOTE.B4,.5,.62],
+  [NOTE.C5,.25,.6],[NOTE.E5,.25,.65],[NOTE.G5,.25,.7],[NOTE.E5,.25,.65],
+  [NOTE.C5,1.0,.72],
+];
+
+const BASS=[
+  [NOTE.C4,.5,.35],[NOTE.C4,.5,.3],
+  [NOTE.A3,.5,.35],[NOTE.A3,.5,.3],
+  [NOTE.F4,.5,.32],[NOTE.F4,.5,.3],
+  [NOTE.G3,.5,.33],[NOTE.G3,.5,.3],
+  [NOTE.C4,.5,.35],[NOTE.C4,.5,.3],
+  [NOTE.A3,.5,.35],[NOTE.A3,.5,.3],
+  [NOTE.D4,.5,.32],[NOTE.D4,.5,.3],
+  [NOTE.G3,1.0,.33],
+  [NOTE.C4,.5,.35],[NOTE.C4,.5,.3],
+  [NOTE.F4,.5,.32],[NOTE.F4,.5,.3],
+  [NOTE.G3,.5,.33],[NOTE.G3,.5,.28],
+  [NOTE.C4,1.0,.35],
+];
+
+function scheduleOsc(ac,freq,start,dur,vol,type='sine',attack=0.01,release=0.08){
+  if(!freq||freq<=0) return;
+  const osc=ac.createOscillator();
+  const g=ac.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(0,start);
+  g.gain.linearRampToValueAtTime(vol,start+attack);
+  g.gain.setValueAtTime(vol,start+dur-release);
+  g.gain.linearRampToValueAtTime(0,start+dur);
+  osc.connect(g);g.connect(_bgmGain);
+  osc.start(start);osc.stop(start+dur+0.01);
+}
+
+function playBGMLoop(){
+  if(!_bgmRunning) return;
+  const ac=getAC();
+  const loopDur=MELODY.reduce((s,n)=>s+n[1],0);
+
+  // 現在時刻から開始
+  let t=ac.currentTime+0.05;
+
+  // メロディー（グロッケン風：sine + triangle混合）
+  MELODY.forEach(([freq,dur,vol])=>{
+    scheduleOsc(ac,freq,t,dur,vol*0.55,'triangle',0.005,0.12);
+    scheduleOsc(ac,freq*2,t,dur*0.3,vol*0.15,'sine',0.002,0.05);
+    t+=dur;
+  });
+
+  // ベース（サイン波：柔らかく）
+  let tb=ac.currentTime+0.05;
+  BASS.forEach(([freq,dur,vol])=>{
+    scheduleOsc(ac,freq,tb,dur,vol*0.5,'sine',0.02,0.1);
+    tb+=dur;
+  });
+
+  // 次のループをスケジュール
+  setTimeout(()=>{if(_bgmRunning) playBGMLoop();},loopDur*1000-80);
+}
+
+function startBGM(vol=0.42){
+  if(_bgmRunning) return;
+  const ac=getAC();
+  _bgmGain=ac.createGain();
+  _bgmGain.gain.setValueAtTime(vol,ac.currentTime);
+  _bgmGain.connect(ac.destination);
+  _bgmRunning=true;
+  playBGMLoop();
+}
+
+function stopBGM(fadeMs=600){
+  _bgmRunning=false;
+  if(_bgmGain){
+    const ac=getAC();
+    _bgmGain.gain.setValueAtTime(_bgmGain.gain.value,ac.currentTime);
+    _bgmGain.gain.linearRampToValueAtTime(0,ac.currentTime+fadeMs/1000);
+    setTimeout(()=>{
+      try{_bgmGain.disconnect();}catch(e){}
+      _bgmGain=null;
+    },fadeMs+50);
+  }
+}
+
+// ── SE：音効果 ──
+function playSE(type){
+  const ac=getAC();
+  const g=ac.createGain();
+  g.connect(ac.destination);
+  const t=ac.currentTime;
+
+  if(type==='collect'){
+    // アイテム取得：キラキラ上昇音
+    [0,0.06,0.12].forEach((dt,i)=>{
+      const osc=ac.createOscillator();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(NOTE.C5*(1+i*0.5),t+dt);
+      const og=ac.createGain();
+      og.gain.setValueAtTime(0.35,t+dt);
+      og.gain.linearRampToValueAtTime(0,t+dt+0.18);
+      osc.connect(og);og.connect(ac.destination);
+      osc.start(t+dt);osc.stop(t+dt+0.2);
+    });
+
+  }else if(type==='goal'){
+    // ゴール出現：ジャーン
+    [[NOTE.C5,.0],[NOTE.E5,.06],[NOTE.G5,.12],[NOTE.C6,.18]].forEach(([f,dt])=>{
+      const osc=ac.createOscillator();
+      osc.type='triangle';
+      osc.frequency.setValueAtTime(f,t+dt);
+      const og=ac.createGain();
+      og.gain.setValueAtTime(0.4,t+dt);
+      og.gain.linearRampToValueAtTime(0,t+dt+0.5);
+      osc.connect(og);og.connect(ac.destination);
+      osc.start(t+dt);osc.stop(t+dt+0.55);
+    });
+
+  }else if(type==='correct'){
+    // 正解：ファンファーレ
+    const fanfare=[
+      [NOTE.C5,.0,.4],[NOTE.E5,.12,.4],[NOTE.G5,.24,.4],
+      [NOTE.C6,.38,.55],[NOTE.G5,.52,.35],[NOTE.E5,.62,.3],[NOTE.C6,.72,.6]
+    ];
+    fanfare.forEach(([f,dt,v])=>{
+      const osc=ac.createOscillator();
+      osc.type='triangle';
+      osc.frequency.setValueAtTime(f,t+dt);
+      const og=ac.createGain();
+      og.gain.setValueAtTime(v*0.5,t+dt);
+      og.gain.linearRampToValueAtTime(0,t+dt+0.22);
+      osc.connect(og);og.connect(ac.destination);
+      osc.start(t+dt);osc.stop(t+dt+0.25);
+    });
+
+  }else if(type==='wrong'){
+    // 不正解：ぶー
+    const osc=ac.createOscillator();
+    osc.type='sawtooth';
+    osc.frequency.setValueAtTime(180,t);
+    osc.frequency.linearRampToValueAtTime(120,t+0.3);
+    const og=ac.createGain();
+    og.gain.setValueAtTime(0.25,t);
+    og.gain.linearRampToValueAtTime(0,t+0.35);
+    osc.connect(og);og.connect(ac.destination);
+    osc.start(t);osc.stop(t+0.38);
+
+  }else if(type==='step'){
+    // 移動音：コツコツ（非常に小さく）
+    const osc=ac.createOscillator();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(200,t);
+    osc.frequency.linearRampToValueAtTime(160,t+0.04);
+    const og=ac.createGain();
+    og.gain.setValueAtTime(0.07,t);
+    og.gain.linearRampToValueAtTime(0,t+0.05);
+    osc.connect(og);og.connect(ac.destination);
+    osc.start(t);osc.stop(t+0.06);
+  }
+}
+
+// ── 画面遷移とBGM/SEの紐付け ──
+// タイトル→BGM開始（最初のタップで AudioContext unlock）
+const _origShowSc=showSc;
+function showSc(id){
+  _origShowSc(id);
+  const ac=_ac?_ac:null;
+  if(id==='title-screen'){
+    // タイトル：BGMをフルボリュームに戻す
+    if(_bgmRunning&&_bgmGain&&ac){
+      _bgmGain.gain.linearRampToValueAtTime(0.42,ac.currentTime+0.6);
+    }
+  } else if(id==='story-screen'){
+    if(_bgmRunning&&_bgmGain&&ac){
+      _bgmGain.gain.linearRampToValueAtTime(0.38,ac.currentTime+0.4);
+    }
+  } else if(id==='game-screen'){
+    if(_bgmRunning&&_bgmGain&&ac){
+      _bgmGain.gain.linearRampToValueAtTime(0.42,ac.currentTime+0.4);
+    }
+  } else if(id==='goal-screen'){
+    // ゴール：BGMをやや絞って緊張感
+    if(_bgmRunning&&_bgmGain&&ac){
+      _bgmGain.gain.linearRampToValueAtTime(0.18,ac.currentTime+0.5);
+    }
+  } else if(id==='result-screen'){
+    // 結果：正解ファンファーレのため一瞬ミュート→SE後に止める
+    if(_bgmGain&&ac){
+      _bgmGain.gain.linearRampToValueAtTime(0,ac.currentTime+0.2);
+    }
+    setTimeout(()=>stopBGM(200),300);
+  }
+}
+
+// move()にSEを追加
+const _origMove=move;
+function move(d){
+  const prevX=px,prevY=py;
+  _origMove(d);
+  if(px!==prevX||py!==prevY) playSE('step');
+}
+
+// collectItem後にSEを鳴らす（collectItem内のpopup表示後）
+const _origCollect=collectItem;
+function collectItem(it){
+  _origCollect(it);
+  playSE('collect');
+}
+
+// doGoal にSEを追加
+const _origDoGoal=doGoal;
+function doGoal(){
+  playSE('goal');
+  _origDoGoal();
+}
+
+// showResult にSEを追加
+const _origShowResult=showResult;
+function showResult(ok){
+  _origShowResult(ok);
+  setTimeout(()=>playSE(ok?'correct':'wrong'),300);
+}
+
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const l=document.getElementById('loading');
-    l.style.opacity='0';l.style.transition='opacity .4s';
-    setTimeout(()=>l.style.display='none',400);
-    showSc('title-screen');
-  },800);
+    // ドットを消してタップ待ち表示
+    const dots=document.getElementById('ld-dots');
+    const tap=document.getElementById('ld-tap');
+    if(dots) dots.style.display='none';
+    if(tap)  tap.style.display='block';
+  },900);
 });
+
+// ローディング画面タップ → BGM開始＋タイトルへ
+document.getElementById('loading').addEventListener('click',function launchGame(){
+  this.removeEventListener('click',launchGame);
+  getAC(); // AudioContext unlock
+  startBGM(0.42);
+  const l=document.getElementById('loading');
+  l.style.opacity='0';l.style.transition='opacity .4s';
+  setTimeout(()=>l.style.display='none',400);
+  showSc('title-screen');
+},{once:true});
 
 // 画面回転・リサイズ時にキャンバスを再初期化
 window.addEventListener('resize',()=>{
