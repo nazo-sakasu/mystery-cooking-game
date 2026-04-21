@@ -787,9 +787,13 @@ let animT=0; // フレームカウンタ
 const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 let heldDir=null,moveTimer=null;
 
+let _lastPressTime=0;
 function press(d){
-  if(heldDir===d) return; // 既に押下中なら無視
-  if(heldDir) rel(heldDir); // 別ボタンを押していたら解放
+  const now=Date.now();
+  if(now-_lastPressTime<30) return; // 30ms以内の重複を無視
+  _lastPressTime=now;
+  if(heldDir===d) return;
+  if(heldDir) rel(heldDir);
   heldDir=d;
   move(d);
   moveTimer=setInterval(()=>move(d),180);
@@ -805,7 +809,10 @@ function rel(d){
 document.addEventListener('touchcancel',()=>{if(heldDir)rel(heldDir);});
 
 // dpadボタンをJS初期化（touch専用・mouseイベント無効化で2コマ防止）
+let _dpadReady=false;
 function initDpad(){
+  if(_dpadReady) return; // 2回目以降は何もしない
+  _dpadReady=true;
   ['up','down','left','right'].forEach(d=>{
     const btn=document.getElementById('db-'+d);
     if(!btn) return;
@@ -821,7 +828,6 @@ function initDpad(){
       e.preventDefault();
       rel(d);
     },{passive:false});
-    // マウス（PC用）- スマホでは発火しないよう touchstart後はmouseを無視
     btn.addEventListener('mousedown',e=>{
       if(e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents) return;
       press(d);
@@ -1139,12 +1145,12 @@ function startGame(){
   document.getElementById('prog').classList.remove('done');
   document.getElementById('prog').textContent='食材: 0 / 8';
   stopLoop();
+  initDpad(); // 初回のみ有効（2回目以降はガードで無視）
   // レイアウト確定後にキャンバス初期化
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       initCanvas();
       initSwipe();
-      initDpad();
       startLoop();
     });
   });
