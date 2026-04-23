@@ -1854,10 +1854,14 @@ function retry(){
   buildGoal();
 }
 function restart(){
-  // ロード画面に戻して名前から再入力
+  // ロード画面に戻す（名前は保持）
   stopHeliLoop();
-  const inp=document.getElementById('player-name');
-  if(inp) inp.value='';
+  // 保存済みの名前を入力欄に復元
+  try{
+    const saved=localStorage.getItem('technoa_player_name');
+    const inp=document.getElementById('player-name');
+    if(inp&&saved) inp.value=saved;
+  }catch(e){}
   const err=document.getElementById('load-name-err');
   if(err) err.textContent='';
   showSc('load-screen');
@@ -2246,6 +2250,34 @@ window.addEventListener('load',()=>{
 // ズーム・スクロール制御
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gestureend',e=>{
+  e.preventDefault();
+  // ピンチ終了時に強制リセット
+  resetViewportZoom();
+},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+// ダブルタップ拡大の防止（300ms以内の連続touchendを無効化）
+let _lastTouchEnd=0;
+document.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-_lastTouchEnd<=300) e.preventDefault();
+  _lastTouchEnd=now;
+},{passive:false});
+// viewport強制リセット関数
+function resetViewportZoom(){
+  const vp=document.querySelector('meta[name="viewport"]');
+  if(!vp) return;
+  // 一度初期値にして、次のフレームで再適用
+  vp.setAttribute('content','width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover');
+}
+// ダブルタップ（2本指）で強制リセット
+let _twoFingerTapTime=0;
+document.addEventListener('touchstart',e=>{
+  if(e.touches.length>=2){
+    resetViewportZoom();
+    _twoFingerTapTime=Date.now();
+  }
+},{passive:true});
 document.addEventListener('touchmove',e=>{
   // ゴール・リザルト画面のスクロール可能要素は通す
   const target=e.target;
