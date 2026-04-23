@@ -23,6 +23,51 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   align-items:center;justify-content:center;flex-direction:column;}
 .screen.active{display:flex;}
 
+.load-name-box{margin:0 auto 26px;max-width:280px;}
+.load-name-label{display:block;font-size:12px;color:rgba(255,255,255,.85);
+  letter-spacing:2px;margin-bottom:8px;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+#player-name{width:100%;padding:12px 14px;border-radius:12px;border:none;
+  font-size:16px;font-family:'Hiragino Sans','Yu Gothic',sans-serif;
+  background:rgba(255,255,255,.95);color:#2a3a5a;text-align:center;letter-spacing:1px;
+  box-shadow:0 4px 14px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.5);
+  outline:none;-webkit-appearance:none;}
+#player-name:focus{background:#fff;box-shadow:0 4px 20px rgba(232,197,71,.5),0 0 0 2px rgba(232,197,71,.8);}
+.load-name-err{height:16px;font-size:11px;color:#ffd8d8;margin-top:6px;letter-spacing:1px;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);}
+.load-tap{cursor:pointer;border:2px solid rgba(255,255,255,.6);}
+/* ═══ LOAD ═══ */
+#load-screen{
+  background:linear-gradient(180deg,#5aa0d8 0%,#98c8ea 50%,#3a6894 100%);
+  cursor:pointer;padding:0;overflow:hidden;
+  align-items:center;justify-content:center;position:relative;}
+#load-screen::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(45px 14px at 12% 20%,rgba(255,255,255,.7) 0%,rgba(255,255,255,0) 70%),
+    radial-gradient(55px 16px at 85% 28%,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 70%),
+    radial-gradient(40px 12px at 50% 14%,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 70%);
+  background-repeat:no-repeat;}
+.load-inner{position:relative;z-index:2;text-align:center;padding:0 30px;
+  animation:loadFade .8s ease-out;}
+@keyframes loadFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.load-logo{font-size:58px;margin-bottom:12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
+  animation:loadBounce 2s ease-in-out infinite;}
+@keyframes loadBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.load-title{font-family:'Zen Kurenaido',serif;font-size:clamp(22px,6vw,30px);
+  color:#fff;letter-spacing:2px;margin-bottom:6px;
+  text-shadow:0 2px 10px rgba(0,0,0,.5),0 0 20px rgba(255,255,255,.3);}
+.load-sub{font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,.85);
+  letter-spacing:6px;margin-bottom:40px;}
+.load-tap{display:inline-block;padding:16px 40px;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.12));
+  border:2px solid rgba(255,255,255,.6);border-radius:30px;
+  color:#fff;font-family:'Zen Kurenaido',serif;font-size:15px;letter-spacing:3px;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  text-shadow:0 1px 4px rgba(0,0,0,.4);
+  box-shadow:0 4px 20px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.3);
+  animation:loadPulse 2.2s ease-in-out infinite;user-select:none;}
+@keyframes loadPulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.04);opacity:1}}
+.load-hint{margin-top:24px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:2px;}
+
 /* ═══ TITLE ═══ */
 #title-screen{
   background:
@@ -283,6 +328,24 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 <body>
 <div id="app">
 
+<!-- ═══ LOAD ═══ -->
+<div id="load-screen" class="screen">
+  <div class="load-inner">
+    <div class="load-logo">🏨</div>
+    <div class="load-title">パティスリー・テクノア</div>
+    <div class="load-sub">PATISSERIE · TECHNOA</div>
+    <div class="load-name-box">
+      <label for="player-name" class="load-name-label">あなたのお名前は？</label>
+      <input id="player-name" type="text" maxlength="12"
+        placeholder="ニックネームでもOK" autocomplete="off"
+        onkeydown="if(event.key==='Enter')enterFromLoad()"/>
+      <div class="load-name-err" id="load-name-err"></div>
+    </div>
+    <button class="load-tap" type="button" onclick="enterFromLoad()">▶ TAP TO START</button>
+    <div class="load-hint">お名前をいれてスタート！</div>
+  </div>
+</div>
+
 <!-- ═══ TITLE ═══ -->
 <div id="title-screen" class="screen">
   <div id="restaurant-scene">
@@ -442,17 +505,19 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
       </defs>
       <g transform="translate(188,26)">
         <g>
-          <!-- 位置アニメ -->
-          <animateTransform attributeName="transform" attributeType="XML"
+          <!-- 位置アニメ（JSで開始制御） -->
+          <animateTransform id="heliMove" attributeName="transform" attributeType="XML"
             type="translate"
             values="212,0; 212,0; 0,0; 0,0; -450,-60; -450,-60"
             keyTimes="0; 0.083; 0.333; 0.5; 0.75; 1"
-            dur="12s" repeatCount="indefinite"/>
+            dur="12s" repeatCount="indefinite"
+            begin="indefinite"/>
           <!-- 透明度 -->
-          <animate attributeName="opacity"
+          <animate id="heliOpacity" attributeName="opacity"
             values="0; 0; 1; 1; 0; 0"
             keyTimes="0; 0.083; 0.167; 0.667; 0.75; 1"
-            dur="12s" repeatCount="indefinite"/>
+            dur="12s" repeatCount="indefinite"
+            begin="indefinite"/>
 
           <!-- ヘリの影（昼間・薄く） -->
           <ellipse cx="12" cy="18" rx="14" ry="1" fill="rgba(0,0,0,.15)"/>
@@ -927,18 +992,18 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
       <!-- 自由記述エリア -->
       <div id="free-input-area" style="margin:12px 0;">
         <div class="albl">▼ 答えを入力してね</div>
-        <div style="display:flex;gap:8px;margin-top:6px;">
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
           <input id="ans-input" type="text" placeholder="ここに入力…"
-            style="flex:1;padding:12px 14px;font-size:16px;font-family:'Kosugi Maru',sans-serif;
-            border:2px solid rgba(107,58,31,.3);border-radius:8px;
+            style="width:100%;padding:12px 14px;font-size:16px;font-family:'Kosugi Maru',sans-serif;
+            border:2px solid rgba(107,58,31,.3);border-radius:8px;box-sizing:border-box;
             background:linear-gradient(180deg,#fdfaf0,#f5edd6);color:var(--brown);
             outline:none;box-shadow:inset 0 1px 4px rgba(0,0,0,.1);">
           <button id="ans-submit" type="button"
-            style="padding:12px 18px;background:linear-gradient(180deg,var(--red-hi),var(--red) 55%,var(--red-lo));
+            style="width:100%;padding:14px 18px;background:linear-gradient(180deg,var(--red-hi),var(--red) 55%,var(--red-lo));
             color:var(--glight);border:none;border-radius:8px;font-family:'Zen Kurenaido',serif;
-            font-size:16px;letter-spacing:1px;cursor:pointer;white-space:nowrap;
-            box-shadow:0 3px 10px rgba(26,58,92,.45),inset 0 1px 0 rgba(255,255,255,.2);
-            touch-action:manipulation;">決定</button>
+            font-size:17px;letter-spacing:2px;cursor:pointer;white-space:nowrap;
+            box-shadow:0 3px 10px rgba(139,32,32,.45),inset 0 1px 0 rgba(255,255,255,.2);
+            touch-action:manipulation;-webkit-appearance:none;appearance:none;">決定 ▶</button>
         </div>
         <div id="ans-error" style="display:none;margin-top:6px;font-size:12px;color:var(--red);
           padding:6px 10px;background:rgba(26,58,92,.07);border-radius:6px;text-align:center;"></div>
@@ -1467,6 +1532,8 @@ function collectItem(it){
 function showSc(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // タイトル画面以外ではヘリ音停止
+  if(id!=='title-screen') stopHeliLoop();
   // BGM音量制御（_acが未初期化なら何もしない）
   if(!_ac||!_bgmGain) return;
   const ct=_ac.currentTime;
@@ -1609,6 +1676,14 @@ function doFreeInput(){
     .replace(/[ａ-ｚ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
     .replace(/[ぁ-ん]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
   const ok=['クッキー','cookie','くっきー'].some(k=>normalized.includes(k.toLowerCase()));
+  // 隠しエンディング：答えに「ネコ」を入れた場合（名前は関係なし）
+  const isNekoAns=['ネコ','ねこ','猫','neko','cat'].some(k=>normalized===k.toLowerCase());
+  if(isNekoAns){
+    document.getElementById('hint-timer-bar').style.display='none';
+    document.getElementById('choice-area').style.display='none';
+    setTimeout(()=>showResult(true,true),400); // 第2引数で隠しエンディング指定
+    return;
+  }
   if(ok){
     document.getElementById('hint-timer-bar').style.display='none';
     document.getElementById('choice-area').style.display='none';
@@ -1655,10 +1730,60 @@ function checkAns(ans,btn,con){
   }
 }
 
-function showResult(ok){
+function showResult(ok,secret){
   showSc('result-screen');
   setTimeout(()=>playSE(ok?'correct':'wrong'),300);
   const card=document.getElementById('result-card');
+  // ━━ 隠しエンディング：答えに「ネコ」と入れた場合 ━━
+  if(secret){
+    const nm=playerName||'名無し';
+    card.innerHTML=`
+      <div class="sparks" id="sparks"></div>
+      <div class="rhd-ok" style="background:linear-gradient(180deg,#7a4b1e,#5a3512 55%,#3e2208);">
+        <div class="rlbl" style="font-size:24px;">🌟 ALL MISSION CLEAR 🌟</div>
+        <div class="rsub">SECRET · RECIPE · UNLOCKED</div>
+      </div>
+      <div class="rdish">
+        <div style="font-size:48px;margin:8px auto;">🐾🍪🐾</div>
+        <div class="dname" style="font-size:22px;line-height:1.4;">
+          ${nm}シェフの<br>オリジナルクッキー
+        </div>
+        <div class="ddesc" style="margin-top:10px;">
+          すべての問題を解くなんて…<br>
+          本当にすごい！<br>
+          <span style="color:var(--gold);font-size:11px;letter-spacing:2px;">★ LEGENDARY CHEF ★</span>
+        </div>
+      </div>
+      <div class="rbdy">
+        <div style="background:linear-gradient(135deg,rgba(122,75,30,.08),rgba(232,197,71,.15));
+          border:2px solid rgba(184,146,42,.55);border-radius:12px;
+          padding:18px 14px;margin-bottom:14px;text-align:center;">
+          <div style="font-size:11px;color:var(--mid);letter-spacing:2px;margin-bottom:8px;">
+            ✨ お疲れさまでした！ ✨
+          </div>
+          <div style="font-family:'Zen Kurenaido',serif;font-size:16px;color:var(--brown);line-height:1.7;">
+            <strong style="color:var(--red);">${nm}</strong>さん、<br>
+            最後までプレイしてくれて<br>ありがとう！
+          </div>
+          <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-top:12px;
+            background:rgba(255,255,255,.6);border-radius:8px;padding:10px;">
+            🎁 受付スタッフに<br>
+            <strong>「${nm}シェフのオリジナル！」</strong><br>
+            と伝えてね
+          </div>
+        </div>
+        <button class="rbtn" onclick="restart()">もう一度あそぶ ↺</button>
+      </div>`;
+    const sp=document.getElementById('sparks');
+    ['🌟','✨','🐾','🍪','💫'].forEach(s=>{
+      for(let j=0;j<4;j++){
+        const el=document.createElement('div');el.className='spark';el.textContent=s;
+        el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2.2}s;animation-duration:${1.6+Math.random()}s`;
+        sp.appendChild(el);
+      }
+    });
+    return;
+  }
   if(ok){
     card.innerHTML=`
       <div class="sparks" id="sparks"></div>
@@ -1670,7 +1795,7 @@ function showResult(ok){
         <div style="text-align:center;margin:8px auto;">${COOKIESVG}</div>
         <div class="dname">クッキー</div>
         <div class="ddesc">
-          ホテルのひみつのレシピで焼き上げた<br>特製クッキーをゲット！<br>
+          ホテルのひみつのレシピで焼き上げた<br>特製クッキーをゲットしよう！<br>
           <span style="color:var(--gold);font-size:11px;">★ 🌾 ＋ 🧈 ＋ 🍚 ＋ 🥚 ＋ 🔥 ＝ 🍪 ★</span>
         </div>
       </div>
@@ -1729,9 +1854,19 @@ function retry(){
   buildGoal();
 }
 function restart(){
+  // ロード画面に戻して名前から再入力
+  stopHeliLoop();
+  const inp=document.getElementById('player-name');
+  if(inp) inp.value='';
+  const err=document.getElementById('load-name-err');
+  if(err) err.textContent='';
+  showSc('load-screen');
+  return;
+  /* 旧処理（参考・未使用）：
   if(hintTimer){clearInterval(hintTimer);hintTimer=null;}
   stopLoop();collected=[];items=[];goalVis=false;goalDone=false;
   showSc('title-screen');
+  */
 }
 
 // ══════════════════════════════
@@ -1934,11 +2069,180 @@ function playSE(type){
   }
 }
 
+// ═══ ヘリコプター音（Web Audio合成・12秒1回） ═══
+// タイムライン: 0-1s 無音 / 1-4s 右から接近 / 4-6s ホバリング / 6-9s 左へ飛去 / 9-12s 無音
+let _heliLoopId=null;
+function playHeliSound(){
+  const ac=getAC();
+  const t0=ac.currentTime;
+  const totalDur=12.0;
+
+  // マスターゲイン
+  const master=ac.createGain();
+  master.gain.setValueAtTime(0,t0);
+  // フェードイン（1秒）→ 接近で音量UP → ホバーで最大 → 飛去でフェードアウト
+  master.gain.linearRampToValueAtTime(0.0,   t0+1.0);
+  master.gain.linearRampToValueAtTime(0.15,  t0+2.5);
+  master.gain.linearRampToValueAtTime(0.28,  t0+4.0);
+  master.gain.linearRampToValueAtTime(0.28,  t0+6.0);
+  master.gain.linearRampToValueAtTime(0.14,  t0+8.0);
+  master.gain.linearRampToValueAtTime(0,     t0+9.5);
+
+  // パン（左右定位）：右→中央→左
+  let panner;
+  try{
+    panner=ac.createStereoPanner();
+    panner.pan.setValueAtTime( 0.85, t0+1.0);
+    panner.pan.linearRampToValueAtTime( 0.0, t0+4.0);
+    panner.pan.linearRampToValueAtTime( 0.0, t0+6.0);
+    panner.pan.linearRampToValueAtTime(-0.9, t0+9.0);
+    panner.connect(master);
+    master.connect(ac.destination);
+  }catch(e){
+    // StereoPanner 非対応（古いSafari）→ master直結
+    master.connect(ac.destination);
+    panner=master;
+  }
+
+  // ── ローター回転音（低音 "バババババ" ） ──
+  // 低周波LFOでgainを脈打たせて作る
+  const rotorCarrier=ac.createOscillator();
+  rotorCarrier.type='sawtooth';
+  rotorCarrier.frequency.setValueAtTime(60,t0);
+  // ドップラー：接近で+5Hz、離れで-5Hz
+  rotorCarrier.frequency.linearRampToValueAtTime(68,t0+4.0);
+  rotorCarrier.frequency.linearRampToValueAtTime(60,t0+6.0);
+  rotorCarrier.frequency.linearRampToValueAtTime(52,t0+8.5);
+
+  const rotorFilter=ac.createBiquadFilter();
+  rotorFilter.type='lowpass';
+  rotorFilter.frequency.setValueAtTime(220,t0);
+  rotorFilter.Q.setValueAtTime(2,t0);
+
+  const rotorGain=ac.createGain();
+  rotorGain.gain.setValueAtTime(0.4,t0);
+
+  // LFO（ローター回転の脈打ち）
+  const rotorLFO=ac.createOscillator();
+  rotorLFO.type='sine';
+  rotorLFO.frequency.setValueAtTime(14,t0); // ローター音の"チョップ"周波数
+  const rotorLFOGain=ac.createGain();
+  rotorLFOGain.gain.setValueAtTime(0.55,t0);
+  rotorLFO.connect(rotorLFOGain);
+  rotorLFOGain.connect(rotorGain.gain);
+
+  rotorCarrier.connect(rotorFilter);
+  rotorFilter.connect(rotorGain);
+  rotorGain.connect(panner);
+
+  // ── エンジン音（高音 "ヴィーン" ） ──
+  const engine=ac.createOscillator();
+  engine.type='sawtooth';
+  engine.frequency.setValueAtTime(180,t0);
+  engine.frequency.linearRampToValueAtTime(210,t0+4.0);
+  engine.frequency.linearRampToValueAtTime(180,t0+6.0);
+  engine.frequency.linearRampToValueAtTime(150,t0+9.0);
+
+  const engineFilter=ac.createBiquadFilter();
+  engineFilter.type='bandpass';
+  engineFilter.frequency.setValueAtTime(800,t0);
+  engineFilter.Q.setValueAtTime(8,t0);
+
+  const engineGain=ac.createGain();
+  engineGain.gain.setValueAtTime(0.08,t0);
+
+  engine.connect(engineFilter);
+  engineFilter.connect(engineGain);
+  engineGain.connect(panner);
+
+  // ── 風切り音（高周波ノイズ） ──
+  const noiseBuf=ac.createBuffer(1, ac.sampleRate*totalDur, ac.sampleRate);
+  const noiseData=noiseBuf.getChannelData(0);
+  for(let i=0;i<noiseData.length;i++) noiseData[i]=(Math.random()*2-1)*0.3;
+  const noiseSrc=ac.createBufferSource();
+  noiseSrc.buffer=noiseBuf;
+  const noiseFilter=ac.createBiquadFilter();
+  noiseFilter.type='bandpass';
+  noiseFilter.frequency.setValueAtTime(2200,t0);
+  noiseFilter.Q.setValueAtTime(3,t0);
+  const noiseGain=ac.createGain();
+  noiseGain.gain.setValueAtTime(0.15,t0);
+  noiseSrc.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(panner);
+
+  // 全部スタート
+  rotorCarrier.start(t0);
+  rotorLFO.start(t0);
+  engine.start(t0);
+  noiseSrc.start(t0);
+  // 停止
+  const stopT=t0+totalDur;
+  rotorCarrier.stop(stopT);
+  rotorLFO.stop(stopT);
+  engine.stop(stopT);
+  noiseSrc.stop(stopT);
+}
+
+function startHeliLoop(){
+  if(_heliLoopId) return;
+  // 即座に1回再生
+  playHeliSound();
+  // 以降12秒ごとに繰り返し（SVGアニメのタイミングと一致）
+  _heliLoopId=setInterval(()=>{
+    // タイトル画面以外ではスキップ
+    const title=document.getElementById('title-screen');
+    if(!title||!title.classList.contains('active')) return;
+    playHeliSound();
+  },12000);
+}
+
+function stopHeliLoop(){
+  if(_heliLoopId){clearInterval(_heliLoopId);_heliLoopId=null;}
+}
 
 
 
 
-window.addEventListener('load',()=>{ initDpad(); showSc('title-screen'); });
+
+// プレイヤー名（セッション中保持）
+let playerName='';
+// ロード画面からタイトルへ
+function enterFromLoad(){
+  const inp=document.getElementById('player-name');
+  const err=document.getElementById('load-name-err');
+  const name=(inp?inp.value:'').trim();
+  if(!name){
+    if(err) err.textContent='お名前を入力してね！';
+    if(inp) inp.focus();
+    return;
+  }
+  playerName=name.slice(0,12);
+  try{localStorage.setItem('technoa_player_name',playerName);}catch(e){}
+  // ネコ判定（ひらがな・カタカナ・漢字いずれも許容）
+  const norm=playerName.replace(/\s/g,'').toLowerCase()
+    .replace(/[ぁ-ん]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+  window._isNekoName=['ネコ','ねこ','猫','neko','cat'].some(k=>norm===k.toLowerCase());
+  getAC();
+  showSc('title-screen');
+  const hm=document.getElementById('heliMove');
+  const ho=document.getElementById('heliOpacity');
+  if(hm&&hm.beginElement){try{hm.beginElement();}catch(e){}try{ho.beginElement();}catch(e){}}
+  startHeliLoop();
+}
+
+window.addEventListener('load',()=>{
+  initDpad();
+  // 前回の名前を復元
+  try{
+    const saved=localStorage.getItem('technoa_player_name');
+    if(saved){
+      const inp=document.getElementById('player-name');
+      if(inp) inp.value=saved;
+    }
+  }catch(e){}
+  showSc('load-screen');
+});
 // ズーム・スクロール制御
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
