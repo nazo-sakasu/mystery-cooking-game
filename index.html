@@ -984,7 +984,7 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
     <div class="obdy">
       <div style="font-size:12px;color:var(--mid);margin-bottom:6px;">【集めた材料】</div>
       <div class="cgrid" id="collected-grid"></div>
-      <div class="oq">
+      <div class="oq" id="answer-prompt">
         集めた材料で何かつくれます！<br>
         それは何でしょう？<br>
         <span style="font-size:11px;opacity:.7;">答えを入力してね</span>
@@ -1041,34 +1041,44 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 // ══════════════════════════════
 // DATA
 // ══════════════════════════════
-// ── クッキーSVG（結果画面用・大） ──
+// ── クッキーSVG（結果画面用・大・プレーンクッキー） ──
 const COOKIESVG=`<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" width="96" height="72">
-  
   <ellipse cx="60" cy="82" rx="50" ry="7" fill="#D4C4A0" opacity=".45"/>
-  
   <ellipse cx="72" cy="68" rx="22" ry="6" fill="#B8902A" opacity=".6" transform="rotate(-12,72,68)"/>
   <ellipse cx="50" cy="70" rx="24" ry="7" fill="#C8A030" opacity=".7" transform="rotate(8,50,70)"/>
-  
   <ellipse cx="60" cy="54" rx="34" ry="10" fill="#B07820"/>
   <ellipse cx="60" cy="50" rx="34" ry="10" fill="#C89030"/>
   <ellipse cx="60" cy="46" rx="34" ry="10" fill="#D4A038"/>
   <ellipse cx="60" cy="43" rx="34" ry="10" fill="#E0B048"/>
   <path d="M26,43 Q44,32 60,34 Q76,32 94,43 Q88,54 60,56 Q32,54 26,43Z" fill="#EEC058"/>
-  
   <ellipse cx="44" cy="40" rx="8" ry="5" fill="#C89030" opacity=".5" transform="rotate(-10,44,40)"/>
   <ellipse cx="74" cy="42" rx="7" ry="4" fill="#C89030" opacity=".4" transform="rotate(15,74,42)"/>
   <ellipse cx="60" cy="50" rx="9" ry="5" fill="#B87820" opacity=".4"/>
-  
-  <ellipse cx="42" cy="38" rx="4" ry="3" fill="#4A2A08" transform="rotate(-15,42,38)"/>
-  <ellipse cx="58" cy="36" rx="3.5" ry="2.5" fill="#3A2008" transform="rotate(5,58,36)"/>
-  <ellipse cx="72" cy="40" rx="4" ry="3" fill="#4A2A08" transform="rotate(20,72,40)"/>
-  <ellipse cx="50" cy="46" rx="3" ry="2" fill="#3A2008" transform="rotate(-8,50,46)"/>
-  <ellipse cx="68" cy="48" rx="3.5" ry="2.5" fill="#4A2A08" transform="rotate(12,68,48)"/>
-  
   <path d="M36,36 Q54,28 72,34" stroke="rgba(255,240,200,0.4)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 </svg>`;
 
-const REQ=[
+// プレイ回数（1=初回, 2=2回目以降）
+let _playCount=1;
+// カカオ追加用：迷路emoji=🍫板チョコ、収集UI=添付画像と同じカカオ実SVG
+const CACAO_POD_SVG=`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+  <defs>
+    <linearGradient id="cBar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a3a14"/>
+      <stop offset="55%" stop-color="#4a1e08"/>
+      <stop offset="100%" stop-color="#2a0f04"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="9" width="24" height="20" rx="2" fill="#2a1408"/>
+  <rect x="6" y="9" width="24" height="20" rx="2" fill="url(#cBar)"/>
+  <line x1="12" y1="9" x2="12" y2="29" stroke="#1a0a04" stroke-width="0.9"/>
+  <line x1="18" y1="9" x2="18" y2="29" stroke="#1a0a04" stroke-width="0.9"/>
+  <line x1="24" y1="9" x2="24" y2="29" stroke="#1a0a04" stroke-width="0.9"/>
+  <line x1="6" y1="19" x2="30" y2="19" stroke="#1a0a04" stroke-width="0.7"/>
+  <rect x="6" y="9" width="24" height="3" fill="rgba(255,210,160,0.22)"/>
+  <rect x="6" y="9" width="3" height="20" fill="rgba(255,210,160,0.1)"/>
+</svg>`;
+const CACAO={id:'cacao',emoji:'🟫',name:'カカオマス',isReq:true,uiSvg:CACAO_POD_SVG};
+let REQ=[
   {id:'flour',  emoji:'🌾',name:'小麦粉',      isReq:true},
   {id:'butter', emoji:'🧈',name:'無塩バター',   isReq:true},
   {id:'sugar',  emoji:'🍚',name:'グラニュー糖', isReq:true},
@@ -1099,7 +1109,7 @@ let GX=11,GY=15; // ゴール位置（毎回ランダム）
 let maze=[],imap={};
 let items=[],collected=[];
 let goalVis=false,goalDone=false;
-const RCOUNT=REQ.length; // 8
+let RCOUNT=REQ.length;
 
 function genMaze(){
   maze=[];
@@ -1502,7 +1512,7 @@ function collectItem(it){
   const pop=document.getElementById('popup');
   const pEmoji=document.getElementById('p-emoji');
   if(it.svg){
-    pEmoji.innerHTML=`<span style="display:inline-block;">${it.svg.replace('width="36"','width="52"').replace('height="36"','height="52"')}</span>`;
+    pEmoji.innerHTML=`<span style="display:inline-block;">${(it.uiSvg||it.svg).replace('width="36"','width="52"').replace('height="36"','height="52"')}</span>`;
   } else {
     pEmoji.textContent=it.emoji;
   }
@@ -1572,7 +1582,7 @@ function startGame(){
   px=1;py=1;goalDone=false;goalVis=false;
   document.getElementById('item-tray').innerHTML='';
   document.getElementById('prog').classList.remove('done');
-  document.getElementById('prog').textContent='食材: 0 / 8';
+  document.getElementById('prog').textContent='食材: 0 / '+RCOUNT;
   stopLoop();
   // レイアウト確定後にキャンバス初期化
   requestAnimationFrame(()=>{
@@ -1600,7 +1610,7 @@ function buildGoal(){
   g.innerHTML='';
   collected.forEach(it=>{
     const d=document.createElement('div');d.className='ci';
-    d.innerHTML=`${it.svg?`<span style="display:block;line-height:1;">${it.svg}</span>`:it.emoji}<span class="cn">${it.name}</span>`;
+    d.innerHTML=`${(it.uiSvg||it.svg)?`<span style="display:block;line-height:1;">${(it.uiSvg||it.svg)}</span>`:it.emoji}<span class="cn">${it.name}</span>`;
     g.appendChild(d);
   });
 
@@ -1658,7 +1668,7 @@ function showHintChoices(){
   sfl([...ANSWERS]).forEach(ans=>{
     const btn=document.createElement('button');
     btn.className='cbtn';btn.type='button';btn.dataset.id=ans.id;
-    btn.innerHTML=`<span class="di">${ans.svg}</span><span class="dl">${ans.name}</span>`;
+    btn.innerHTML=`<span class="di">${ans.uiSvg||ans.svg}</span><span class="dl">${ans.name}</span>`;
     let t=false;
     btn.addEventListener('touchend',e=>{e.preventDefault();if(t)return;t=true;checkAns(ans,btn,con);},{passive:false});
     btn.addEventListener('click',()=>{if(t)return;t=true;checkAns(ans,btn,con);});
@@ -1675,13 +1685,15 @@ function doFreeInput(){
   const normalized=raw.replace(/\s/g,'').toLowerCase()
     .replace(/[ａ-ｚ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
     .replace(/[ぁ-ん]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+  // チョコ系（2回目以降）= 隠しエンディング ※他より先に判定
+  const chocoKeys=['チョコ','ちょこ','choco','chocolate','チョコクッキー','チョコ味','ちょこあじ','ちょこくっきー','chocolatecookie'];
+  const isChocoSecret=_playCount>=2 && chocoKeys.some(k=>normalized===k.toLowerCase().replace(/\s/g,''));
+  // 通常正解：クッキー系
   const ok=['クッキー','cookie','くっきー'].some(k=>normalized.includes(k.toLowerCase()));
-  // 隠しエンディング：答えに「ネコ」を入れた場合（名前は関係なし）
-  const isNekoAns=['ネコ','ねこ','猫','neko','cat'].some(k=>normalized===k.toLowerCase());
-  if(isNekoAns){
+  if(isChocoSecret){
     document.getElementById('hint-timer-bar').style.display='none';
     document.getElementById('choice-area').style.display='none';
-    setTimeout(()=>showResult(true,true),400); // 第2引数で隠しエンディング指定
+    setTimeout(()=>showResult(true,true),400);
     return;
   }
   if(ok){
@@ -1734,48 +1746,56 @@ function showResult(ok,secret){
   showSc('result-screen');
   setTimeout(()=>playSE(ok?'correct':'wrong'),300);
   const card=document.getElementById('result-card');
-  // ━━ 隠しエンディング：答えに「ネコ」と入れた場合 ━━
+  // ━━ 隠しエンディング：答えに「チョコ」と入れた場合 ━━
   if(secret){
     const nm=playerName||'名無し';
     card.innerHTML=`
       <div class="sparks" id="sparks"></div>
-      <div class="rhd-ok" style="background:linear-gradient(180deg,#7a4b1e,#5a3512 55%,#3e2208);">
-        <div class="rlbl" style="font-size:24px;">🌟 ALL MISSION CLEAR 🌟</div>
-        <div class="rsub">SECRET · RECIPE · UNLOCKED</div>
+      <div class="rhd-ok" style="background:linear-gradient(180deg,#9a6a2a 0%,#6a3a14 45%,#3a1c08 100%);position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:
+          repeating-linear-gradient(-45deg,transparent 0,transparent 14px,rgba(255,215,120,.08) 14px,rgba(255,215,120,.08) 28px);
+          pointer-events:none;"></div>
+        <div class="rlbl" style="font-size:24px;text-shadow:0 2px 8px rgba(0,0,0,.6),0 0 18px rgba(255,200,100,.45);">
+          👑 ALL MISSION CLEAR 👑
+        </div>
+        <div class="rsub" style="color:rgba(255,220,170,.95);">SECRET · CHOCOLATE · UNLOCKED</div>
       </div>
-      <div class="rdish">
-        <div style="font-size:48px;margin:8px auto;">🐾🍪🐾</div>
-        <div class="dname" style="font-size:22px;line-height:1.4;">
+      <div class="rdish" style="background:linear-gradient(180deg,#fdfaf0,#f4e9d2);padding:20px 14px 16px;">
+        <div style="margin:6px auto 12px;display:flex;justify-content:center;">
+          <svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\" width=\"110\" height=\"82\"><ellipse cx=\"60\" cy=\"82\" rx=\"50\" ry=\"7\" fill=\"#1a0a04\" opacity=\".4\"/><ellipse cx=\"60\" cy=\"54\" rx=\"34\" ry=\"10\" fill=\"#2a1408\"/><ellipse cx=\"60\" cy=\"50\" rx=\"34\" ry=\"10\" fill=\"#3a1c0a\"/><ellipse cx=\"60\" cy=\"46\" rx=\"34\" ry=\"10\" fill=\"#4a2410\"/><ellipse cx=\"60\" cy=\"43\" rx=\"34\" ry=\"10\" fill=\"#5a3018\"/><path d=\"M26,43 Q44,32 60,34 Q76,32 94,43 Q88,54 60,56 Q32,54 26,43Z\" fill=\"#6a3820\"/><ellipse cx=\"44\" cy=\"40\" rx=\"8\" ry=\"5\" fill=\"#3a1c0a\" opacity=\".5\" transform=\"rotate(-10,44,40)\"/><ellipse cx=\"74\" cy=\"42\" rx=\"7\" ry=\"4\" fill=\"#3a1c0a\" opacity=\".4\" transform=\"rotate(15,74,42)\"/><ellipse cx=\"60\" cy=\"50\" rx=\"9\" ry=\"5\" fill=\"#2a1408\" opacity=\".4\"/><path d=\"M36,36 Q54,28 72,34\" stroke=\"rgba(255,200,150,0.18)\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"46\" cy=\"38\" r=\"2\" fill=\"#1a0a04\"/><circle cx=\"66\" cy=\"36\" r=\"1.8\" fill=\"#1a0a04\"/><circle cx=\"56\" cy=\"48\" r=\"1.6\" fill=\"#1a0a04\"/><circle cx=\"76\" cy=\"46\" r=\"1.8\" fill=\"#1a0a04\"/></svg>
+        </div>
+        <div class="dname" style="font-size:26px;line-height:1.4;color:#5a3018;letter-spacing:1px;
+          text-shadow:0 1px 0 #fff,0 2px 4px rgba(122,75,30,.25);">
           ${nm}シェフの<br>オリジナルクッキー
         </div>
-        <div class="ddesc" style="margin-top:10px;">
+        <div class="ddesc" style="margin-top:14px;font-size:14px;color:#6a4520;line-height:1.7;">
           すべての問題を解くなんて…<br>
           本当にすごい！<br>
-          <span style="color:var(--gold);font-size:11px;letter-spacing:2px;">★ LEGENDARY CHEF ★</span>
+          <span style="color:#8a5018;font-size:13px;letter-spacing:3px;font-weight:bold;">★ LEGENDARY CHEF ★</span>
         </div>
       </div>
       <div class="rbdy">
-        <div style="background:linear-gradient(135deg,rgba(122,75,30,.08),rgba(232,197,71,.15));
+        <div style="background:linear-gradient(135deg,rgba(122,75,30,.08),rgba(232,197,71,.18));
           border:2px solid rgba(184,146,42,.55);border-radius:12px;
-          padding:18px 14px;margin-bottom:14px;text-align:center;">
-          <div style="font-size:11px;color:var(--mid);letter-spacing:2px;margin-bottom:8px;">
+          padding:20px 16px;margin-bottom:14px;text-align:center;">
+          <div style="font-size:13px;color:var(--mid);letter-spacing:2px;margin-bottom:10px;font-weight:bold;">
             ✨ お疲れさまでした！ ✨
           </div>
-          <div style="font-family:'Zen Kurenaido',serif;font-size:16px;color:var(--brown);line-height:1.7;">
-            <strong style="color:var(--red);">${nm}</strong>さん、<br>
+          <div style="font-family:'Zen Kurenaido',serif;font-size:18px;color:var(--brown);line-height:1.7;">
+            <strong style="color:var(--red);font-size:22px;">${nm}</strong>さん、<br>
             最後までプレイしてくれて<br>ありがとう！
           </div>
-          <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-top:12px;
-            background:rgba(255,255,255,.6);border-radius:8px;padding:10px;">
+          <div style="font-size:14px;color:#5a3018;line-height:1.7;margin-top:14px;
+            background:rgba(255,255,255,.8);border-radius:8px;padding:14px;font-weight:bold;">
             🎁 受付スタッフに<br>
-            <strong>「${nm}シェフのオリジナル！」</strong><br>
-            と伝えてね
+            <span style="color:var(--red);font-size:17px;">「シェフのオリジナルクッキー」</span><br>
+            と伝えてね！
           </div>
         </div>
         <button class="rbtn" onclick="restart()">もう一度あそぶ ↺</button>
       </div>`;
     const sp=document.getElementById('sparks');
-    ['🌟','✨','🐾','🍪','💫'].forEach(s=>{
+    ['🍫','✨','👑','🌟','💫'].forEach(s=>{
       for(let j=0;j<4;j++){
         const el=document.createElement('div');el.className='spark';el.textContent=s;
         el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2.2}s;animation-duration:${1.6+Math.random()}s`;
@@ -1854,9 +1874,17 @@ function retry(){
   buildGoal();
 }
 function restart(){
+  // 2回目以降フラグON
+  _playCount++;
+  // 2回目以降はカカオマスを追加（既に追加済みなら何もしない）
+  if(_playCount>=2 && !REQ.some(r=>r.id==='cacao')){
+    REQ.push(CACAO);
+    RCOUNT=REQ.length;
+  }
+  // 答えプロンプトを更新
+  updateAnswerPrompt();
   // ロード画面に戻す（名前は保持）
   stopHeliLoop();
-  // 保存済みの名前を入力欄に復元
   try{
     const saved=localStorage.getItem('technoa_player_name');
     const inp=document.getElementById('player-name');
@@ -2209,6 +2237,16 @@ function stopHeliLoop(){
 
 
 
+// 答えプロンプト切替（1回目=クッキー, 2回目以降=チョコ）
+function updateAnswerPrompt(){
+  const el=document.getElementById('answer-prompt');
+  if(!el) return;
+  if(_playCount>=2){
+    el.innerHTML='集めた材料で<strong style="color:var(--red);">何味のクッキー</strong>が作れますか？<br>答えを入力してね';
+  }else{
+    el.innerHTML='集めた材料で何かつくれます！<br>それは何でしょう？<br><span style="font-size:11px;opacity:.7;">答えを入力してね</span>';
+  }
+}
 // プレイヤー名（セッション中保持）
 let playerName='';
 // ロード画面からタイトルへ
