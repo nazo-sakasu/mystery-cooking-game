@@ -1583,6 +1583,7 @@ function startGame(){
   document.getElementById('item-tray').innerHTML='';
   document.getElementById('prog').classList.remove('done');
   document.getElementById('prog').textContent='食材: 0 / '+RCOUNT;
+  updateAnswerPrompt();
   stopLoop();
   // レイアウト確定後にキャンバス初期化
   requestAnimationFrame(()=>{
@@ -1636,18 +1637,25 @@ function buildGoal(){
   inp.parentNode.replaceChild(newInp,inp);
   newInp.addEventListener('keydown',e=>{if(e.key==='Enter')doFreeInput();});
 
-  // ヒントタイマー開始
+  // ヒントタイマー開始（2回目以降はヒント無し）
   if(hintTimer) clearInterval(hintTimer);
-  hintCountdown=120;
-  updateHintTimer();
-  hintTimer=setInterval(()=>{
-    hintCountdown--;
+  const timerBarEl=document.getElementById('hint-timer-bar');
+  if(_playCount>=2){
+    // 2回目以降：ヒント機能オフ
+    if(timerBarEl) timerBarEl.style.display='none';
+    hintTimer=null;
+  }else{
+    hintCountdown=120;
     updateHintTimer();
-    if(hintCountdown<=0){
-      clearInterval(hintTimer);hintTimer=null;
-      showHintChoices();
-    }
-  },1000);
+    hintTimer=setInterval(()=>{
+      hintCountdown--;
+      updateHintTimer();
+      if(hintCountdown<=0){
+        clearInterval(hintTimer);hintTimer=null;
+        showHintChoices();
+      }
+    },1000);
+  }
 }
 
 function updateHintTimer(){
@@ -2261,10 +2269,6 @@ function enterFromLoad(){
   }
   playerName=name.slice(0,12);
   try{localStorage.setItem('technoa_player_name',playerName);}catch(e){}
-  // ネコ判定（ひらがな・カタカナ・漢字いずれも許容）
-  const norm=playerName.replace(/\s/g,'').toLowerCase()
-    .replace(/[ぁ-ん]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
-  window._isNekoName=['ネコ','ねこ','猫','neko','cat'].some(k=>norm===k.toLowerCase());
   getAC();
   showSc('title-screen');
   const hm=document.getElementById('heliMove');
