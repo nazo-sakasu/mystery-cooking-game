@@ -1416,12 +1416,16 @@ function draw(){
   cx2.beginPath();
   cx2.arc(px2, py2+bv+CS*0.15, CS*0.45, 0, Math.PI*2);
   cx2.fill();
-  // シェフ本体（iOSの絵文字baseline補正を共通変数_iosEmで適用）
-  cx2.font=`${Math.floor(CS*1.15)}px serif`;
+  // シェフ本体：セル内に収まるサイズ、影と中心を揃える
+  // iOS の ZWJ絵文字 🧑‍🍳 は textBaseline=middle でも上にずれるため、
+  // 絵文字自身のサイズを抑え、bottom基準で描画して影の中心に合わせる
+  const chefSize=Math.floor(CS*0.85);
+  cx2.font=`${chefSize}px serif`;
   cx2.textAlign='center';
-  cx2.textBaseline='middle';
+  cx2.textBaseline='bottom';
   cx2.fillStyle='#000';
-  cx2.fillText('🧑‍🍳', px2, py2+bv+_iosEm);
+  // bottom基準なので、絵文字の下端を「影中心+影の半径分」に置く
+  cx2.fillText('🧑‍🍳', px2, py2+bv+CS*0.4);
   cx2.restore();
 }
 
