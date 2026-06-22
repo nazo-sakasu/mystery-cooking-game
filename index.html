@@ -1308,16 +1308,11 @@ const ISO_Y=0;
 function initCanvas(){
   cv=document.getElementById('gc');
   const wrap=document.getElementById('canvas-wrap');
-  // offsetWidth/Height でレイアウト確定後のサイズを取得
   CW=wrap.offsetWidth||wrap.clientWidth;
   CH=wrap.offsetHeight||wrap.clientHeight;
-  // devicePixelRatio対応：論理サイズ=CSS、物理サイズ=DPR倍
-  const dpr=Math.min(window.devicePixelRatio||1, 2);
-  cv.width=Math.floor(CW*dpr);cv.height=Math.floor(CH*dpr);
+  cv.width=CW;cv.height=CH;
   cv.style.width=CW+'px';cv.style.height=CH+'px';
   cx2=cv.getContext('2d');
-  cx2.setTransform(dpr,0,0,dpr,0,0); // 描画座標は論理サイズで
-  // セルサイズ：迷路全体がcanvas内に収まる最大サイズ
   CS=Math.floor(Math.min(CW/COLS, CH/ROWS));
 }
 
@@ -1377,10 +1372,6 @@ function draw(){
   // アイテム描画（写真通り：シンプル、くっきり）
   cx2.textAlign='center';
   cx2.textBaseline='middle';
-  // iOS絵文字baseline補正
-  const _iosEm=(/iP(hone|od|ad)/.test(navigator.platform)
-    ||(navigator.userAgent.includes('Mac')&&'ontouchend' in document))
-    ? CS*0.1 : 0;
   const itemFontSize=Math.floor(CS*0.72);
   items.forEach(it=>{
     if(it.col) return;
@@ -1393,14 +1384,12 @@ function draw(){
     cx2.font=`${itemFontSize}px serif`;
     cx2.textAlign='center';
     cx2.textBaseline='middle';
-    cx2.fillText(it.emoji, ix, iy+bob+_iosEm*0.7);
+    cx2.fillText(it.emoji, ix, iy+bob);
   });
 
   // シェフ描画（最優先・state完全リセット）
   cx2.save();
-  // DPRスケールを保ったまま transform リセット
-  const _dpr=Math.min(window.devicePixelRatio||1, 2);
-  cx2.setTransform(_dpr,0,0,_dpr,0,0);
+  cx2.setTransform(1,0,0,1,0,0); // transform完全リセット
   cx2.globalAlpha=1.0;
   cx2.globalCompositeOperation='source-over';
   cx2.shadowBlur=0;
@@ -1416,16 +1405,12 @@ function draw(){
   cx2.beginPath();
   cx2.arc(px2, py2+bv+CS*0.15, CS*0.45, 0, Math.PI*2);
   cx2.fill();
-  // シェフ本体：セル内に収まるサイズ、影と中心を揃える
-  // iOS の ZWJ絵文字 🧑‍🍳 は textBaseline=middle でも上にずれるため、
-  // 絵文字自身のサイズを抑え、bottom基準で描画して影の中心に合わせる
-  const chefSize=Math.floor(CS*0.85);
-  cx2.font=`${chefSize}px serif`;
+  // シェフ本体（元の動作していた構成に戻す）
+  cx2.font=`${Math.floor(CS*1.15)}px serif`;
   cx2.textAlign='center';
-  cx2.textBaseline='bottom';
+  cx2.textBaseline='middle';
   cx2.fillStyle='#000';
-  // bottom基準なので、絵文字の下端を「影中心+影の半径分」に置く
-  cx2.fillText('🧑‍🍳', px2, py2+bv+CS*0.4);
+  cx2.fillText('🧑‍🍳', px2, py2+bv);
   cx2.restore();
 }
 
