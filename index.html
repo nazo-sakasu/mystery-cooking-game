@@ -1377,6 +1377,10 @@ function draw(){
   // アイテム描画（写真通り：シンプル、くっきり）
   cx2.textAlign='center';
   cx2.textBaseline='middle';
+  // iOS絵文字baseline補正
+  const _iosEm=(/iP(hone|od|ad)/.test(navigator.platform)
+    ||(navigator.userAgent.includes('Mac')&&'ontouchend' in document))
+    ? CS*0.1 : 0;
   const itemFontSize=Math.floor(CS*0.72);
   items.forEach(it=>{
     if(it.col) return;
@@ -1387,7 +1391,9 @@ function draw(){
     cx2.shadowBlur=0;
     cx2.shadowColor='transparent';
     cx2.font=`${itemFontSize}px serif`;
-    cx2.fillText(it.emoji, ix, iy+bob);
+    cx2.textAlign='center';
+    cx2.textBaseline='middle';
+    cx2.fillText(it.emoji, ix, iy+bob+_iosEm*0.7);
   });
 
   // シェフ描画（最優先・state完全リセット）
@@ -1410,12 +1416,12 @@ function draw(){
   cx2.beginPath();
   cx2.arc(px2, py2+bv+CS*0.15, CS*0.45, 0, Math.PI*2);
   cx2.fill();
-  // シェフ本体
+  // シェフ本体（iOSの絵文字baseline補正を共通変数_iosEmで適用）
   cx2.font=`${Math.floor(CS*1.15)}px serif`;
   cx2.textAlign='center';
   cx2.textBaseline='middle';
   cx2.fillStyle='#000';
-  cx2.fillText('🧑‍🍳', px2, py2+bv);
+  cx2.fillText('🧑‍🍳', px2, py2+bv+_iosEm);
   cx2.restore();
 }
 
