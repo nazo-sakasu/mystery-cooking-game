@@ -1401,25 +1401,26 @@ function draw(){
   const chefX=ox+px*CS+CS/2;
   const cellTop=oy+py*CS;
   const bv=Math.sin(animT*0.14)*(heldDir?2:0.8);
-  // セル中心ではなく「足元」を基準にする
-  const footY=cellTop+CS*0.88+bv;
-  const shadowY=footY-CS*0.04;
-  // 影は足元の楕円
+  // 足元基準
+  const footY=cellTop+CS*0.86+bv;
+  // 影（足元の楕円）── シェフと同じ chefX
   cx2.fillStyle='rgba(255,220,80,0.35)';
   cx2.beginPath();
-  cx2.ellipse(chefX, shadowY, CS*0.34, CS*0.13, 0, 0, Math.PI*2);
+  cx2.ellipse(chefX, footY-CS*0.02, CS*0.30, CS*0.10, 0, 0, Math.PI*2);
   cx2.fill();
-  // iPhone/Safari の emoji 描画差を吸収：measureTextで下端を足元に揃える
-  const chefSize=Math.floor(CS*1.15);
-  cx2.font=`${chefSize}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`;
+  // シェフ絵文字：水平は textAlign=center で中央、垂直は実測下端を足元に
+  const chefSize=Math.floor(CS*1.05);
+  cx2.font=`${chefSize}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
   cx2.textAlign='center';
   cx2.textBaseline='alphabetic';
   cx2.fillStyle='#000';
-  const mt=cx2.measureText(chefEmoji);
-  const descent=(mt.actualBoundingBoxDescent&&isFinite(mt.actualBoundingBoxDescent))
-    ? mt.actualBoundingBoxDescent
-    : chefSize*0.12;
-  cx2.fillText(chefEmoji, chefX, footY-descent);
+  let bd;
+  try{
+    const mt=cx2.measureText(chefEmoji);
+    bd=(mt.actualBoundingBoxDescent&&isFinite(mt.actualBoundingBoxDescent)&&mt.actualBoundingBoxDescent>0)
+      ? mt.actualBoundingBoxDescent : chefSize*0.18;
+  }catch(e){ bd=chefSize*0.18; }
+  cx2.fillText(chefEmoji, chefX, footY-bd);
   cx2.restore();
 }
 
