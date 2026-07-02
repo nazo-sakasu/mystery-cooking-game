@@ -327,6 +327,29 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
   box-shadow:0 4px 16px rgba(139,32,32,.48),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .1s;text-shadow:0 1px 3px rgba(0,0,0,.4);-webkit-appearance:none;appearance:none;}
 .rbtn:active{transform:scale(.97);}
 
+/* 幹事用・隠しタップ領域（右上・完全透明） */
+#secret-tap-zone{position:absolute;top:0;right:0;width:64px;height:64px;
+  z-index:50;cursor:default;-webkit-tap-highlight-color:transparent;}
+/* 幹事用・残り時間パネル（ガラスモーフィズム・上品） */
+#host-timer{position:absolute;top:14px;right:14px;z-index:60;display:none;
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(20,28,48,.82),rgba(12,18,36,.9));
+  border:1px solid rgba(201,162,39,.5);
+  box-shadow:0 6px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12),
+    0 0 20px rgba(201,162,39,.15);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  text-align:center;animation:htIn .4s cubic-bezier(.2,.8,.3,1);}
+@keyframes htIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
+#host-timer.show{display:block;}
+.ht-label{font-family:Georgia,serif;font-size:8px;letter-spacing:3px;
+  color:rgba(201,162,39,.85);text-transform:uppercase;margin-bottom:3px;}
+.ht-time{font-family:'Courier New',monospace;font-size:22px;font-weight:bold;
+  letter-spacing:1px;color:#f0e0b0;text-shadow:0 0 12px rgba(240,224,176,.4);
+  line-height:1;}
+.ht-sub{font-size:9px;color:rgba(255,255,255,.55);margin-top:4px;letter-spacing:1px;}
+#host-timer.unlocked .ht-time{color:#7ae87a;text-shadow:0 0 14px rgba(122,232,122,.5);}
+#host-timer.unlocked .ht-label{color:rgba(122,232,122,.85);}
+
 @keyframes db{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-8px);opacity:1}}
 </style>
 </head>
@@ -335,6 +358,14 @@ body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none;
 
 <!-- ═══ LOAD ═══ -->
 <div id="load-screen" class="screen">
+  <!-- 幹事用・隠しタップ領域（右上・不可視） -->
+  <div id="secret-tap-zone" onclick="onSecretTap()"></div>
+  <!-- 幹事用・残り時間パネル（初期非表示） -->
+  <div id="host-timer">
+    <div class="ht-label">解除まで</div>
+    <div class="ht-time" id="ht-time">--:--:--</div>
+    <div class="ht-sub" id="ht-sub"></div>
+  </div>
   <div class="load-inner">
     <div class="load-logo">🏨</div>
     <div class="load-title">パティスリー・テクノア</div>
@@ -1096,7 +1127,7 @@ let REQ=[
   {id:'egg',    emoji:'🥚',name:'卵',           isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><radialGradient id="egGr" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#ffffff"/><stop offset="65%" stop-color="#f8ecc8"/><stop offset="100%" stop-color="#d8b878"/></radialGradient></defs><ellipse cx="18" cy="32" rx="9" ry="1.5" fill="#1a0a04" opacity=".2"/><path d="M18,5 C 11,5.5 8,16 9,24 C 10,30 13.5,32 18,32 C 22.5,32 26,30 27,24 C 28,16 25,5.5 18,5 Z" fill="url(#egGr)" stroke="#b89858" stroke-width="0.5"/><ellipse cx="14.5" cy="13" rx="2.5" ry="4" fill="rgba(255,255,255,0.65)" transform="rotate(-15,14.5,13)"/><ellipse cx="13.5" cy="11" rx="1" ry="2" fill="rgba(255,255,255,0.85)" transform="rotate(-15,13.5,11)"/></svg>`},
   {id:'pin',    emoji:'🪄',name:'麺棒',         isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><linearGradient id="pnGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8c890"/><stop offset="50%" stop-color="#c89858"/><stop offset="100%" stop-color="#8a6028"/></linearGradient></defs><rect x="1" y="15" width="6" height="6" rx="1" fill="#8a5828" stroke="#5a3818" stroke-width="0.5"/><rect x="29" y="15" width="6" height="6" rx="1" fill="#8a5828" stroke="#5a3818" stroke-width="0.5"/><circle cx="2.5" cy="18" r="0.6" fill="#4a2810"/><circle cx="33.5" cy="18" r="0.6" fill="#4a2810"/><rect x="6.5" y="14" width="23" height="8" rx="1.5" fill="url(#pnGr)" stroke="#5a3818" stroke-width="0.5"/><path d="M6.5,16 L29.5,16" stroke="rgba(255,240,200,0.4)" stroke-width="0.6"/><path d="M6.5,20 L29.5,20" stroke="rgba(90,55,25,0.3)" stroke-width="0.5"/><ellipse cx="10" cy="16.5" rx="1.5" ry="0.5" fill="rgba(255,255,255,0.4)"/></svg>`},
   {id:'cutter', emoji:'⭐',name:'抜き型',       isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><linearGradient id="ctGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff8a0"/><stop offset="50%" stop-color="#f0c850"/><stop offset="100%" stop-color="#a86810"/></linearGradient></defs><polygon points="18,4 22.5,15 34,15 24.5,22 28.5,33 18,26 7.5,33 11.5,22 2,15 13.5,15" fill="url(#ctGr)" stroke="#8a5810" stroke-width="0.7" stroke-linejoin="round"/><polygon points="18,7 21,14.5 28.5,14.5 22.5,19.5 25.5,28 18,23 10.5,28 13.5,19.5 7.5,14.5 15,14.5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/><circle cx="18" cy="18" r="1.5" fill="rgba(255,255,255,0.5)"/></svg>`},
-  {id:'sheet',  emoji:'🫓',name:'ベーキングシート',isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><linearGradient id="shGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdfbf2"/><stop offset="100%" stop-color="#e8dec0"/></linearGradient></defs><rect x="3" y="6" width="30" height="24" rx="1" fill="url(#shGr)" stroke="#a89868" stroke-width="0.8"/><rect x="3" y="6" width="30" height="2.5" fill="rgba(255,255,255,0.45)"/><rect x="5" y="8" width="26" height="20" rx="0.5" fill="none" stroke="#c0a878" stroke-width="0.5" stroke-dasharray="2,1.5"/><circle cx="10" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="18" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="26" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="10" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="18" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="26" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="9.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/><circle cx="17.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/><circle cx="25.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/></svg>`},
+  {id:'sheet',  emoji:'🫓',name:'クッキングシート',isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><linearGradient id="shGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdfbf2"/><stop offset="100%" stop-color="#e8dec0"/></linearGradient></defs><rect x="3" y="6" width="30" height="24" rx="1" fill="url(#shGr)" stroke="#a89868" stroke-width="0.8"/><rect x="3" y="6" width="30" height="2.5" fill="rgba(255,255,255,0.45)"/><rect x="5" y="8" width="26" height="20" rx="0.5" fill="none" stroke="#c0a878" stroke-width="0.5" stroke-dasharray="2,1.5"/><circle cx="10" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="18" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="26" cy="14" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="10" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="18" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="26" cy="22" r="2.2" fill="#d4a868" stroke="#a87838" stroke-width="0.5"/><circle cx="9.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/><circle cx="17.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/><circle cx="25.5" cy="13.5" r="0.5" fill="rgba(255,255,255,0.6)"/></svg>`},
   {id:'oven',   emoji:'🫕',name:'オーブン',     isReq:true, svg:`<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><defs><linearGradient id="ovBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8ecf2"/><stop offset="100%" stop-color="#9aa4b4"/></linearGradient><linearGradient id="ovDoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1a22"/><stop offset="100%" stop-color="#0a0a12"/></linearGradient><radialGradient id="ovFire" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#ffb040" stop-opacity="0.7"/><stop offset="100%" stop-color="#ff6010" stop-opacity="0"/></radialGradient></defs><rect x="2" y="4" width="32" height="28" rx="2.5" fill="url(#ovBody)" stroke="#5a6878" stroke-width="0.8"/><rect x="2" y="4" width="32" height="3" rx="2" fill="rgba(255,255,255,0.4)"/><rect x="4" y="7" width="28" height="3" fill="#3a4250"/><circle cx="7" cy="8.5" r="0.7" fill="#80d040"/><rect x="11" y="8" width="18" height="1" fill="#1a2a3a"/><text x="20" y="9" font-family="monospace" font-size="1.4" fill="#ff8030" text-anchor="middle">180°C</text><rect x="4" y="11" width="28" height="16" rx="1.5" fill="url(#ovDoor)" stroke="#3a4250" stroke-width="0.6"/><rect x="6" y="13" width="24" height="12" rx="1" fill="#050508"/><ellipse cx="18" cy="20" rx="11" ry="5" fill="url(#ovFire)"/><path d="M9,18 Q18,15 27,18" stroke="rgba(255,160,60,0.6)" stroke-width="1.2" fill="none"/><path d="M9,21 Q18,18 27,21" stroke="rgba(255,120,30,0.4)" stroke-width="0.9" fill="none"/><circle cx="9" cy="19" r="0.5" fill="#ffc870" opacity=".8"/><circle cx="27" cy="19" r="0.5" fill="#ffc870" opacity=".8"/><rect x="4" y="28" width="28" height="3" rx="0.5" fill="#707888"/><circle cx="9" cy="29.5" r="1.3" fill="#5a6270" stroke="#3a4250" stroke-width="0.4"/><circle cx="9" cy="29.5" r="0.7" fill="#3a4250"/><rect x="8.5" y="29.3" width="1" height="0.4" fill="#ffd060"/><circle cx="18" cy="29.5" r="1.3" fill="#5a6270" stroke="#3a4250" stroke-width="0.4"/><circle cx="18" cy="29.5" r="0.7" fill="#3a4250"/><circle cx="27" cy="29.5" r="1.3" fill="#5a6270" stroke="#3a4250" stroke-width="0.4"/><circle cx="27" cy="29.5" r="0.7" fill="#3a4250"/></svg>`},
 ];
 const MIS=[];
@@ -1885,7 +1916,7 @@ function showResult(ok,secret){
             と伝えよう！
           </div>
         </div>
-        <button class="rbtn" onclick="restart()">もう一度あそぶ ↺</button>
+        <button class="rbtn" id="replay-locked-btn" onclick="tryRestartLocked()">もう一度あそぶ ↺</button>
       </div>`;
     const sp=document.getElementById('sparks');
     ['✨','⭐','🍪','💫','✦'].forEach(s=>{
@@ -1896,6 +1927,7 @@ function showResult(ok,secret){
         sp.appendChild(el);
       }
     });
+    updateReplayLockState();
   } else {
     card.innerHTML=`
       <div class="rhd-ng">
@@ -1918,6 +1950,33 @@ function retry(){
   showSc('goal-screen');
   buildGoal();
 }
+// ═══ 時間ロック：2026年7月12日14:00まで「もう一度あそぶ」を無効化 ═══
+const REPLAY_UNLOCK_TIME=new Date(2026,6,12,14,0,0).getTime(); // 月は0始まり→6=7月
+
+function isReplayUnlocked(){
+  return Date.now()>=REPLAY_UNLOCK_TIME;
+}
+
+function tryRestartLocked(){
+  if(isReplayUnlocked()){
+    restart();
+  }
+  // 未解除なら何もしない（ボタンは見た目もdisabled）
+}
+
+// 結果画面表示時にボタンの状態を更新
+function updateReplayLockState(){
+  const btn=document.getElementById('replay-locked-btn');
+  if(!btn) return;
+  if(isReplayUnlocked()){
+    btn.style.cursor='pointer';
+    btn.style.pointerEvents='auto';
+  }else{
+    btn.style.cursor='default';
+    btn.style.pointerEvents='none';
+  }
+}
+
 function restart(){
   // 2回目以降フラグON
   _playCount++;
@@ -2292,6 +2351,71 @@ function updateAnswerPrompt(){
     el.innerHTML='集めた材料で何かつくれます！<br>それは何でしょう？<br><span style="font-size:11px;opacity:.7;">答えを入力してね</span>';
   }
 }
+// ═══ 幹事用・隠しコマンド（右上5回タップで残り時間トグル） ═══
+let _secretTapCount=0;
+let _secretTapTimer=null;
+let _hostTimerVisible=false;
+let _hostTimerInterval=null;
+
+function onSecretTap(){
+  _secretTapCount++;
+  if(_secretTapTimer) clearTimeout(_secretTapTimer);
+  // 3秒以内に10回タップで発動
+  _secretTapTimer=setTimeout(()=>{_secretTapCount=0;},3000);
+  if(_secretTapCount>=10){
+    _secretTapCount=0;
+    toggleHostTimer();
+  }
+}
+
+function toggleHostTimer(){
+  _hostTimerVisible=!_hostTimerVisible;
+  const panel=document.getElementById('host-timer');
+  if(!panel) return;
+  if(_hostTimerVisible){
+    panel.classList.add('show');
+    updateHostTimer();
+    if(_hostTimerInterval) clearInterval(_hostTimerInterval);
+    _hostTimerInterval=setInterval(updateHostTimer,1000);
+  }else{
+    panel.classList.remove('show');
+    if(_hostTimerInterval){clearInterval(_hostTimerInterval);_hostTimerInterval=null;}
+  }
+}
+
+function updateHostTimer(){
+  const panel=document.getElementById('host-timer');
+  const timeEl=document.getElementById('ht-time');
+  const subEl=document.getElementById('ht-sub');
+  const labelEl=panel?panel.querySelector('.ht-label'):null;
+  if(!timeEl) return;
+  const now=Date.now();
+  const diff=REPLAY_UNLOCK_TIME-now;
+  if(diff<=0){
+    // 解除済み
+    panel.classList.add('unlocked');
+    timeEl.textContent='解除済み';
+    if(labelEl) labelEl.textContent='STATUS';
+    if(subEl) subEl.textContent='もう一度あそぶ 有効';
+  }else{
+    panel.classList.remove('unlocked');
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    timeEl.textContent=
+      String(h).padStart(2,'0')+':'+
+      String(m).padStart(2,'0')+':'+
+      String(s).padStart(2,'0');
+    if(labelEl) labelEl.textContent='解除まで';
+    // 解除予定時刻も表示
+    const ud=new Date(REPLAY_UNLOCK_TIME);
+    if(subEl) subEl.textContent=
+      ud.getMonth()+1+'/'+ud.getDate()+' '+
+      String(ud.getHours()).padStart(2,'0')+':'+
+      String(ud.getMinutes()).padStart(2,'0')+' 解除';
+  }
+}
+
 // プレイヤー名（セッション中保持）
 let playerName='';
 // ロード画面からタイトルへ
